@@ -2,7 +2,6 @@
 
 This repository contains practical files and lab work for various subjects throughout my university coursework. It serves as a centralized and organized location for reference, revision, and version control.
 
-** for you, for all of us **
 ---
 
 ## 📚 Subjects Covered
