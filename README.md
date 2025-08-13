@@ -18,16 +18,18 @@ This repository contains practical files and lab work for various subjects throu
 
 ```
 ONE-FOR-ALL//
-├── ML/
-├── MA/
-├── ST/
-├── DV/
-├── Python/
+├── DATA VISUALIZATION
+├── DECISION THEORY
+├── LINEAR MODELS
+├── MEASURE THEORY
+├── MULTIVARIATE ANALYSIS
+├── SAMPLING THEORY
 └── README.md
 ```
 
 Each folder contains:
 - `.pdf` or `.docx` practical files
+- `.pdf` theory files
 - `.ipynb` / `.py`  source code (if applicable)
 - `README.md` (per subject, optional)
 
@@ -41,6 +43,7 @@ Each folder contains:
 - MySQL 
 - Rstudio
 - Excel
+- notebooks
  and relevant source materials
 
 ---
