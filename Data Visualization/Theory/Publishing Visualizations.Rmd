@@ -1,0 +1,105 @@
+---
+title: "Publishing Plotly visualization"
+output: html_notebook
+---
+
+Publishing a visualization may mean any of the following:
+
+-   Saving plotly graphs as HTML
+
+-   Embedding a graph within a larger HTML documents
+
+-   Exporting to an image file
+
+In this session, we will discuss how to carry out these tasks.
+
+## Saving as HTML
+
+### htmlwidgets
+
+The `htmlwidgets` package provides a framework for creating a packages that provides an R interface to a Javascript library. The `plotly` package is one such example of an `htmlwidgets` package. A widget made using any such package is referred to an an htmlwidget.
+
+An htmlwidget can be saved as a standalone HTML file using the `htmlwidgets::saveWidget` function. By default, this function produces a completely self-contained HTML file, meaning that all the necessary JavaScript and CSS dependency files are bundled inside the resultant HTML file.
+
+Let's first create a plotly visualization.
+
+```{r}
+library(plotly)
+p = plot_ly(data = economics, x = ~date) %>%
+    add_trace(
+      y = ~uempmed,
+      type = "scatter",
+      mode = "markers",
+      name = "unemployment",
+      marker = list(color = "blue")
+    ) %>%   
+    add_trace(
+      type = "scatter",
+      mode = "lines",
+      y = ~fitted(loess(uempmed ~ as.numeric(date))),
+      name = "Loess",
+      line = list(color = "red", dash = "dashed")
+    ) %>%
+    layout(
+      title = "Unemployment",
+      xaxis = list( 
+                title = "Time",
+                showgrid = F
+              ),
+      yaxis = list(
+              title = "uidx"
+              )
+    )
+p
+```
+
+Now we save this graph (the `plotly` object) as an html file using the following code.'
+
+```{r}
+library(htmlwidgets)
+saveWidget(p, "unemployment.html")
+```
+
+Since the resultant html file is a self contained html file, it is quite a big file. If we want to create a smaller html file that saves all dependencies stored in a separate folder, we can use the following code.
+
+```{r}
+saveWidget(p, "unemployment2.html", selfcontained = F, libdir = "unemplib")
+```
+
+The file "unemployment2.html" is much smaller in size as compared to the file "unemployment.html". However, in this case, if we want to share the `html` file with someone else, you have to make sure that you also include the `libdir` folder along with the `html` file.
+
+## Embedding within an HTML document
+
+### html `<iframe>` tag
+
+The `<iframe>` tag of html is used to display a web page within a web page. The html `<iframe>` tag specifies an inline frame that contains another html page.
+
+#### The syntax
+
+`<iframe src="url" title="description"></iframe>`
+
+Embedding `plotly` graph using the `<iframe>` element is not only easy, it has another advantage: It prevents any JavaScript and CSS in the container html document from negatively impacting how the `plotly` graph renders.
+
+## Exporting to an image file
+
+### Exporting from browser
+
+When a plotly graph is displayed within a browser window, it also show a modebar containing buttons to allow you to perform some useful tasks. The 'download plot' icon in the modebar will download the displayed graph to a png file, which also uses the height and width of the graph.
+
+These defaults can be changed via the `config` function as shown below.
+
+```{r}
+p %>%
+  config(
+    toImageButtonOptions = list(
+      format = "svg",
+      filename = "Unemployment",
+      width = 800,
+      height = 400
+    )
+  )
+```
+
+The other supported static file formats are JPEG, and WEBP.
+
+The static image files can be incorporated in the reports created by word processors such as Microsoft word, or can be incorporated as a static image in a webpage using html `<img>` tag.

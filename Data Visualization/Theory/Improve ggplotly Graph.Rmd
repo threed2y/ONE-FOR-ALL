@@ -1,0 +1,133 @@
+---
+title: "Improving Graph created using ggplotly"
+output: html_notebook
+---
+
+A `plotly` graph, once created can be improved subsequently. This is true for any `plotly` graph, whether created using `plot_ly` function or using `ggplotly` function.
+
+More specifically, a `plotly` object created by `ggplotly` function is just like any other `plotly` object. Thus, every function designed to work with a `plotly` object also works with the `plotly` object created using `ggplotly` function.
+
+Before we discuss some of the useful functions for improving a plotly graph, let us load the `plotly` package in the environment.
+
+```{r}
+library(plotly)
+```
+
+## Getting more control on Interactive behavior
+
+The most common improvement to be done on a graph created using `ggplotly` is to customize the interactive behavior of the graph. There several options available to customize the interactive behavior. Some of these options are discussed below.
+
+### Dynamic ticks on axes
+
+When we zoom into the graph by selecting a rectangular region on a `plotly` graph, by default the `plotly` graph produced by `ggplotly` will simply be zoomed into the selected region with no modifications of any kind in the graph.
+
+```{r}
+names = c("Preeti", "Sheetal", "Vandana", "Karan", "Jaydip",
+          "Ayush", "Aman", "Deep", "Priyanka", "Nitu")
+Emarks = c(41, 36, 27, 31, 26, 22, 33, 25, 30, 23)
+MT = c(22, 24, 18, 20, 20, 14, 21, 19, 22, 15)
+DV = c(25, 22, 17, 21, 23, 16, 24, 20, 24, 14)
+Marks = data.frame(Emarks, MT, DV)
+rownames(Marks) = names
+Marks
+```
+
+Next we create a plot of marks MT and DV against Emarks.
+
+```{r}
+p = ggplot(data = Marks, aes(x = Emarks)) +
+    geom_point(aes(y = MT), col = 'blue' ) +
+    geom_point(aes(y = DV), col = 'red') 
+p1 = ggplotly(p)
+p1
+```
+
+If, however, this graph is produced using plot_ly, the new ticks are inserted dynamically for the zoomed graph as can be seen below.
+
+```{r}
+p2 = plot_ly(data = Marks) %>%
+     add_markers(x = Emarks, y = MT, name = 'Measure Theory') %>%
+     add_markers(x = Emarks, y = DV, name = 'Data Visualization')
+p2
+```
+
+To achieve this interactive behavior for the graph produced by ggplotly, we need to specify the value of the `dynamicTicks` argument of `ggplotly` function to TRUE as shown below.
+
+```{r}
+ggplotly(p, dynamicTicks = TRUE)
+```
+
+### Adding range slider
+
+The `rangeslider` function adds a range slider in the `plotly` graph that allows us to zoom on the x-axis. The following code adds a range slider in the above graph.
+
+```{r}
+ggplotly(p, dynamicTicks = TRUE) %>%
+  rangeslider()
+```
+
+### Modifying layout
+
+Any aspect of a `plotly` object's layout can be modified using the `layout` function. The layout of a plotly graph contain certain attributes that affect the graph's interactive behavior.
+
+#### change hovermode
+
+One such attribute is `hovermode`. By default, the value of `hovermode` is 'closest', indicating that the information about the *closest* point is to be displayed on the occurrence of "mouse hover" event. When we have multiple y-values in the graph as in the above graphs, we may be interested in showing all the y values at a specific x-value. To achieve this, we can set the value of `hovermode` attribute to 'x' through the `layout` function as shown below.
+
+```{r}
+ggplotly(p, dynamicTicks = TRUE) %>%
+  layout(hovermode = 'x')
+```
+
+#### Customize hover text
+
+We can customize the information that is displayed when we hover the mouse pointer near a data point in the displayed graph. The text that is displayed on "mouse hover" event is set for each ***trace*** in the `plotly` graph. Trace of a `plotly` graph has several attributes. The `hoverinfo` attribute of a trace specifies the information to be displayed on the "mouse hover" event. To see the `hoverinfo` set by `ggplotly`, we can look at the JSON representation of the graph.
+
+```{r}
+plotly_json(p1)
+```
+
+To customize the information to be displayed on the "mouse hover" event, we need to modify the data used by the `hoverinfo` attribute of the concerned trace. In the JSON representation, we have seen that `hoverinfo` refers to the `text` attribute. Modification of existing values of trace attributes can be achieved using the `style` function. In the following code, we modify the `text` attribute through `style` function.
+
+```{r}
+style(p1, text = rownames(Marks))
+```
+
+We can modify `hoverinfo` attribute to incorporate additional information as shown below.
+
+```{r}
+style(p1, text = rownames(Marks), hoverinfo = "text+x+y")
+```
+
+We can specify format for hover text using `hovertemplate` attribute as shown below.
+
+```{r}
+style(p1, text = rownames(Marks), hovertemplate = "%{text}:(%{x},%{y}") 
+```
+
+In the next example given below, we change an attribute for a specific trace.
+
+```{r}
+style(p1, name = "Measure Theory", traces = c(1)) %>%
+style(name = "Data Visualization", traces = c(2)) %>%
+style(p1, text = rownames(Marks), hovertemplate = "%{text}:(%{x},%{y}") 
+```
+
+#### Change the plot size
+
+The plot size can be specified using height and width arguments of `ggplotly`. The size of the plot cannot be modified subsequently using any of the functions.
+
+```{r}
+ggplotly(p, width = 900) %>%
+style(p1, name = "Measure Theory", traces = c(1)) %>%
+style(name = "Data Visualization", traces = c(2)) %>%
+style(p1, text = rownames(Marks), hovertemplate = "%{text}:(%{x},%{y}")
+```
+
+For a complete information on various options available to customize plotly graphs, visit [this link](https://plotly.com/r/reference).
+
+### Exercise 
+
+1.  Understand the effect of customization discussed in this notebook by tweaking the values of the attributes covered in the notebook. Practice it by customizing a `ggplotly` graph created by you for a sample data set in `ggplot`.
+
+2.  Explore other options for customizing the `plotly` graphs.

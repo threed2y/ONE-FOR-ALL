@@ -1,0 +1,62 @@
+---
+title: "Plotting Geospatial data"
+output: html_notebook
+---
+
+```{r}
+library(rnaturalearth)
+library(ggplot2)
+```
+
+```{r}
+world <- ne_countries(scale = "medium", returnclass = "sf")
+class(world)
+```
+
+```{r}
+ggplot(data = world) +
+    geom_sf()
+```
+
+```{r}
+ggplot(data = world) +
+    geom_sf() +
+    coord_sf(xlim = c(65, 100), ylim = c(5, 40))
+```
+
+```{r}
+colnames(world)
+```
+
+```{r}
+ggplot(data = world) +
+    geom_sf(mapping = aes(fill = abbrev), show.legend = FALSE)
+```
+
+```{r}
+cities = data.frame(list(long = c(77.1025, 73.1812), lat = c(28.7041, 22.3072)))
+ggplot(data = world) +
+  geom_sf(mapping = aes(fill = abbrev), show.legend = FALSE) +
+  coord_sf(xlim = c(65, 100), ylim = c(5, 40)) +
+  geom_point(data = cities, aes(x = long, y = lat), colour = "red")
+```
+
+```{r}
+cities = data.frame(list(long = c(77.1025, 73.1812), 
+                         lat = c(28.7041, 22.3072)))
+library(sf)
+cities = st_as_sf(cities, 
+                  coords = c("long", "lat"), 
+                  crs = 4326, 
+                  agr = "constant")
+p = ggplot(data = world) +
+  geom_sf(mapping = aes(fill = abbrev), show.legend = FALSE) +
+  geom_sf(data = cities, color = "red") +
+  coord_sf(xlim = c(65, 100), ylim = c(5, 40)) 
+p
+```
+
+```{r}
+library(plotly)
+ggplotly(p)
+```

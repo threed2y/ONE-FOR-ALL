@@ -1,0 +1,147 @@
+---
+title: "Introduction to ggplot"
+output: html_notebook
+---
+
+The R package `ggplot2` provides a system for creating statistical graphics based on ***The Grammer of Graphics*** conceptualized by Hadley Wickham. The latest version of ggplot2 is `ggplot2 3.3.6`.
+
+Before we can use the main plotting function `ggplot` provided by the package, it is necessary to install ggplot2.
+
+**Remark**
+
+`ggplot2` is a part of the `tidyverse`, a collection of R packages designed for data science. All these packages share the same design philosophy. All these packages can be installed together by installing `tidyverse`.
+
+Once `ggplot2` is installed in the system, we start by loading the `ggplot2`, whenever we need its functionality, by executing the following R code.
+
+```{r}
+library (ggplot2)
+```
+
+## Creating a plot
+
+Every statistical plot depends on the data at its core.We will use the `mpg` data that comes with `ggplot`.
+
+Let's first have a look at the data.
+
+```{r}
+mpg
+```
+
+Note the different display of the data than that one would expect for a dataframe. This is actually a variant of R dataframe called ***tibble***.
+
+The `mpg` dataframe contains a data about "miles per gallon" for different models of cars.
+
+To see how the fuel efficiency varies with engine size, we create a scatter plot of "hwy" versus "displ". Execute the following R code to create the scatter plot.
+
+```{r}
+ggplot (data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy))
+```
+
+The `ggplot` function creates a coordinate system to which layers can be added.
+
+To complete the graph, we need to add one or more layers to the coordinate system. The function `geom_point` create a layer of points, which is added to the coordinate system using `+` operator.
+
+There are several `geom` functions that create a different type of layer. Each geom function takes a mapping argument that defines how the variables in your dataset are mapped to the visual elements of the graph, the aesthetics.
+
+## Aesthetics
+
+An ***aesthetic*** is a visual property of the elements in your graph. These include the things like size, shape, and color.You can convey information about your data by mapping the aesthetics in your plot to the variables in your dataset.
+
+To distinguish cars of different class from each other, we can map the "class" variable to the color of the points as shown in the following code.
+
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy, color = class))
+```
+
+Note that ggplot has
+
+1.  automatically chosen unique color for each unique value of the "class" variable.
+2.  automatically added a legend
+
+Once you map an aesthetic to a variable, the `ggplot2` takes care of the rest.
+
+## Facets
+
+A `facet` is a subplot that displays a subset of data. To facet your plot by a single variable, use the `facet_wrap()` function as shown in the following code.
+
+```{r}
+ggplot (data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy)) +
+  facet_wrap(~ class, nrow = 2)
+```
+
+The first argument of the `facet_wrap` is a `formula` object. This is typically a `~` symbol followed by name of a discrete variable in your dataset.
+
+You can also facet your plot on the combination of two variables using the `facet_grid` function. This function also requires its first argument to be a `formula` object. This is shown in the following code.
+
+```{r}
+ggplot (data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy)) +
+  facet_grid(drv ~ cyl)
+```
+
+If we do not want to facet along rows or columns, we can use a formula such as `.~ <variable>` or `<variable> ~ .`
+
+```{r}
+ggplot (data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy)) +
+  facet_grid(. ~ cyl)
+```
+
+```{r}
+ggplot (data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy)) +
+  facet_grid(drv ~ .)
+```
+
+## Geometric Objects
+
+Different plots such as scatter plot, histogram, pie chart etc. use different ***geometric objects*** to create a plot.
+
+In `ggplot` , a geometric object is specified by a `geom`. We often refer to plots by the type of `geom` that the plot uses. As noted earlier, ggplot2 provides several `geom` functions (more than 30), each designed to use a different geometric object. Different `geom` functions used with the same data create different plots.
+
+```{r}
+ggplot (data = mpg) +
+  geom_smooth(mapping = aes(x = displ, y = hwy))
+```
+
+Also note that each geometric object has an associated set of aesthetics that are relevant to the geometric object.
+
+### Multiple Geometric objects in same plot
+
+We can also use multiple geometric objects in the same plots as shown in the next plot.
+
+```{r}
+ggplot (data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy)) +
+  geom_smooth(mapping = aes(x = displ, y = hwy))
+```
+
+In above code, the mapping has been duplicated. To avoid duplication of code we can provide the `mapping` argument to `ggplot` function itself as shown below.
+
+```{r}
+ggplot (data = mpg, mapping = aes(x = displ, y = hwy)) +
+  geom_point() +
+  geom_smooth()
+```
+
+Note that the code produced the same plot.
+
+The mappings supplied to `ggplot` are treated as a global mappings and are applied to every geometric object in the graph. Mappings supplied to a geom function are the local mappings for the corresponding layer. See, for example, the following code.
+
+```{r}
+ggplot (data = mpg, mapping = aes(x = displ, y = hwy)) +
+  geom_point(mapping = aes(colour = class)) +
+  geom_smooth()
+```
+
+The same idea can be used to specify different data for each layer. In the following code we specify only a subset of the data in the layer created by `geom_smooth`.
+
+```{r}
+ggplot (data = mpg, mapping = aes(x = displ, y = hwy)) +
+  geom_point(mapping = aes(colour = class)) +
+  geom_smooth(data = subset(mpg, class == "2seater"),
+              se = FALSE)
+```

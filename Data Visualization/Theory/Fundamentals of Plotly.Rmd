@@ -1,0 +1,161 @@
+---
+title: "Fundamentals of Plotly"
+output: html notebook
+---
+
+As noted earlier the `plot_ly` function provides a direct interface to the `plotly.js` Javascript library. It, therefore, provides some more specialized chart types or even some visualization that the ggplot2 API doesn't support. The `plotly` R package also add some abstractions that are inspired by grammar of graphics.
+
+To understand the functionality of the `plotly` package, we use `plot_ly` function in the following code to visualize the `diamonds` data set of ggplot2.
+
+```{r}
+library(plotly)
+bchart = plot_ly(diamonds, x = ~cut, color = ~clarity, colors = "Accent")
+bchart
+```
+
+#### Aesthetic mappings
+
+Note that the `plot_ly` function takes arguments that facilitate mappings of aesthetic elements to variables in the dataset. In the above code, aesthetic `x` is mapped to variable "cut" and aesthetic `color` has been mapped to variable "clarity".
+
+By default, an aesthetic mapping maps the values from data space to the visual space specified by plural form of the aesthetic. In above code, the values of "clarity" variable are mapped to the `color` values specified by `colors` parameter. Since we have specified the value "Accent" for `colors` parameter, the colors are chosen from the "Accent" color palette from the "RColorBrewer" package. One can specify custom color codes or a color palette function for `colors` parameter.
+
+Since the mappings are designed to map data values to a visual space, we get unexpected results if we try to directly specify a value in the visual space. For example, see the result of following code.
+
+```{r}
+plot_ly(diamonds, x = ~cut, color = "blue")
+```
+
+Observe that in spite of specifying "blue" color, we didn't get "blue" color. To directly specify a value in the visual space for an aesthetic, we need to use the `I` function as demonstrated in the following code.
+
+```{r}
+plot_ly(diamonds, x = ~cut, color = I("blue"))
+```
+
+When aesthetic mappings are specified in `plot_ly`, it tries to infer suitable geometric objects to represent data points. Observe that we have not specified any geometric objects to represent data points in above code. From the specified aesthetic mappings, `plot_ly` inferred the geometric object "bar" to produce a bar chart. We can override the inferred geometric object by explicitly specifying it in our code.
+
+#### Adding graphical layers
+
+Plotly provides a family of `add_` functions each of which add a graphical layer to a `plotly` object supplied as its function argument. A graphical layer comprise of a group of graphical elements that can be described using only 5 components:
+
+1.  Data
+
+2.  Aesthetic mappings
+
+3.  A geometric representation
+
+4.  Statistical transformation
+
+5.  Positional adjustments
+
+In the following code, we explicitly add a layer comprising of box plot instead of accepting automatically added layer of histogram.
+
+```{r}
+p = plot_ly(diamonds, x = ~price)
+add_boxplot(p, color = ~cut)
+```
+
+#### Layout of Visualization
+
+Once a data visualization is created we often want to modify the visualization by adding titles, changing fonts, their size, and so on. `plotly` provides `layout` function to modify the layout of a plotly visualization..
+
+In the following code, we modify the layout of the box plot created above.
+
+```{r}
+p = plot_ly(diamonds, x = ~price)
+p = add_boxplot(p, color = ~cut)
+layout(p, 
+       title = "Price for different cut qualities",
+       legend = list(title = list(text = "Cut"))
+       )
+```
+
+#### Functional approach to grammar of graphics
+
+The `plotly` package takes a purely functional approach to the layered grammar of graphics. That is, almost every `plotly` function takes a `plotly` object as it's first argument and returns a modified version of that `plotly` object. For a example, the `layout` function anticipates a `plotly` object as it's first argument and it's other arguments add and/or modify various layout components, such as the title, of that object.
+
+When multiple functions modify the data visualization one after another, one approach is to write code as shown above. Alternatively, the same code can be written as:
+
+```{r}
+layout(
+  add_boxplot(
+    plot_ly(diamonds, x = ~price), 
+    color = ~cut
+  ), 
+  title = "Price for different cut qualities",
+  legend = list(title = list(text = "Clarity"))
+)
+```
+
+In a typical graph development scenario, we need to call several functions one after another. Thus our code may look like:
+
+```{r}
+fun_5 (
+  fun_4 (
+    fun_3(
+      fun_2(
+        fun_1(<data>, <arguments 1>),`
+        <arguments 2>
+       ),
+      <arguments 3>
+    ),
+    <arguments 4>
+  ),
+  <arguments 5> 
+)
+```
+
+This code looks very cumbersome to read. Moreover, we have to start reading from the innermost part of the expression, then read outwards towards the end result.
+
+the R package `magrittr` provides the `%>%` operator that allows us to re-arrange this code to make it convenient to read and understand. The `%>%` operator places the left-hand operand object as the first argument of the right-hand operand function. That is, the code
+
+`<object> %>% <function>(<arguments>)`
+
+will be transformed into the code
+
+`<function>(<object>, <arguments>)`
+
+The operator `%>%` enables us to write the above cumbersome code as
+
+```{r}
+<data> %>%
+  fun_1(<arguments 1>) %>%
+  fun_2(<arguments 2>) %>%
+  fun_3(<arguments 3>) %>%
+  fun_4(<arguments 4>) %>%
+  fun_5(<arguments 5>) %>%
+```
+
+Thus, we can rewrite the last code generating box plots for diamond prices as
+
+```{r}
+diamonds %>%
+  plot_ly(x = ~price) %>%
+  add_boxplot(color = ~cut) %>%
+  layout(
+    title = "Price for different cut qualities",
+    legend = list(title = list(text = "Clarity"))
+  )
+```
+
+#### An example with add_lines
+
+```{r}
+data(economics, package = "ggplot2")
+# sort economics by psavert, just to 
+# show difference between paths and lines
+economics %>%
+  arrange(psavert) %>%
+  plot_ly(x = ~date, y = ~psavert) %>%
+  add_lines()
+```
+
+### Trace
+
+In plotly.js terminology, a ***trace*** defines a mapping from data to visuals. Every trace has a *type* (e.g., histogram, pie, scatter, etc) and the trace type determines what other attributes are available to control the trace.
+
+The `add_` functions discussed earlier essentially add one or more traces to the visualization.
+
+### Exercise
+
+1.  Explore the functions `add_markers`, `add_lines`, and `add_boxplot`
+2.  Write your observations and understanding is an R notebook.

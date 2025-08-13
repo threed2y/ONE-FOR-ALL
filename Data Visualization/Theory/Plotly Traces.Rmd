@@ -1,0 +1,241 @@
+---
+title: "Plotly Fundamentals"
+output: html_document
+---
+
+## Representation of a Plotly figure
+
+`plotly.js` figures are described declaratively as JSON objects. Every aspect of a plotly figure has a corresponding JSON attribute.
+
+### The two categories of attributes
+
+The attributes that describe Plotly's figure are categorized into two types.
+
+-   Traces: represent the objects (graphical marks) that describe a single series of data in a graph
+
+    -   Each trace must have a type. There are more that 40 possible types available. The type of a trace define other allowable attributes.
+
+    -   A trace can also have a mode that further specifies the geometrical objects used for the visualization.
+
+    -   Each trace may have a single legend entry (with some exceptions).
+
+-   Layout: the attributes that apply to the rest of the chart such as the `title`, `xaxis`, or `annotations`.
+
+In R, there are two options to represent the figures :
+
+1.  As a lists
+2.  As a `plotly` object
+
+This representation is then *serialized* as text in JSON before it is passed to `plotly.js` for rendering the figure on a webpage.
+
+### Representation as a list
+
+```{r}
+library(plotly)
+fig = list(
+  data = list(
+    list(
+      x = c(1, 2, 3),
+      y = c(1, 3, 2),
+      type = 'bar',
+      name = "Series1"
+    ),
+    list(
+      x = c(1, 2, 3),
+      y = c(1, 3, 2),
+      type = 'scatter',
+      mode = "lines",
+      name = "Series2"
+    )
+  ),
+  layout = list(
+    title = 'A Figure Specified By R List',
+    plot_bgcolor='#e5ecf6', 
+         xaxis = list( 
+           gridcolor = 'ffff'), 
+         yaxis = list( 
+           gridcolor = 'ffff')
+  )
+)
+```
+
+To display the figure defined by this list, use the `plotly_build` function as shown below
+
+```{r}
+plotly_build(fig)
+```
+
+Note that in the list representation of a figure, the named list has two top level attributes.
+
+```{r}
+attributes(fig)
+```
+
+In general, there are three top level attributes. The third top level attribute of a plotly figure is "frames", which is used for creating animated plots and is beyond the scope of this course.
+
+The `data` attribute is itself a list of lists. The list elements of `data` are the traces. In other words, `data` attribute is a list of one or more traces. The JSON representation sent to `plotly.js` for rendering can be seen using `plotly_json` function as shown below.
+
+```{r}
+plotly_json(fig)
+```
+
+Note that the JSON representation contains several other attributes that we have not specified in our list object "fig". In general, when describing a figure, it is *not necessary to specify every attribute* of every object. The default values for each required unspecified attribute will be substituted in the process of building and rendering the figure. The default values for unspecified attributes are computed based on the ones that are specified,
+
+### Representation as a plotly object
+
+To describe a plotly figure in R using these attributes, `plotly` package provides the following three functions:
+
+-   `plot_ly`
+
+-   `add_trace`
+
+-   `layout`
+
+The figure, that we described above using a list object, can be described as a `plotly` object as shown below.
+
+```{r}
+fig2 = plot_ly(
+  x = c(1, 2, 3),
+  y = c(1, 3, 2),
+  ) %>%
+  add_trace(
+  type = 'bar',
+  name = "Series1"   
+  )%>%
+  add_trace(
+    type = "scatter",
+    mode = "lines",
+    name = "Series2"
+  ) %>%
+  layout(
+    title = 'A Figure Specified By plotly object',
+    plot_bgcolor='#e5ecf6', 
+    xaxis = list( 
+      gridcolor = 'ffff'
+    ), 
+    yaxis = list( 
+      gridcolor = 'ffff'
+    )
+  )
+fig2
+```
+
+Note the following points in above code:
+
+-   The attributed specified in the `plot_ly` call are inherited in subsequent `add_trace` calls.
+
+-   The traces of type "bar" and "scatter" is added respectively using the `add_trace` functions
+
+-   The layout is specified using the `layout` function.
+
+-   The `plot_ly` function has added several additional attributes. This can be verified by looking at the JSON representation of the figure.
+
+Between the two approaches of representing a plotly figure, the approach of representing as a plotly object should be prefered as it provides the benefits stated below.
+
+1.  `plot_ly` provide data validation with helpful error message describing the problem. o
+
+2.  objects created using `plot_ly` contain descriptions of each valid property as R docstrings, using which one can learn about the available properties.
+
+3.  Properties of `plotly` object can be accessed using dictionary-style key lookup (e.g. `fig$x`).
+
+4.  `plotly` objects support higher-level convenience functions for updating the figures (`.layout()`, `.add_trace()` etc).
+
+5.  `plotly` objects support exporting functions.
+
+Next we consider another example where we create a visualization for the "economics" data set.
+
+### Example
+
+```{r}
+p = plot_ly(data = economics, x = ~date) %>%
+    add_trace(
+      y = ~uempmed,
+      type = "scatter",
+      mode = "markers",
+      name = "unemployment",
+      marker = list(color = "blue")
+    ) %>%   
+    add_trace(
+      type = "scatter",
+      mode = "lines",
+      y = ~fitted(loess(uempmed ~ as.numeric(date))),
+      name = "Loess",
+      line = list(color = "red", dash = "dashed")
+    ) %>%
+    layout(
+      title = "Unemployment",
+      xaxis = list( 
+                title = "Time",
+                showgrid = F
+              ),
+      yaxis = list(
+              title = "uidx"
+              )
+    )
+p
+```
+
+### `add_trace` function
+
+Recall that the `add-trace` function was never called earlier when we created `plotly` graphs using `plot_ly` function. We had instead called the functions like `add_markers` and `add_lines`. These functions are just the wrappers to `add_trace` function with `type` attribute set to "scatter" and the `mode` attribute set to "markers" and "lines" respectively.
+
+The following code generates the same graph as before.
+
+```{r}
+p = plot_ly(data = economics, x = ~date) %>%   # arguments of plot_ly are inherited
+    add_markers(
+                y = ~uempmed,
+                name = "unemployment",
+                marker = list(color = "blue")
+               ) %>%
+    add_lines(
+              y = ~fitted(loess(uempmed ~ as.numeric(date))),
+              name = "Loess",
+              line = list(color = "red", dash = "dashed")
+             ) %>%
+    layout(
+            title = "Unemployment",
+            xaxis = list( 
+                      title = "Time",
+                      showgrid = F
+                    ),
+            yaxis = list(
+                      title = "uidx"
+                    )
+                      
+          )
+p
+```
+
+### Trace types
+
+Given below are some of the trace types categories by the type of subplots for which they are compatible.
+
+#### Trace types for 2 dimensional Cartesian subplots
+
+`scatter`, `bar`, `histogram`, box, `violin`, `heatmap`, `contour`, `histogram2D`, `candlestick`
+
+#### Trace types for 3 dimensional Cartesian subplots
+
+`scatter3D`, `surface`, `mesh`, `cone`
+
+#### Trace types for Polar subplots
+
+`scatterpolar`, `barpolar`
+
+#### Trace types for map subplots
+
+`scattergeo`, `choropleth`
+
+#### Trace types having their own subplots
+
+`pie`, `sunburst`, `parcoords`, `parcats`
+
+### The `layout` function
+
+The value of top level attribute "layout" is a list of attributes that control the positioning and configuration of non-data-elements of the figure. As noted above, `plotly` provides the `layout` function to specify these attributes.
+
+### Exercise
+
+1.  Visit sections **Basic Charts** and **Statistical Charts on** website <https://plotly.com/r/> and understand the sample code for creating various graphs. Also observe the code for specifying the desired layout.
+2.  Create R Notebook containing the similar graphs for the sample data sets available with "ggplot2" package.

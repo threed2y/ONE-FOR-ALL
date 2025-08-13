@@ -1,0 +1,106 @@
+---
+title: "Scales and Guides"
+output:
+  html_document:
+    df_print: paged
+---
+
+## Scales
+
+Scales control the mapping from data to aesthetics. Every aesthetic mapping has a scale associated with it.. If you want to adjust that scale , then you use a `scale_`function. Formally, every scale is a function from a region in data space (the domain of the scale) to a region in aesthetic space (the range of the scale).
+
+Every scale has corresponding *guide* using which viewer can read the values in graph. In other words, a guide provides information about the scale to which it corresponds.
+
+-    The default guide can be overridden using the guide argument of the corresponding scale function, or more conveniently, by using the `guides` helper function.
+
+-   ggplot provides `guide_` functions that are useful to specify the guides using above method.
+
+To understand these concepts, let us recreate the scatter plot of mileage against displacement that we created earlier.
+
+```{r}
+library(ggplot2)
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy, color = class))
+```
+
+Above plot has three aesthetic mappings. The variable "displ" is mapped to `x`; "hwy" is mapped to `y`; and "class" is mapped to `color`. Since both "displ" and "hwy" are continuous variables, `x` and `y` aesthetics use continuous scales with limits chosen so as to cover both smallest and the largest value. Since "class" is a categorical variable, the aesthetic `color` uses a discrete scale. It takes 7 values, each represented by a different color.
+
+The guides for `x` and `y` aesthetics are the labeled tick-marks on X-axis and Y-axis, whereas the guide for `color` aesthetic is the legend displayed on the plot.
+
+When we execute the above r code, the following r code is effectively executed.
+
+```{r}
+library(ggplot2)
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy, color = class)) +
+  scale_x_continuous() +
+  scale_y_continuous() +
+  scale_color_discrete()
+```
+
+The scale functions available in ggplot have the names like
+
+`scale_<aesthetic>_<type>`
+
+`scale_` functions are automatically chosen by ggplot depending on the aesthetic and the type of variable to which it is mapped. However, these can be overridden by calling them explicitly as shown below.
+
+```{r}
+library(ggplot2)
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, 
+                           y = hwy, 
+                           color = class)) +
+  scale_x_continuous("Engine Displacement", 
+                     breaks = c(2, 4, 6)) +
+  scale_y_continuous("MPG on Highway") +
+  scale_color_discrete()
+```
+
+In above code, we have modified the labels of X-axis and Y-axis.
+
+-   Modification of labels is a very common task. For this reason, ggplot provides the helper functions `labs`, `xlab`, and `ylab`.
+
+-   Another frequent task is to have formatted labels for tick marks. A package `scales` has been developed for this purpose.
+
+Apart from labels of axes/ legends, we can also control almost every aspect of axes and legends using `scale_` functions.
+
+#### Exercise1
+
+Explore the parameters of different `scale_` functions to understand how different aspects of axes and legend can be controlled.
+
+## Guides
+
+As noted earlier, guides serve the purpose of helping viewers to read the values in a graph. A guide is either an axis (for `x` and `y` aesthetics) or a legend (for everything else). While an axis and a legend look very different from each other it is interesting no note that there are many natural correspondences between the two, as shown in the following figure.
+
+![](images/paste-1F4D5191.png)
+
+ggplot provides the `guide_` functions to have finer control over the guides in the graph.
+
+### Overriding default guide
+
+As noted earlier, the default guide for a scale can be overridden by providing the `guide` parameter. This is shown in the following code.
+
+```{r}
+df = data.frame(x = 1, y = 1:4, z = 1:4)
+base = ggplot(df, aes(x, y)) + geom_raster(aes(fill = z))
+base
+base + scale_fill_continuous(guide = guide_legend())
+```
+
+Notice a different legend in the second graph. The same graph can be produced using the helper function `guides` as shown below.
+
+```{r}
+base + guides(fill = guide_legend())
+```
+
+In above code, we have provided the guide for `fill` aesthetic to the `guides` function.
+
+As mentioned earlier a finer control can be exercised on a guide using `guide_` function. For this purpose, the `guide_` function accepts several parameters. For example, consider the following code.
+
+```{r}
+base + guides(fill = guide_legend(ncol = 2))
+```
+
+#### Exercise 2
+
+Explore different `guide_` functions to understand how to exercise a finer control on guides.
