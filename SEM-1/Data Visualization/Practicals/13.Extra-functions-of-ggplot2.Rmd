@@ -1,0 +1,142 @@
+---
+title: "Extra functions of ggplot2"
+author: "Sheetal Prasad"
+date: "2025-09-30"
+output: html_document
+---
+
+## ggcorrplot
+
+The **`ggcorrplot`** package in R is used to visualize correlation matrices using **heatmaps with ggplot2**. It provides an intuitive and elegant way to explore the relationships between multiple variables in a dataset by representing correlations as heatmaps or circle plots. This package allows users to visualize not only the **strength** of the correlation, ranging from –1 to +1, but also the **direction** (positive or negative) through color gradients and shapes.
+
+```{r}
+# Load package
+library(ggcorrplot)
+
+```
+
+Consider the mtcars dataset
+
+```{r}
+data(mtcars)
+
+# Compute correlation matrix
+corr <- cor(mtcars)
+
+# Basic plot
+ggcorrplot(corr)
+
+```
+
+Function involve in ggcorrplot package
+
+-   `method` : Defines the shape of the plot, can be `"square"` or `"circle"`.
+
+<!-- -->
+
+-    `type` : Specifies which part of the matrix to display, options are `"full"`, `"lower"`, or `"upper"`.
+
+-    `lab` : Logical, if `TRUE` displays the correlation coefficients on the plot.
+
+<!-- -->
+
+-    `lab_size` : Adjusts the text size of the displayed correlation coefficients.
+
+<!-- -->
+
+-    `colors` : Defines a custom color gradient for correlations.
+
+<!-- -->
+
+-    `hc.order` : Logical, if `TRUE` reorders the correlation matrix using hierarchical clustering
+
+<!-- -->
+
+-    `title` : Allows adding a custom title to the correlation plot.
+
+<!-- -->
+
+-    `ggtheme` : Specifies the ggplot2 theme to style the plot (e.g., `theme_minimal()`).
+
+```{r}
+# Customized correlation heatmap
+ggcorrplot(corr,
+           method = "circle",        # Shape: "square" or "circle"
+           type = "lower",           # Show only lower triangle
+           lab = TRUE,               # Display correlation coefficients
+           lab_size = 3,             # Text size for labels
+           colors = c("red", "white", "blue"), # Custom color gradient
+           title = "Correlation Matrix of mtcars",
+           ggtheme = ggplot2::theme_minimal())
+
+```
+
+## Heatmaply
+
+The **`heatmaply`** package in R provides an efficient way to create interactive heatmaps that go beyond static visualizations. Unlike traditional heatmap functions, `heatmaply` builds upon the **plotly** library, enabling users to zoom, pan, hover over cells for details, and export plots as interactive HTML widgets.
+
+```{r}
+# Load library
+library(heatmaply)
+```
+
+```{r}
+data(mtcars)
+
+# Create a basic heatmap
+heatmaply(mtcars, 
+          main = "Interactive Heatmap of mtcars Dataset")
+```
+
+```{r}
+# Compute correlation matrix
+corr_matrix <- cor(mtcars)
+
+# Interactive heatmap of correlations
+heatmaply(corr_matrix, 
+          main = "Correlation Heatmap of mtcars",
+          xlab = "Variables", 
+          ylab = "Variables",
+          k_col = 3,    # Cluster columns into 3 groups
+          k_row = 3)    # Cluster rows into 3 groups
+
+```
+
+```{r}
+heatmaply(mtcars, 
+          scale = "column",                     # Scale data by column
+          colors = colorRampPalette(RColorBrewer::brewer.pal(9, "Blues"))(100),
+          dendrogram = "row",                   # Show dendrogram only for rows
+          main = "Customized Heatmap with Dendrogram")
+
+```
+
+## **Key Functions and Options in `heatmaply`**
+
+-    `heatmaply(x)` : Main function to generate an interactive heatmap.
+
+-    `main` : Title of the heatmap.
+
+-    `xlab`, `ylab` : Labels for x-axis and y-axis.
+
+-   `scale` : Standardizes data by row, column, or none (`"row"`, `"column"`, `"none"`).
+
+-    `colors` : Custom color palettes for heatmap cells.
+
+-    `dendrogram` : Controls dendrogram display (`"both"`, `"row"`, `"column"`, or `"none"`).
+
+-    `k_col`, `k_row` : Number of clusters for columns and rows.
+
+-    `Rowv`, `Colv` : Logical, determines whether rows/columns are reordered.
+
+-    `hide_colorbar` : Hides or displays the color legend.
+
+-    `file` : Saves the heatmap to an external HTML file for sharing.
+
+## Reference
+
+1\. <https://librarycarpentry.github.io/lc-r/instructor/04-data-viz-ggplot.html#>:\~:text=The%20data%20argument%20is%20used,barplot%2C%20scatter%20plot%2C%20boxplot.
+
+2.  <https://www.geeksforgeeks.org/r-language/data-visualization-with-r-and-ggplot2/>
+
+3\. <https://clauswilke.com/dataviz/aesthetic-mapping.html>
