@@ -1,0 +1,46 @@
+create schema NewSchema;
+create table NewSchema.B
+(
+  x int,
+  y float
+);
+insert into B values (5, 10);
+select * from B;
+insert into B values (6, 12), (7, 15), (8, 19), (10, 23);
+insert into newschema.B values (6, 1.2), (7, 1.5), (8, 1.9), (10, 2.3);
+select * from newschema.B;
+create table author
+(
+	authorid char(6) primary key,
+	author varchar (25) not null
+);
+create table book
+(
+	bookid char(5) primary key,
+	title varchar(50) not null,
+	authorid char(6) references author,
+	pyear int
+);
+insert into author values
+(123456, 'E Lehman');
+
+insert into author values
+(123467, 'C R Rao'),
+(123478, 'R A Fisher');
+
+select * from author;
+
+insert into book values
+('QA275', 'Theory of Estimation', 123456, 1999);
+insert into book values 
+('QA276', 'Linear Inference and its Applications', 123467, 1980);
+
+
+
+
+
+
+
+
+
+

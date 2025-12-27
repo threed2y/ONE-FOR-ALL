@@ -1,0 +1,2514 @@
+postgres=# create database store;
+CREATE DATABASE
+postgres=# \c store
+You are now connected to database "store" as user "postgres".
+store=# create table customer(
+store(# customer_id serial,
+store(# c_name varchar(32),
+store(# age smallint,
+store(# payment_mode varchar(32) not null,
+store(# purchase_date date,
+store(# gender char(2) not null,
+store(# area varchar(32),
+store(# mobile_no varchar(12),
+store(# constraint customer_pk primary key(customer_id));
+CREATE TABLE
+store=# \c store
+You are now connected to database "store" as user "postgres".
+store=# \d
+                    List of relations
+ Schema |           Name           |   Type   |  Owner
+--------+--------------------------+----------+----------
+ public | customer                 | table    | postgres
+ public | customer_customer_id_seq | sequence | postgres
+(2 rows)
+
+
+store=# \d customer
+                                           Table "public.customer"
+    Column     |         Type          | Collation | Nullable |                    Default
+---------------+-----------------------+-----------+----------+-----------------------------------------------
+ customer_id   | integer               |           | not null | nextval('customer_customer_id_seq'::regclass)
+ c_name        | character varying(32) |           |          |
+ age           | smallint              |           |          |
+ payment_mode  | character varying(32) |           | not null |
+ purchase_date | date                  |           |          |
+ gender        | character(2)          |           | not null |
+ area          | character varying(32) |           |          |
+ mobile_no     | character varying(12) |           |          |
+Indexes:
+    "customer_pk" PRIMARY KEY, btree (customer_id)
+
+
+store=# insert into customer(c_name,age,paymet_mode,purchase_date,gender,area,mobile_no)
+
+                                        ^
+
+store=# insert into customer(c_name,age,payment_mode,purchase_date,gender,area,mobile_no) values('Nitin',21,'online','10-11-2022','M','Dwarka','9811255681');
+INSERT 0 1
+store=# insert into customer(c_name,age,payment_mode,purchase_date,gender,area,mobile_no) values('Omkar',22,'online','1-1-2022','M','Surat','9899520245');
+INSERT 0 1
+store=# insert into customer(c_name,age,payment_mode,purchase_date,gender,area,mobile_no) values('Palak',22,'offline','12-11-2022','F','Ratlam','9823450245');
+INSERT 0 1
+store=# insert into customer(c_name,age,payment_mode,purchase_date,gender,area,mobile_no) values('Yathi',22,'offline','12-11-2012','M','Baroda','9823345245');
+INSERT 0 1
+store=# insert into customer(c_name,age,payment_mode,purchase_date,gender,area,mobile_no) values('Riona',23,'online','2-11-2012','F','Bharuch','9823344545');
+INSERT 0 1
+store=# insert into customer(c_name,age,payment_mode,purchase_date,gender,area,mobile_no) values('Preeti',23,'offline','20-1-2012','F','Wagodia','9823389745');
+INSERT 0 1
+store=# insert into customer(c_name,age,payment_mode,purchase_date,gender,area,mobile_no) values('Riona',23,'online','2-11-2012','F','Bharuch','9823344545');
+INSERT 0 1
+store=# select* from customer;
+ customer_id | c_name | age | payment_mode | purchase_date | gender |  area   | mobile_no
+-------------+--------+-----+--------------+---------------+--------+---------+------------
+           1 | Nitin  |  21 | online       | 2022-11-10    | M      | Dwarka  | 9811255681
+           2 | Omkar  |  22 | online       | 2022-01-01    | M      | Surat   | 9899520245
+           3 | Palak  |  22 | offline      | 2022-11-12    | F      | Ratlam  | 9823450245
+           4 | Yathi  |  22 | offline      | 2012-11-12    | M      | Baroda  | 9823345245
+           5 | Riona  |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+           6 | Preeti |  23 | offline      | 2012-01-20    | F      | Wagodia | 9823389745
+           7 | Riona  |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+(7 rows)
+
+
+store=# insert into customer(c_name,age,payment_mode,purchase_date,gender,area,mobile_no) values('Nirav',24,'online','2-11-2021','M','Patan','9223344545');
+INSERT 0 1
+store=# select* from customer;
+ customer_id | c_name | age | payment_mode | purchase_date | gender |  area   | mobile_no
+-------------+--------+-----+--------------+---------------+--------+---------+------------
+           1 | Nitin  |  21 | online       | 2022-11-10    | M      | Dwarka  | 9811255681
+           2 | Omkar  |  22 | online       | 2022-01-01    | M      | Surat   | 9899520245
+           3 | Palak  |  22 | offline      | 2022-11-12    | F      | Ratlam  | 9823450245
+           4 | Yathi  |  22 | offline      | 2012-11-12    | M      | Baroda  | 9823345245
+           5 | Riona  |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+           6 | Preeti |  23 | offline      | 2012-01-20    | F      | Wagodia | 9823389745
+           7 | Riona  |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+           8 | Nirav  |  24 | online       | 2021-11-02    | M      | Patan   | 9223344545
+(8 rows)
+
+
+store=# insert into customer(c_name,age,payment_mode,purchase_date,gender,area,mobile_no) values('Rohit',20,'offline','2-8-2020','M','Valsad','9223344234');
+INSERT 0 1
+store=# insert into customer(c_name,age,payment_mode,purchase_date,gender,area,mobile_no) values('Priyanshi',30,'online','4-9-2020','F','Goa','9223344234');
+INSERT 0 1
+store=# select* from customer;
+ customer_id |  c_name   | age | payment_mode | purchase_date | gender |  area   | mobile_no
+-------------+-----------+-----+--------------+---------------+--------+---------+------------
+           1 | Nitin     |  21 | online       | 2022-11-10    | M      | Dwarka  | 9811255681           2 | Omkar     |  22 | online       | 2022-01-01    | M      | Surat   | 9899520245           3 | Palak     |  22 | offline      | 2022-11-12    | F      | Ratlam  | 9823450245           4 | Yathi     |  22 | offline      | 2012-11-12    | M      | Baroda  | 9823345245           5 | Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545           6 | Preeti    |  23 | offline      | 2012-01-20    | F      | Wagodia | 9823389745           7 | Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545           8 | Nirav     |  24 | online       | 2021-11-02    | M      | Patan   | 9223344545           9 | Rohit     |  20 | offline      | 2020-08-02    | M      | Valsad  | 9223344234          10 | Priyanshi |  30 | online       | 2020-09-04    | F      | Goa     | 9223344234(10 rows)
+
+
+store=# select* from customer where payment_mode='online';
+ customer_id |  c_name   | age | payment_mode | purchase_date | gender |  area   | mobile_no
+-------------+-----------+-----+--------------+---------------+--------+---------+------------
+           1 | Nitin     |  21 | online       | 2022-11-10    | M      | Dwarka  | 9811255681           2 | Omkar     |  22 | online       | 2022-01-01    | M      | Surat   | 9899520245           5 | Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545           7 | Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545           8 | Nirav     |  24 | online       | 2021-11-02    | M      | Patan   | 9223344545          10 | Priyanshi |  30 | online       | 2020-09-04    | F      | Goa     | 9223344234(6 rows)
+
+
+store=# select* from customer where payment_mode='offline';
+ customer_id | c_name | age | payment_mode | purchase_date | gender |  area   | mobile_no
+-------------+--------+-----+--------------+---------------+--------+---------+------------
+           3 | Palak  |  22 | offline      | 2022-11-12    | F      | Ratlam  | 9823450245
+           4 | Yathi  |  22 | offline      | 2012-11-12    | M      | Baroda  | 9823345245
+           6 | Preeti |  23 | offline      | 2012-01-20    | F      | Wagodia | 9823389745
+           9 | Rohit  |  20 | offline      | 2020-08-02    | M      | Valsad  | 9223344234
+(4 rows)
+
+
+store=# select* from customer where age<=22;
+ customer_id | c_name | age | payment_mode | purchase_date | gender |  area  | mobile_no
+-------------+--------+-----+--------------+---------------+--------+--------+------------
+           1 | Nitin  |  21 | online       | 2022-11-10    | M      | Dwarka | 9811255681
+           2 | Omkar  |  22 | online       | 2022-01-01    | M      | Surat  | 9899520245
+           3 | Palak  |  22 | offline      | 2022-11-12    | F      | Ratlam | 9823450245
+           4 | Yathi  |  22 | offline      | 2012-11-12    | M      | Baroda | 9823345245
+           9 | Rohit  |  20 | offline      | 2020-08-02    | M      | Valsad | 9223344234
+(5 rows)
+
+
+
+store=# select* from customer where age>=22;
+ customer_id |  c_name   | age | payment_mode | purchase_date | gender |  area   | mobile_no
+-------------+-----------+-----+--------------+---------------+--------+---------+------------
+           2 | Omkar     |  22 | online       | 2022-01-01    | M      | Surat   | 9899520245           3 | Palak     |  22 | offline      | 2022-11-12    | F      | Ratlam  | 9823450245           4 | Yathi     |  22 | offline      | 2012-11-12    | M      | Baroda  | 9823345245           5 | Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545           6 | Preeti    |  23 | offline      | 2012-01-20    | F      | Wagodia | 9823389745           7 | Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545           8 | Nirav     |  24 | online       | 2021-11-02    | M      | Patan   | 9223344545          10 | Priyanshi |  30 | online       | 2020-09-04    | F      | Goa     | 9223344234(8 rows)
+
+
+                                           ^
+store=# select* from customer where gender='M';
+ customer_id | c_name | age | payment_mode | purchase_date | gender |  area  | mobile_no
+-------------+--------+-----+--------------+---------------+--------+--------+------------
+           1 | Nitin  |  21 | online       | 2022-11-10    | M      | Dwarka | 9811255681
+           2 | Omkar  |  22 | online       | 2022-01-01    | M      | Surat  | 9899520245
+           4 | Yathi  |  22 | offline      | 2012-11-12    | M      | Baroda | 9823345245
+           8 | Nirav  |  24 | online       | 2021-11-02    | M      | Patan  | 9223344545
+           9 | Rohit  |  20 | offline      | 2020-08-02    | M      | Valsad | 9223344234
+(5 rows)
+
+
+
+                     ^
+store=# select c_name,age,area from customer where age>=21;
+  c_name   | age |  area
+-----------+-----+---------
+ Nitin     |  21 | Dwarka
+ Omkar     |  22 | Surat
+ Palak     |  22 | Ratlam
+ Yathi     |  22 | Baroda
+ Riona     |  23 | Bharuch
+ Preeti    |  23 | Wagodia
+ Riona     |  23 | Bharuch
+ Nirav     |  24 | Patan
+ Priyanshi |  30 | Goa
+(9 rows)
+
+
+store=# select *from customer;
+ customer_id |  c_name   | age | payment_mode | purchase_date | gender |  area   | mobile_no
+-------------+-----------+-----+--------------+---------------+--------+---------+------------
+           1 | Nitin     |  21 | online       | 2022-11-10    | M      | Dwarka  | 9811255681           2 | Omkar     |  22 | online       | 2022-01-01    | M      | Surat   | 9899520245           3 | Palak     |  22 | offline      | 2022-11-12    | F      | Ratlam  | 9823450245           4 | Yathi     |  22 | offline      | 2012-11-12    | M      | Baroda  | 9823345245           5 | Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545           6 | Preeti    |  23 | offline      | 2012-01-20    | F      | Wagodia | 9823389745           7 | Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545           8 | Nirav     |  24 | online       | 2021-11-02    | M      | Patan   | 9223344545           9 | Rohit     |  20 | offline      | 2020-08-02    | M      | Valsad  | 9223344234          10 | Priyanshi |  30 | online       | 2020-09-04    | F      | Goa     | 9223344234(10 rows)
+
+
+store=# select * from customer;
+ customer_id |  c_name   | age | payment_mode | purchase_date | gender |  area   | mobile_no
+-------------+-----------+-----+--------------+---------------+--------+---------+------------
+           1 | Nitin     |  21 | online       | 2022-11-10    | M      | Dwarka  | 9811255681
+           2 | Omkar     |  22 | online       | 2022-01-01    | M      | Surat   | 9899520245
+           3 | Palak     |  22 | offline      | 2022-11-12    | F      | Ratlam  | 9823450245
+           4 | Yathi     |  22 | offline      | 2012-11-12    | M      | Baroda  | 9823345245
+           5 | Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+           6 | Preeti    |  23 | offline      | 2012-01-20    | F      | Wagodia | 9823389745
+           7 | Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+           8 | Nirav     |  24 | online       | 2021-11-02    | M      | Patan   | 9223344545
+           9 | Rohit     |  20 | offline      | 2020-08-02    | M      | Valsad  | 9223344234
+          10 | Priyanshi |  30 | online       | 2020-09-04    | F      | Goa     | 9223344234
+(10 rows)
+
+
+                                          ^
+store=# select c_name ,area , gender, age from customer where extract(year from purchase_date)=2022;
+ c_name |  area  | gender | age
+--------+--------+--------+-----
+ Nitin  | Dwarka | M      |  21
+ Omkar  | Surat  | M      |  22
+ Palak  | Ratlam | F      |  22
+(3 rows)
+
+
+
+
+
+postgres=# create database shops;
+CREATE DATABASE
+postgres=# \c shops
+You are now connected to database "shops" as user "postgres".
+
+shops=# create table items(
+shops(# Items_id serial,
+shops(# prod_name varchar(32),
+shops(# quantity smallint,
+shops(# mrp numeric(7,2),
+shops(# mfg_date date,
+shops(# exp_date date,
+shops(# brand varchar(32),
+shops(# constraint items_pk primary key(Items_id));
+CREATE TABLE
+shops=# \d items
+                                        Table "public.items"
+  Column   |         Type          | Collation | Nullable |                 Default
+-----------+-----------------------+-----------+----------+-----------------------------------------
+ items_id  | integer               |           | not null | nextval('items_items_id_seq'::regclass)
+ prod_name | character varying(32) |           |          |
+ quantity  | smallint              |           |          |
+ mrp       | numeric(7,2)          |           |          |
+ mfg_date  | date                  |           |          |
+ exp_date  | date                  |           |          |
+ brand     | character varying(32) |           |          |
+Indexes:
+    "items_pk" PRIMARY KEY, btree (items_id)
+
+
+
+postgres=# \l
+                                       List of databases
+   Name    |  Owner   | Encoding |     Collate      |      Ctype       |   Access privileges
+-----------+----------+----------+------------------+------------------+-----------------------
+ items     | postgres | UTF8     | Hindi_India.utf8 | Hindi_India.utf8 |
+ postgres  | postgres | UTF8     | Hindi_India.utf8 | Hindi_India.utf8 |
+ shops     | postgres | UTF8     | Hindi_India.utf8 | Hindi_India.utf8 |
+ store     | postgres | UTF8     | Hindi_India.utf8 | Hindi_India.utf8 |
+ template0 | postgres | UTF8     | Hindi_India.utf8 | Hindi_India.utf8 | =c/postgres          +
+           |          |          |                  |                  | postgres=CTc/postgres
+ template1 | postgres | UTF8     | Hindi_India.utf8 | Hindi_India.utf8 | =c/postgres          +
+           |          |          |                  |                  | postgres=CTc/postgres
+(6 rows)
+
+
+                      ^
+postgres=# \c store
+You are now connected to database "store" as user "postgres".
+store=# select * from customer;
+ customer_id |  c_name   | age | payment_mode | purchase_date | gender |  area   | mobile_no
+-------------+-----------+-----+--------------+---------------+--------+---------+------------
+           1 | Nitin     |  21 | online       | 2022-11-10    | M      | Dwarka  | 9811255681
+           2 | Omkar     |  22 | online       | 2022-01-01    | M      | Surat   | 9899520245
+           3 | Palak     |  22 | offline      | 2022-11-12    | F      | Ratlam  | 9823450245
+           4 | Yathi     |  22 | offline      | 2012-11-12    | M      | Baroda  | 9823345245
+           5 | Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+           6 | Preeti    |  23 | offline      | 2012-01-20    | F      | Wagodia | 9823389745
+           7 | Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+           8 | Nirav     |  24 | online       | 2021-11-02    | M      | Patan   | 9223344545
+           9 | Rohit     |  20 | offline      | 2020-08-02    | M      | Valsad  | 9223344234
+          10 | Priyanshi |  30 | online       | 2020-09-04    | F      | Goa     | 9223344234
+(10 rows)
+
+
+
+store=# \dt
+          List of relations
+ Schema |   Name   | Type  |  Owner                      (dt use to describe table)
+--------+----------+-------+----------
+ public | customer | table | postgres
+(1 row)
+
+
+
+
+
+store=# \d customer
+                                           Table "public.customer"
+    Column     |         Type          | Collation | Nullable |                    Default
+---------------+-----------------------+-----------+----------+-----------------------------------------------
+ customer_id   | integer               |           | not null | nextval('customer_customer_id_seq'::regclass)
+ c_name        | character varying(32) |           |          |
+ age           | smallint              |           |          |
+ payment_mode  | character varying(32) |           | not null |
+ purchase_date | date                  |           |          |
+ gender        | character(2)          |           | not null |                               ( d describe the table )
+ area          | character varying(32) |           |          |
+ mobile_no     | character varying(12) |           |          |
+Indexes:
+    "customer_pk" PRIMARY KEY, btree (customer_id)
+
+
+
+\e helps to edit the mistake while typing the codes.(by opening a notepad)
+
+\? HELP function in sql
+
+\h select (function name)
+
+/q to quit help 
+
+
+
+postgres=# \c store
+You are now connected to database "store" as user "postgres".
+store=# select * from customer;
+ customer_id |  c_name   | age | payment_mode | purchase_date | gender |  area   | mobile_no
+-------------+-----------+-----+--------------+---------------+--------+---------+------------
+           1 | Nitin     |  21 | online       | 2022-11-10    | M      | Dwarka  | 9811255681
+           2 | Omkar     |  22 | online       | 2022-01-01    | M      | Surat   | 9899520245
+           3 | Palak     |  22 | offline      | 2022-11-12    | F      | Ratlam  | 9823450245
+           4 | Yathi     |  22 | offline      | 2012-11-12    | M      | Baroda  | 9823345245
+           5 | Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+           6 | Preeti    |  23 | offline      | 2012-01-20    | F      | Wagodia | 9823389745
+           7 | Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+           8 | Nirav     |  24 | online       | 2021-11-02    | M      | Patan   | 9223344545
+           9 | Rohit     |  20 | offline      | 2020-08-02    | M      | Valsad  | 9223344234
+          10 | Priyanshi |  30 | online       | 2020-09-04    | F      | Goa     | 9223344234
+(10 rows)
+
+
+store=# select c_name,area,age from customer;
+  c_name   |  area   | age
+-----------+---------+-----
+ Nitin     | Dwarka  |  21
+ Omkar     | Surat   |  22
+ Palak     | Ratlam  |  22
+ Yathi     | Baroda  |  22
+ Riona     | Bharuch |  23
+ Preeti    | Wagodia |  23
+ Riona     | Bharuch |  23
+ Nirav     | Patan   |  24
+ Rohit     | Valsad  |  20
+ Priyanshi | Goa     |  30
+(10 rows)
+
+
+
+store=# select count(area) from customer;
+ count
+-------
+    10
+(1 row)
+
+
+store=# select count(area) from customer where area='Bharuch';
+ count
+-------
+     2
+(1 row)
+
+
+
+store=# select distinct(area) from customer;
+  area
+---------
+ Wagodia
+ Goa
+ Valsad
+ Dwarka
+ Ratlam
+ Bharuch
+ Patan
+ Baroda
+ Surat
+(9 rows)
+
+
+
+store=# select distinct(count(area)) from customer;
+ count
+-------
+    10
+(1 row)
+
+
+store=# select count(distinct(area)) from customer;
+ count
+-------
+     9
+(1 row)
+
+
+store=# select count(area) from customer where area='Surat';
+ count
+-------
+     1
+(1 row)
+
+
+
+store=# select min(age) from customer;
+ min
+-----
+  20
+(1 row)
+
+store=# select max(age) from customer;
+ max
+-----
+  30
+(1 row)
+
+
+
+store=# select avg(age) from customer;
+         avg
+---------------------
+ 23.0000000000000000
+(1 row)
+
+
+
+store=# select avg(age) as average_age_of_customer from customer;
+ average_age_of_customer
+-------------------------
+     23.0000000000000000                     ( alias use to change avg as average_age_of_customer)
+(1 row)
+
+
+
+store=# select avg(age) as "average ag of customer" from customer;
+ average ag of customer
+------------------------
+    23.0000000000000000
+(1 row)
+
+
+               ^
+store=# select * from customer where c_name='Yathi';
+ customer_id | c_name | age | payment_mode | purchase_date | gender |  area  | mobile_no
+-------------+--------+-----+--------------+---------------+--------+--------+------------
+           4 | Yathi  |  22 | offline      | 2012-11-12    | M      | Baroda | 9823345245
+(1 row)
+	
+
+                                                    ^
+store=# select c_name, age from customer where area='Surat';
+ c_name | age
+--------+-----
+ Omkar  |  22
+(1 row)
+
+
+store=# select distinct(area) from customer order by area;
+  area
+---------
+ Baroda
+ Bharuch
+ Dwarka
+ Goa
+ Patan
+ Ratlam
+ Surat
+ Valsad
+ Wagodia
+(9 rows)
+
+
+store=# select distinct(area) from customer order by area desc;
+  area
+---------
+ Wagodia
+ Valsad
+ Surat
+ Ratlam
+ Patan
+ Goa
+ Dwarka
+ Bharuch
+ Baroda
+(9 rows)
+
+
+store=# select( c_name, age) as "Ranalkar"  from customer where area='Surat';
+  Ranalkar
+------------
+ (Omkar,22)
+(1 row)
+
+
+
+store=# select * from customer order by area ;
+ customer_id |  c_name   | age | payment_mode | purchase_date | gender |  area   | mobile_no
+-------------+-----------+-----+--------------+---------------+--------+---------+------------
+           4 | Yathi     |  22 | offline      | 2012-11-12    | M      | Baroda  | 9823345245
+           5 | Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+           7 | Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+           1 | Nitin     |  21 | online       | 2022-11-10    | M      | Dwarka  | 9811255681
+          10 | Priyanshi |  30 | online       | 2020-09-04    | F      | Goa     | 9223344234
+           8 | Nirav     |  24 | online       | 2021-11-02    | M      | Patan   | 9223344545
+           3 | Palak     |  22 | offline      | 2022-11-12    | F      | Ratlam  | 9823450245
+           2 | Omkar     |  22 | online       | 2022-01-01    | M      | Surat   | 9899520245
+           9 | Rohit     |  20 | offline      | 2020-08-02    | M      | Valsad  | 9223344234
+           6 | Preeti    |  23 | offline      | 2012-01-20    | F      | Wagodia | 9823389745
+(10 rows)
+
+
+store=# select * from customer order by area desc ;
+ customer_id |  c_name   | age | payment_mode | purchase_date | gender |  area   | mobile_no
+-------------+-----------+-----+--------------+---------------+--------+---------+------------
+           6 | Preeti    |  23 | offline      | 2012-01-20    | F      | Wagodia | 9823389745
+           9 | Rohit     |  20 | offline      | 2020-08-02    | M      | Valsad  | 9223344234
+           2 | Omkar     |  22 | online       | 2022-01-01    | M      | Surat   | 9899520245
+           3 | Palak     |  22 | offline      | 2022-11-12    | F      | Ratlam  | 9823450245
+           8 | Nirav     |  24 | online       | 2021-11-02    | M      | Patan   | 9223344545
+          10 | Priyanshi |  30 | online       | 2020-09-04    | F      | Goa     | 9223344234
+           1 | Nitin     |  21 | online       | 2022-11-10    | M      | Dwarka  | 9811255681
+           7 | Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+           5 | Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+           4 | Yathi     |  22 | offline      | 2012-11-12    | M      | Baroda  | 9823345245
+(10 rows)
+
+
+
+store=# select * from customer order by c_name desc ;
+ customer_id |  c_name   | age | payment_mode | purchase_date | gender |  area   | mobile_no
+-------------+-----------+-----+--------------+---------------+--------+---------+------------
+           4 | Yathi     |  22 | offline      | 2012-11-12    | M      | Baroda  | 9823345245
+           9 | Rohit     |  20 | offline      | 2020-08-02    | M      | Valsad  | 9223344234
+           7 | Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+           5 | Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+          10 | Priyanshi |  30 | online       | 2020-09-04    | F      | Goa     | 9223344234
+           6 | Preeti    |  23 | offline      | 2012-01-20    | F      | Wagodia | 9823389745
+           3 | Palak     |  22 | offline      | 2022-11-12    | F      | Ratlam  | 9823450245
+           2 | Omkar     |  22 | online       | 2022-01-01    | M      | Surat   | 9899520245
+           1 | Nitin     |  21 | online       | 2022-11-10    | M      | Dwarka  | 9811255681
+           8 | Nirav     |  24 | online       | 2021-11-02    | M      | Patan   | 9223344545
+(10 rows)
+
+
+
+
+store=# select * from customer order by c_name desc ;
+ customer_id |  c_name   | age | payment_mode | purchase_date | gender |  area   | mobile_no
+-------------+-----------+-----+--------------+---------------+--------+---------+------------
+           4 | Yathi     |  22 | offline      | 2012-11-12    | M      | Baroda  | 9823345245
+           9 | Rohit     |  20 | offline      | 2020-08-02    | M      | Valsad  | 9223344234
+           7 | Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+           5 | Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+          10 | Priyanshi |  30 | online       | 2020-09-04    | F      | Goa     | 9223344234
+           6 | Preeti    |  23 | offline      | 2012-01-20    | F      | Wagodia | 9823389745
+           3 | Palak     |  22 | offline      | 2022-11-12    | F      | Ratlam  | 9823450245
+           2 | Omkar     |  22 | online       | 2022-01-01    | M      | Surat   | 9899520245
+           1 | Nitin     |  21 | online       | 2022-11-10    | M      | Dwarka  | 9811255681
+           8 | Nirav     |  24 | online       | 2021-11-02    | M      | Patan   | 9223344545
+(10 rows)
+
+
+store=# select * from customer where area =' ';
+ customer_id | c_name | age | payment_mode | purchase_date | gender | area | mobile_no
+-------------+--------+-----+--------------+---------------+--------+------+-----------
+(0 rows)
+
+
+store=# select * from customer where c_name =' ';
+ customer_id | c_name | age | payment_mode | purchase_date | gender | area | mobile_no
+-------------+--------+-----+--------------+---------------+--------+------+-----------
+(0 rows)
+
+
+
+store=# select * from customer where age <> 20;
+ customer_id |  c_name   | age | payment_mode | purchase_date | gender |  area   | mobile_no
+-------------+-----------+-----+--------------+---------------+--------+---------+------------
+           1 | Nitin     |  21 | online       | 2022-11-10    | M      | Dwarka  | 9811255681
+           2 | Omkar     |  22 | online       | 2022-01-01    | M      | Surat   | 9899520245
+           3 | Palak     |  22 | offline      | 2022-11-12    | F      | Ratlam  | 9823450245
+           4 | Yathi     |  22 | offline      | 2012-11-12    | M      | Baroda  | 9823345245
+           5 | Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+           6 | Preeti    |  23 | offline      | 2012-01-20    | F      | Wagodia | 9823389745
+           7 | Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+           8 | Nirav     |  24 | online       | 2021-11-02    | M      | Patan   | 9223344545
+          10 | Priyanshi |  30 | online       | 2020-09-04    | F      | Goa     | 9223344234
+(9 rows)
+
+
+store=# select sum(age) as "sum age" from customer;
+ sum age
+---------
+     230
+(1 row)
+
+
+
+store=# select sum(age) from customer;
+ sum
+-----
+ 230
+(1 row)
+
+
+                                ^
+store=# select round(avg(age),3) "age" from customer;
+  age
+--------
+ 23.000
+(1 row)
+
+
+
+store=# select round(avg(age),3) from customer;
+ round
+--------
+ 23.000
+(1 row)
+
+
+
+postgres=# \c store
+You are now connected to database "store" as user "postgres".
+store=# create table items(
+store(# items_id serial,
+store(# prod_name varchar(32),
+store(# quantity smallint,
+store(# mrp numeric(7,2),
+store(# mfg date,
+store(# exp_date date,
+store(# brand varchar(32),
+store(# constraint items_pk primary key(items_id));
+CREATE TABLE
+store=# \d items
+                                        Table "public.items"
+  Column   |         Type          | Collation | Nullable |                 Default
+-----------+-----------------------+-----------+----------+-----------------------------------------
+ items_id  | integer               |           | not null | nextval('items_items_id_seq'::regclass)
+ prod_name | character varying(32) |           |          |
+ quantity  | smallint              |           |          |
+ mrp       | numeric(7,2)          |           |          |
+ mfg       | date                  |           |          |
+ exp_date  | date                  |           |          |
+ brand     | character varying(32) |           |          |
+Indexes:
+    "items_pk" PRIMARY KEY, btree (items_id)
+
+
+store=# insert into items values(1,'Rice',50,500,'12-2-2022','12-2-2024','Sona masuri');
+INSERT 0 1
+store=# insert into items values(2,'Sugar',10,50,'12-3-2022','12-12-2023','Sugar crush');
+INSERT 0 1
+store=# insert into items values(3,'Shampoo',100,5000,'16-7-2012','12-10-2023','Dove');
+INSERT 0 1
+store=# insert into items values(4,'Cookies',20,500,'16-7-2019','12-7-2023','Britenia');
+INSERT 0 1
+store=# insert into items values(5,'Maggies',20,200,'1-9-2019','3-7-2023','Nestle');
+INSERT 0 1
+store=# insert into items values(6,'Soap',110,1200,'1-9-2019','3-7-2021','Patanjali');
+INSERT 0 1
+store=# insert into items values(7,'Pen',11000,12000,'1-9-2009','3-9-2021','Cello');
+INSERT 0 1
+store=# insert into items values(8,'Condom',100,1200,'1-10-2019','3-9-2021','Durex');
+INSERT 0 1
+store=# insert into items values(9,'Chocolate',100,120,'4-10-2019','30-5-2021','Eclairs');
+INSERT 0 1
+store=# insert into items values(10,'Pencil',12000,12000,'22-2-2018','30-5-2021','Nataraj');
+INSERT 0 1
+
+
+                           ^
+store=# \c store
+You are now connected to database "store" as user "postgres".
+store=# \d items
+                                        Table "public.items"
+  Column   |         Type          | Collation | Nullable |                 Default
+-----------+-----------------------+-----------+----------+-----------------------------------------
+ items_id  | integer               |           | not null | nextval('items_items_id_seq'::regclass)
+ prod_name | character varying(32) |           |          |
+ quantity  | smallint              |           |          |
+ mrp       | numeric(7,2)          |           |          |
+ mfg       | date                  |           |          |
+ exp_date  | date                  |           |          |
+ brand     | character varying(32) |           |          |
+Indexes:
+    "items_pk" PRIMARY KEY, btree (items_id)
+
+
+
+
+store=# select * from items;
+ items_id | prod_name | quantity |   mrp    |    mfg     |  exp_date  |    brand
+----------+-----------+----------+----------+------------+------------+-------------
+        1 | Rice      |       50 |   500.00 | 2022-02-12 | 2024-02-12 | Sona masuri
+        2 | Sugar     |       10 |    50.00 | 2022-03-12 | 2023-12-12 | Sugar crush
+        3 | Shampoo   |      100 |  5000.00 | 2012-07-16 | 2023-10-12 | Dove
+        4 | Cookies   |       20 |   500.00 | 2019-07-16 | 2023-07-12 | Britenia
+        5 | Maggies   |       20 |   200.00 | 2019-09-01 | 2023-07-03 | Nestle
+        6 | Soap      |      110 |  1200.00 | 2019-09-01 | 2021-07-03 | Patanjali
+        7 | Pen       |    11000 | 12000.00 | 2009-09-01 | 2021-09-03 | Cello
+        8 | Condom    |      100 |  1200.00 | 2019-10-01 | 2021-09-03 | Durex
+        9 | Chocolate |      100 |   120.00 | 2019-10-04 | 2021-05-30 | Eclairs
+       10 | Pencil    |    12000 | 12000.00 | 2018-02-22 | 2021-05-30 | Nataraj
+(10 rows)
+
+
+postgres=# \c store
+You are now connected to database "store" as user "postgres".
+store=# \d
+                    List of relations
+ Schema |           Name           |   Type   |  Owner
+--------+--------------------------+----------+----------
+ public | customer                 | table    | postgres
+ public | customer_customer_id_seq | sequence | postgres
+ public | items                    | table    | postgres
+ public | items_items_id_seq       | sequence | postgres
+(4 rows)
+
+
+store=# select * from customer
+store-# select * from customer;
+ERROR:  syntax error at or near "select"
+LINE 2: select * from customer;
+        ^
+store=# \d customer
+                                           Table "public.customer"
+    Column     |         Type          | Collation | Nullable |                    Default
+---------------+-----------------------+-----------+----------+-----------------------------------------------
+ customer_id   | integer               |           | not null | nextval('customer_customer_id_seq'::regclass)
+ c_name        | character varying(32) |           |          |
+ age           | smallint              |           |          |
+ payment_mode  | character varying(32) |           | not null |
+ purchase_date | date                  |           |          |
+ gender        | character(2)          |           | not null |
+ area          | character varying(32) |           |          |
+ mobile_no     | character varying(12) |           |          |
+Indexes:
+    "customer_pk" PRIMARY KEY, btree (customer_id)
+
+
+store=# select * from customer;
+ customer_id |  c_name   | age | payment_mode | purchase_date | gender |  area   | mobile_no
+-------------+-----------+-----+--------------+---------------+--------+---------+------------
+           1 | Nitin     |  21 | online       | 2022-11-10    | M      | Dwarka  | 9811255681
+           2 | Omkar     |  22 | online       | 2022-01-01    | M      | Surat   | 9899520245
+           3 | Palak     |  22 | offline      | 2022-11-12    | F      | Ratlam  | 9823450245
+           4 | Yathi     |  22 | offline      | 2012-11-12    | M      | Baroda  | 9823345245
+           5 | Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+           6 | Preeti    |  23 | offline      | 2012-01-20    | F      | Wagodia | 9823389745
+           7 | Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+           8 | Nirav     |  24 | online       | 2021-11-02    | M      | Patan   | 9223344545
+           9 | Rohit     |  20 | offline      | 2020-08-02    | M      | Valsad  | 9223344234
+          10 | Priyanshi |  30 | online       | 2020-09-04    | F      | Goa     | 9223344234
+(10 rows)
+
+
+store=# select * from items;
+ items_id | prod_name | quantity |   mrp    |    mfg     |  exp_date  |    brand
+----------+-----------+----------+----------+------------+------------+-------------
+        1 | Rice      |       50 |   500.00 | 2022-02-12 | 2024-02-12 | Sona masuri
+        2 | Sugar     |       10 |    50.00 | 2022-03-12 | 2023-12-12 | Sugar crush
+        3 | Shampoo   |      100 |  5000.00 | 2012-07-16 | 2023-10-12 | Dove
+        4 | Cookies   |       20 |   500.00 | 2019-07-16 | 2023-07-12 | Britenia
+        5 | Maggies   |       20 |   200.00 | 2019-09-01 | 2023-07-03 | Nestle
+        6 | Soap      |      110 |  1200.00 | 2019-09-01 | 2021-07-03 | Patanjali
+        7 | Pen       |    11000 | 12000.00 | 2009-09-01 | 2021-09-03 | Cello
+        8 | Condom    |      100 |  1200.00 | 2019-10-01 | 2021-09-03 | Durex
+        9 | Chocolate |      100 |   120.00 | 2019-10-04 | 2021-05-30 | Eclairs
+       10 | Pencil    |    12000 | 12000.00 | 2018-02-22 | 2021-05-30 | Nataraj
+(10 rows)
+
+
+store=# select * from customer;
+ customer_id |  c_name   | age | payment_mode | purchase_date | gender |  area   | mobile_no
+-------------+-----------+-----+--------------+---------------+--------+---------+------------
+           1 | Nitin     |  21 | online       | 2022-11-10    | M      | Dwarka  | 9811255681
+           2 | Omkar     |  22 | online       | 2022-01-01    | M      | Surat   | 9899520245
+           3 | Palak     |  22 | offline      | 2022-11-12    | F      | Ratlam  | 9823450245
+           4 | Yathi     |  22 | offline      | 2012-11-12    | M      | Baroda  | 9823345245
+           5 | Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+           6 | Preeti    |  23 | offline      | 2012-01-20    | F      | Wagodia | 9823389745
+           7 | Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+           8 | Nirav     |  24 | online       | 2021-11-02    | M      | Patan   | 9223344545
+           9 | Rohit     |  20 | offline      | 2020-08-02    | M      | Valsad  | 9223344234
+          10 | Priyanshi |  30 | online       | 2020-09-04    | F      | Goa     | 9223344234
+(10 rows)
+
+
+store=# select * from customer where gender = 'F' and area = 'Baroda';
+ customer_id | c_name | age | payment_mode | purchase_date | gender | area | mobile_no
+-------------+--------+-----+--------------+---------------+--------+------+-----------
+(0 rows)
+
+
+store=# select * from customer where gender = 'F' and area = 'Bharuch';
+ customer_id | c_name | age | payment_mode | purchase_date | gender |  area   | mobile_no
+-------------+--------+-----+--------------+---------------+--------+---------+------------
+           5 | Riona  |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+           7 | Riona  |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+(2 rows)
+
+
+store=# select * from customer where gender = 'F' and area = 'Ratlam';
+ customer_id | c_name | age | payment_mode | purchase_date | gender |  area  | mobile_no
+-------------+--------+-----+--------------+---------------+--------+--------+------------
+           3 | Palak  |  22 | offline      | 2022-11-12    | F      | Ratlam | 9823450245
+(1 row)
+
+
+
+store=# select * from customer where c_name in('Nitin','Omkar','Palak');
+ customer_id | c_name | age | payment_mode | purchase_date | gender |  area  | mobile_no
+-------------+--------+-----+--------------+---------------+--------+--------+------------
+           1 | Nitin  |  21 | online       | 2022-11-10    | M      | Dwarka | 9811255681
+           2 | Omkar  |  22 | online       | 2022-01-01    | M      | Surat  | 9899520245
+           3 | Palak  |  22 | offline      | 2022-11-12    | F      | Ratlam | 9823450245
+(3 rows)
+
+
+
+store=# select distinct(c_name) from customer;
+  c_name
+-----------
+ Priyanshi
+ Nitin
+ Nirav
+ Omkar
+ Yathi
+ Rohit
+ Preeti
+ Riona
+ Palak
+(9 rows)
+
+
+store=# select * from customer where c_name in('Nitin','Omkar','Palak');
+ customer_id | c_name | age | payment_mode | purchase_date | gender |  area  | mobile_no
+-------------+--------+-----+--------------+---------------+--------+--------+------------
+           1 | Nitin  |  21 | online       | 2022-11-10    | M      | Dwarka | 9811255681
+           2 | Omkar  |  22 | online       | 2022-01-01    | M      | Surat  | 9899520245
+           3 | Palak  |  22 | offline      | 2022-11-12    | F      | Ratlam | 9823450245
+(3 rows)
+
+
+store=# select * from customer where c_name in('Nitin','Omkar','Rohit');
+ customer_id | c_name | age | payment_mode | purchase_date | gender |  area  | mobile_no
+-------------+--------+-----+--------------+---------------+--------+--------+------------
+           1 | Nitin  |  21 | online       | 2022-11-10    | M      | Dwarka | 9811255681
+           2 | Omkar  |  22 | online       | 2022-01-01    | M      | Surat  | 9899520245
+           9 | Rohit  |  20 | offline      | 2020-08-02    | M      | Valsad | 9223344234
+(3 rows)
+
+
+
+store=# select * from customer where c_name like 'Ni%';
+ customer_id | c_name | age | payment_mode | purchase_date | gender |  area  | mobile_no
+-------------+--------+-----+--------------+---------------+--------+--------+------------
+           1 | Nitin  |  21 | online       | 2022-11-10    | M      | Dwarka | 9811255681
+           8 | Nirav  |  24 | online       | 2021-11-02    | M      | Patan  | 9223344545
+(2 rows)
+
+
+store=# select * from customer where c_name like 'N%';
+ customer_id | c_name | age | payment_mode | purchase_date | gender |  area  | mobile_no
+-------------+--------+-----+--------------+---------------+--------+--------+------------
+           1 | Nitin  |  21 | online       | 2022-11-10    | M      | Dwarka | 9811255681
+           8 | Nirav  |  24 | online       | 2021-11-02    | M      | Patan  | 9223344545
+(2 rows)
+
+                                                         ^
+store=# select * from customer where c_name like '%ee%';
+ customer_id | c_name | age | payment_mode | purchase_date | gender |  area   | mobile_no
+-------------+--------+-----+--------------+---------------+--------+---------+------------
+           6 | Preeti |  23 | offline      | 2012-01-20    | F      | Wagodia | 9823389745
+(1 row)
+
+
+
+store=# select * from customer where c_name like 'Ri%' or c_name like 'Pr%';
+ customer_id |  c_name   | age | payment_mode | purchase_date | gender |  area   | mobile_no
+-------------+-----------+-----+--------------+---------------+--------+---------+------------
+           5 | Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+           6 | Preeti    |  23 | offline      | 2012-01-20    | F      | Wagodia | 9823389745
+           7 | Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+          10 | Priyanshi |  30 | online       | 2020-09-04    | F      | Goa     | 9223344234
+
+
+store=# select * from customer where c_name like 'Ri%' and c_name like 'Pr%';
+ customer_id | c_name | age | payment_mode | purchase_date | gender | area | mobile_no
+-------------+--------+-----+--------------+---------------+--------+------+-----------
+(0 rows)
+
+
+store=# select * from customer where c_name like '%a%;
+store'# select * from customer where c_name like '%a%';
+store'# select * from customer where c_name like '%a%';
+store'# ';
+ERROR:  column "a" does not exist
+LINE 2: select * from customer where c_name like '%a%';
+                                                   ^
+
+
+store=# select * from customer where c_name like '%a%';
+ customer_id |  c_name   | age | payment_mode | purchase_date | gender |  area   | mobile_no
+-------------+-----------+-----+--------------+---------------+--------+---------+------------
+           2 | Omkar     |  22 | online       | 2022-01-01    | M      | Surat   | 9899520245
+           3 | Palak     |  22 | offline      | 2022-11-12    | F      | Ratlam  | 9823450245
+           4 | Yathi     |  22 | offline      | 2012-11-12    | M      | Baroda  | 9823345245
+           5 | Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+           7 | Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+           8 | Nirav     |  24 | online       | 2021-11-02    | M      | Patan   | 9223344545
+          10 | Priyanshi |  30 | online       | 2020-09-04    | F      | Goa     | 9223344234
+(7 rows)
+
+
+store=# select * from customer where c_name like '_a%';
+ customer_id | c_name | age | payment_mode | purchase_date | gender |  area  | mobile_no
+-------------+--------+-----+--------------+---------------+--------+--------+------------
+           3 | Palak  |  22 | offline      | 2022-11-12    | F      | Ratlam | 9823450245
+           4 | Yathi  |  22 | offline      | 2012-11-12    | M      | Baroda | 9823345245
+(2 rows)
+
+
+store=# select * from customer where c_name like '_a%';
+ customer_id | c_name | age | payment_mode | purchase_date | gender |  area  | mobile_no
+-------------+--------+-----+--------------+---------------+--------+--------+------------
+           3 | Palak  |  22 | offline      | 2022-11-12    | F      | Ratlam | 9823450245
+           4 | Yathi  |  22 | offline      | 2012-11-12    | M      | Baroda | 9823345245
+(2 rows)
+
+
+store=# select * from customer where c_name like '____a%';
+ customer_id |  c_name   | age | payment_mode | purchase_date | gender |  area   | mobile_no
+-------------+-----------+-----+--------------+---------------+--------+---------+------------
+           5 | Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+           7 | Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+          10 | Priyanshi |  30 | online       | 2020-09-04    | F      | Goa     | 9223344234
+(3 rows)
+
+
+store=# select * from customer where c_name like '_____a%';
+ customer_id | c_name | age | payment_mode | purchase_date | gender | area | mobile_no
+-------------+--------+-----+--------------+---------------+--------+------+-----------
+(0 rows)
+
+
+store=# select * from customer where c_name like '_____n%';
+ customer_id |  c_name   | age | payment_mode | purchase_date | gender | area | mobile_no
+-------------+-----------+-----+--------------+---------------+--------+------+------------
+          10 | Priyanshi |  30 | online       | 2020-09-04    | F      | Goa  | 9223344234
+(1 row)
+
+
+store=# select * from customer where c_name like '____n%';
+ customer_id | c_name | age | payment_mode | purchase_date | gender |  area  | mobile_no
+-------------+--------+-----+--------------+---------------+--------+--------+------------
+           1 | Nitin  |  21 | online       | 2022-11-10    | M      | Dwarka | 9811255681
+(1 row)
+
+
+
+store=# select * from customer where c_name like '%h_';
+ customer_id |  c_name   | age | payment_mode | purchase_date | gender |  area  | mobile_no
+-------------+-----------+-----+--------------+---------------+--------+--------+------------
+           4 | Yathi     |  22 | offline      | 2012-11-12    | M      | Baroda | 9823345245
+          10 | Priyanshi |  30 | online       | 2020-09-04    | F      | Goa    | 9223344234
+(2 rows)
+
+
+store=# select * from customer where mobile_no like '2';
+ customer_id | c_name | age | payment_mode | purchase_date | gender | area | mobile_no
+-------------+--------+-----+--------------+---------------+--------+------+-----------
+(0 rows)
+
+
+store=# select * from customer where mobile_no like '2%';
+ customer_id | c_name | age | payment_mode | purchase_date | gender | area | mobile_no
+-------------+--------+-----+--------------+---------------+--------+------+-----------
+(0 rows)
+
+
+store=# select * from customer where mobile_no like '9%';
+ customer_id |  c_name   | age | payment_mode | purchase_date | gender |  area   | mobile_no
+-------------+-----------+-----+--------------+---------------+--------+---------+------------
+           1 | Nitin     |  21 | online       | 2022-11-10    | M      | Dwarka  | 9811255681
+           2 | Omkar     |  22 | online       | 2022-01-01    | M      | Surat   | 9899520245
+           3 | Palak     |  22 | offline      | 2022-11-12    | F      | Ratlam  | 9823450245
+           4 | Yathi     |  22 | offline      | 2012-11-12    | M      | Baroda  | 9823345245
+           5 | Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+           6 | Preeti    |  23 | offline      | 2012-01-20    | F      | Wagodia | 9823389745
+           7 | Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+           8 | Nirav     |  24 | online       | 2021-11-02    | M      | Patan   | 9223344545
+           9 | Rohit     |  20 | offline      | 2020-08-02    | M      | Valsad  | 9223344234
+          10 | Priyanshi |  30 | online       | 2020-09-04    | F      | Goa     | 9223344234
+(10 rows)
+
+
+
+store=# select * from customer where age like '23%';
+ERROR:  operator does not exist: smallint ~~ unknown
+LINE 1: select * from customer where age like '23%';
+                                         ^
+HINT:  No operator matches the given name and argument types. You might need to add explicit type casts.
+store=# select * from customer where age like '2';
+ERROR:  operator does not exist: smallint ~~ unknown
+LINE 1: select * from customer where age like '2';
+                                         ^
+HINT:  No operator matches the given name and argument types. You might need to add explicit type casts.
+store=#
+
+store=# select * from customer where mobile_no like '%2%';
+ customer_id |  c_name   | age | payment_mode | purchase_date | gender |  area   | mobile_no
+-------------+-----------+-----+--------------+---------------+--------+---------+------------
+           1 | Nitin     |  21 | online       | 2022-11-10    | M      | Dwarka  | 9811255681
+           2 | Omkar     |  22 | online       | 2022-01-01    | M      | Surat   | 9899520245
+           3 | Palak     |  22 | offline      | 2022-11-12    | F      | Ratlam  | 9823450245
+           4 | Yathi     |  22 | offline      | 2012-11-12    | M      | Baroda  | 9823345245
+           5 | Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+           6 | Preeti    |  23 | offline      | 2012-01-20    | F      | Wagodia | 9823389745
+           7 | Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+           8 | Nirav     |  24 | online       | 2021-11-02    | M      | Patan   | 9223344545
+           9 | Rohit     |  20 | offline      | 2020-08-02    | M      | Valsad  | 9223344234
+          10 | Priyanshi |  30 | online       | 2020-09-04    | F      | Goa     | 9223344234
+(10 rows)
+
+
+
+store=# select * from customer where age between 20 and 25;
+ customer_id | c_name | age | payment_mode | purchase_date | gender |  area   | mobile_no
+-------------+--------+-----+--------------+---------------+--------+---------+------------
+           1 | Nitin  |  21 | online       | 2022-11-10    | M      | Dwarka  | 9811255681
+           2 | Omkar  |  22 | online       | 2022-01-01    | M      | Surat   | 9899520245
+           3 | Palak  |  22 | offline      | 2022-11-12    | F      | Ratlam  | 9823450245
+           4 | Yathi  |  22 | offline      | 2012-11-12    | M      | Baroda  | 9823345245
+           5 | Riona  |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+           6 | Preeti |  23 | offline      | 2012-01-20    | F      | Wagodia | 9823389745
+           7 | Riona  |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+           8 | Nirav  |  24 | online       | 2021-11-02    | M      | Patan   | 9223344545
+           9 | Rohit  |  20 | offline      | 2020-08-02    | M      | Valsad  | 9223344234
+(9 rows)
+
+
+store=# select * from customer where age between 20 and 22;
+ customer_id | c_name | age | payment_mode | purchase_date | gender |  area  | mobile_no
+-------------+--------+-----+--------------+---------------+--------+--------+------------
+           1 | Nitin  |  21 | online       | 2022-11-10    | M      | Dwarka | 9811255681
+           2 | Omkar  |  22 | online       | 2022-01-01    | M      | Surat  | 9899520245
+           3 | Palak  |  22 | offline      | 2022-11-12    | F      | Ratlam | 9823450245
+           4 | Yathi  |  22 | offline      | 2012-11-12    | M      | Baroda | 9823345245
+           9 | Rohit  |  20 | offline      | 2020-08-02    | M      | Valsad | 9223344234
+(5 rows)
+
+                        ^
+store=# select distinct(age) from customer order by age;
+ age
+-----
+  20
+  21
+  22
+  23
+  24
+  30
+(6 rows)
+
+                                                            ^
+store=# select * from customer where purchase_date between '1-1-2020' and '1-1-2022';
+ customer_id |  c_name   | age | payment_mode | purchase_date | gender |  area  | mobile_no
+-------------+-----------+-----+--------------+---------------+--------+--------+------------
+           2 | Omkar     |  22 | online       | 2022-01-01    | M      | Surat  | 9899520245
+           8 | Nirav     |  24 | online       | 2021-11-02    | M      | Patan  | 9223344545
+           9 | Rohit     |  20 | offline      | 2020-08-02    | M      | Valsad | 9223344234
+          10 | Priyanshi |  30 | online       | 2020-09-04    | F      | Goa    | 9223344234
+(4 rows)
+
+
+store=# select * from customer where purchase_date between '1-1-2012' and '1-1-2022';
+ customer_id |  c_name   | age | payment_mode | purchase_date | gender |  area   | mobile_no
+-------------+-----------+-----+--------------+---------------+--------+---------+------------
+           2 | Omkar     |  22 | online       | 2022-01-01    | M      | Surat   | 9899520245
+           4 | Yathi     |  22 | offline      | 2012-11-12    | M      | Baroda  | 9823345245
+           5 | Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+           6 | Preeti    |  23 | offline      | 2012-01-20    | F      | Wagodia | 9823389745
+           7 | Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+           8 | Nirav     |  24 | online       | 2021-11-02    | M      | Patan   | 9223344545
+           9 | Rohit     |  20 | offline      | 2020-08-02    | M      | Valsad  | 9223344234
+          10 | Priyanshi |  30 | online       | 2020-09-04    | F      | Goa     | 9223344234
+(8 rows)
+
+
+store=# select * from customer where purchase_date between '1-1-2012' and '1-1-2018';
+ customer_id | c_name | age | payment_mode | purchase_date | gender |  area   | mobile_no
+-------------+--------+-----+--------------+---------------+--------+---------+------------
+           4 | Yathi  |  22 | offline      | 2012-11-12    | M      | Baroda  | 9823345245
+           5 | Riona  |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+           6 | Preeti |  23 | offline      | 2012-01-20    | F      | Wagodia | 9823389745
+           7 | Riona  |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+(4 rows)
+
+
+store=# select length(c_name) from customer;
+ length
+--------
+      5
+      5
+      5
+      5
+      5
+      6
+      5
+      5
+      5
+      9
+(10 rows)
+
+
+store=# select c_name, length(c_name) from customer;
+  c_name   | length
+-----------+--------
+ Nitin     |      5
+ Omkar     |      5
+ Palak     |      5
+ Yathi     |      5
+ Riona     |      5
+ Preeti    |      6
+ Riona     |      5
+ Nirav     |      5
+ Rohit     |      5
+ Priyanshi |      9
+(10 rows)
+
+
+store=# select mobile_no, length(mobile_no) from customer;
+ mobile_no  | length
+------------+--------
+ 9811255681 |     10
+ 9899520245 |     10
+ 9823450245 |     10
+ 9823345245 |     10
+ 9823344545 |     10
+ 9823389745 |     10
+ 9823344545 |     10
+ 9223344545 |     10
+ 9223344234 |     10
+ 9223344234 |     10
+(10 rows)
+
+
+store=# select area, length(mobile_no) from customer;
+  area   | length
+---------+--------
+ Dwarka  |     10
+ Surat   |     10
+ Ratlam  |     10
+ Baroda  |     10
+ Bharuch |     10
+ Wagodia |     10
+ Bharuch |     10
+ Patan   |     10
+ Valsad  |     10
+ Goa     |     10
+(10 rows)
+
+
+store=# select area, length(c_name) from customer;
+  area   | length
+---------+--------
+ Dwarka  |      5
+ Surat   |      5
+ Ratlam  |      5
+ Baroda  |      5
+ Bharuch |      5
+ Wagodia |      6
+ Bharuch |      5
+ Patan   |      5
+ Valsad  |      5
+ Goa     |      9
+(10 rows)
+
+
+store=# select distinct(area), length(c_name) from customer;
+  area   | length
+---------+--------
+ Surat   |      5
+ Wagodia |      6
+ Dwarka  |      5
+ Patan   |      5
+ Valsad  |      5
+ Baroda  |      5
+ Ratlam  |      5
+ Goa     |      9
+ Bharuch |      5
+(9 rows)
+
+
+store=# select distinct(area), length(area) from customer;
+  area   | length
+---------+--------
+ Surat   |      5
+ Wagodia |      7
+ Valsad  |      6
+ Baroda  |      6
+ Goa     |      3
+ Patan   |      5
+ Ratlam  |      6
+ Dwarka  |      6
+ Bharuch |      7
+(9 rows)
+
+
+store=# select distinct(area), length(area) from customer order by area;
+  area   | length
+---------+--------
+ Baroda  |      6
+ Bharuch |      7
+ Dwarka  |      6
+ Goa     |      3
+ Patan   |      5
+ Ratlam  |      6
+ Surat   |      5
+ Valsad  |      6
+ Wagodia |      7
+(9 rows)
+
+                                        ^
+store=# select mobile_no from customer order by mobile_no nulls last;
+ mobile_no
+------------
+ 9223344234
+ 9223344234
+ 9223344545
+ 9811255681
+ 9823344545
+ 9823344545
+ 9823345245
+ 9823389745
+ 9823450245
+ 9899520245
+(10 rows)
+
+        ^
+store=# select c_name ,age from customer order by age;
+  c_name   | age
+-----------+-----
+ Rohit     |  20
+ Nitin     |  21
+ Palak     |  22
+ Yathi     |  22
+ Omkar     |  22
+ Preeti    |  23
+ Riona     |  23
+ Riona     |  23
+ Nirav     |  24
+ Priyanshi |  30
+(10 rows)
+
+
+store=# select c_name ,age from customer order by age limit 4;
+ c_name | age
+--------+-----
+ Rohit  |  20
+ Nitin  |  21
+ Palak  |  22
+ Yathi  |  22
+(4 rows)
+
+
+
+store=# select c_name ,age from customer order by age desc limit 4;
+  c_name   | age
+-----------+-----
+ Priyanshi |  30
+ Nirav     |  24
+ Riona     |  23
+ Riona     |  23
+(4 rows)
+
+
+store=# select c_name ,age from customer order by age asc limit 4;
+ c_name | age
+--------+-----
+ Rohit  |  20
+ Nitin  |  21
+ Palak  |  22
+ Yathi  |  22
+(4 rows)
+
+store=# select distinct(area),length(area) from customer order by length(area);
+  area   | length
+---------+--------
+ Goa     |      3
+ Patan   |      5
+ Surat   |      5
+ Baroda  |      6
+ Dwarka  |      6
+ Ratlam  |      6
+ Valsad  |      6
+ Bharuch |      7
+ Wagodia |      7
+(9 rows)
+
+
+store=# select distinct(area),length(area) from customer order by length(area) limit 5;
+  area  | length
+--------+--------
+ Goa    |      3
+ Patan  |      5
+ Surat  |      5
+ Baroda |      6
+ Valsad |      6
+(5 rows)
+
+
+store=# select distinct(area),length(area) from customer order by length(area) desc limit 5;
+  area   | length
+---------+--------
+ Bharuch |      7
+ Wagodia |      7
+ Dwarka  |      6
+ Valsad  |      6
+ Ratlam  |      6
+(5 rows)
+
+                                              ^
+store=# select distinct(area),length(area) as "length of area" from customer order by length(area) desc limit 5;
+  area   | length of area
+---------+----------------
+ Bharuch |              7
+ Wagodia |              7
+ Dwarka  |              6
+ Valsad  |              6
+ Ratlam  |              6
+(5 rows)
+
+                                    ^
+store=# select area, count(area) as "area count" from customer group by area;
+  area   | area count
+---------+------------
+ Wagodia |          1
+ Goa     |          1
+ Valsad  |          1
+ Dwarka  |          1
+ Ratlam  |          1
+ Bharuch |          2
+ Patan   |          1
+ Baroda  |          1
+ Surat   |          1
+(9 rows)
+
+
+store=# select area, count(area) from customer group by area;
+  area   | count
+---------+-------
+ Wagodia |     1
+ Goa     |     1
+ Valsad  |     1
+ Dwarka  |     1
+ Ratlam  |     1
+ Bharuch |     2
+ Patan   |     1
+ Baroda  |     1
+ Surat   |     1
+(9 rows)
+
+
+store=# select area as "area name", count(area) as "area count" from customer group by area;
+ area name | area count
+-----------+------------
+ Wagodia   |          1
+ Goa       |          1
+ Valsad    |          1
+ Dwarka    |          1
+ Ratlam    |          1
+ Bharuch   |          2
+ Patan     |          1
+ Baroda    |          1
+ Surat     |          1
+(9 rows)
+
+
+
+store=# select area as "area name", count(area) as "frequency" from customer group by area order by area;
+ area name | frequency
+-----------+-----------
+ Baroda    |         1
+ Bharuch   |         2
+ Dwarka    |         1
+ Goa       |         1
+ Patan     |         1
+ Ratlam    |         1
+ Surat     |         1
+ Valsad    |         1
+ Wagodia   |         1
+(9 rows)
+
+
+store=# select * from customer where length(mobile_no)>7;
+ customer_id |  c_name   | age | payment_mode | purchase_date | gender |  area   | mobile_no
+-------------+-----------+-----+--------------+---------------+--------+---------+------------
+           1 | Nitin     |  21 | online       | 2022-11-10    | M      | Dwarka  | 9811255681
+           2 | Omkar     |  22 | online       | 2022-01-01    | M      | Surat   | 9899520245
+           3 | Palak     |  22 | offline      | 2022-11-12    | F      | Ratlam  | 9823450245
+           4 | Yathi     |  22 | offline      | 2012-11-12    | M      | Baroda  | 9823345245
+           5 | Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+           6 | Preeti    |  23 | offline      | 2012-01-20    | F      | Wagodia | 9823389745
+           7 | Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+           8 | Nirav     |  24 | online       | 2021-11-02    | M      | Patan   | 9223344545
+           9 | Rohit     |  20 | offline      | 2020-08-02    | M      | Valsad  | 9223344234
+          10 | Priyanshi |  30 | online       | 2020-09-04    | F      | Goa     | 9223344234
+(10 rows)
+
+
+store=# select * from customer where length(mobile_no)>10;
+ customer_id | c_name | age | payment_mode | purchase_date | gender | area | mobile_no
+-------------+--------+-----+--------------+---------------+--------+------+-----------
+(0 rows)
+
+
+
+
+store=# select age,c_name from customer where purchase_date between '10-11-2013' and '14-11-2025';
+ age |  c_name
+-----+-----------
+  21 | Nitin
+  22 | Omkar
+  22 | Palak
+  24 | Nirav
+  20 | Rohit
+  30 | Priyanshi
+(6 rows)
+
+
+store=# select age,c_name as "NAme" from customer where purchase_date between '10-11-2013' and '14-11-2025';
+ age |   NAme
+-----+-----------
+  21 | Nitin
+  22 | Omkar
+  22 | Palak
+  24 | Nirav
+  20 | Rohit
+  30 | Priyanshi
+(6 rows)
+
+
+
+store=# alter table customer drop customer_id;
+ALTER TABLE
+store=# \d customer
+                        Table "public.customer"
+    Column     |         Type          | Collation | Nullable | Default
+---------------+-----------------------+-----------+----------+---------
+ c_name        | character varying(32) |           |          |
+ age           | smallint              |           |          |
+ payment_mode  | character varying(32) |           | not null |
+ purchase_date | date                  |           |          |
+ gender        | character(2)          |           | not null |
+ area          | character varying(32) |           |          |
+ mobile_no     | character varying(12) |           |          |
+ 
+
+
+store=# select * from customer;
+  c_name   | age | payment_mode | purchase_date | gender |  area   | mobile_no
+-----------+-----+--------------+---------------+--------+---------+------------
+ Nitin     |  21 | online       | 2022-11-10    | M      | Dwarka  | 9811255681
+ Omkar     |  22 | online       | 2022-01-01    | M      | Surat   | 9899520245
+ Palak     |  22 | offline      | 2022-11-12    | F      | Ratlam  | 9823450245
+ Yathi     |  22 | offline      | 2012-11-12    | M      | Baroda  | 9823345245
+ Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+ Preeti    |  23 | offline      | 2012-01-20    | F      | Wagodia | 9823389745
+ Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545
+ Nirav     |  24 | online       | 2021-11-02    | M      | Patan   | 9223344545
+ Rohit     |  20 | offline      | 2020-08-02    | M      | Valsad  | 9223344234
+ Priyanshi |  30 | online       | 2020-09-04    | F      | Goa     | 9223344234
+(10 rows)
+
+                                                     ^
+store=# alter table customer  add quantity int;
+x	 TABLE
+store=# \d
+                 List of relations
+ Schema |        Name        |   Type   |  Owner
+--------+--------------------+----------+----------
+ public | customer           | table    | postgres
+ public | items              | table    | postgres
+ public | items_items_id_seq | sequence | postgres
+(3 rows)
+
+
+store=# \d customer
+                        Table "public.customer"
+    Column     |         Type          | Collation | Nullable | Default
+---------------+-----------------------+-----------+----------+---------
+ c_name        | character varying(32) |           |          |
+ age           | smallint              |           |          |
+ payment_mode  | character varying(32) |           | not null |
+ purchase_date | date                  |           |          |
+ gender        | character(2)          |           | not null |
+ area          | character varying(32) |           |          |
+ mobile_no     | character varying(12) |           |          |
+ quantity      | integer               |           |          |
+
+
+postgres=# \c store
+You are now connected to database "store" as user "postgres".
+store=# select * from customer;
+  c_name   | age | payment_mode | purchase_date | gender |  area   | mobile_no  | quantity
+-----------+-----+--------------+---------------+--------+---------+------------+----------
+ Nitin     |  21 | online       | 2022-11-10    | M      | Dwarka  | 9811255681 |
+ Omkar     |  22 | online       | 2022-01-01    | M      | Surat   | 9899520245 |
+ Palak     |  22 | offline      | 2022-11-12    | F      | Ratlam  | 9823450245 |
+ Yathi     |  22 | offline      | 2012-11-12    | M      | Baroda  | 9823345245 |
+ Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545 |
+ Preeti    |  23 | offline      | 2012-01-20    | F      | Wagodia | 9823389745 |
+ Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545 |
+ Nirav     |  24 | online       | 2021-11-02    | M      | Patan   | 9223344545 |
+ Rohit     |  20 | offline      | 2020-08-02    | M      | Valsad  | 9223344234 |
+ Priyanshi |  30 | online       | 2020-09-04    | F      | Goa     | 9223344234 |
+(10 rows)
+
+
+store=# update  customer set quantity=12;
+UPDATE 10
+store=# select * from customer;
+  c_name   | age | payment_mode | purchase_date | gender |  area   | mobile_no  | quantity
+-----------+-----+--------------+---------------+--------+---------+------------+----------
+ Nitin     |  21 | online       | 2022-11-10    | M      | Dwarka  | 9811255681 |       12
+ Omkar     |  22 | online       | 2022-01-01    | M      | Surat   | 9899520245 |       12
+ Palak     |  22 | offline      | 2022-11-12    | F      | Ratlam  | 9823450245 |       12
+ Yathi     |  22 | offline      | 2012-11-12    | M      | Baroda  | 9823345245 |       12
+ Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545 |       12
+ Preeti    |  23 | offline      | 2012-01-20    | F      | Wagodia | 9823389745 |       12
+ Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545 |       12
+ Nirav     |  24 | online       | 2021-11-02    | M      | Patan   | 9223344545 |       12
+ Rohit     |  20 | offline      | 2020-08-02    | M      | Valsad  | 9223344234 |       12
+ Priyanshi |  30 | online       | 2020-09-04    | F      | Goa     | 9223344234 |       12
+(10 rows)
+
+                                         ^
+store=# update  customer set quantity=12 where c_name='Nitin';
+UPDATE 1
+store=# update  customer set quantity=10 where c_name='Omkar';
+UPDATE 1
+store=# update  customer set quantity=14 where c_name='Palak';
+UPDATE 1
+store=# update  customer set quantity=14 where c_name='Yathi';
+UPDATE 1
+store=# update  customer set quantity=15 where c_name='Riona';
+UPDATE 2
+store=# select * from customer;
+  c_name   | age | payment_mode | purchase_date | gender |  area   | mobile_no  | quantity
+-----------+-----+--------------+---------------+--------+---------+------------+----------
+ Preeti    |  23 | offline      | 2012-01-20    | F      | Wagodia | 9823389745 |       12
+ Nirav     |  24 | online       | 2021-11-02    | M      | Patan   | 9223344545 |       12
+ Rohit     |  20 | offline      | 2020-08-02    | M      | Valsad  | 9223344234 |       12
+ Priyanshi |  30 | online       | 2020-09-04    | F      | Goa     | 9223344234 |       12
+ Nitin     |  21 | online       | 2022-11-10    | M      | Dwarka  | 9811255681 |       12
+ Omkar     |  22 | online       | 2022-01-01    | M      | Surat   | 9899520245 |       10
+ Palak     |  22 | offline      | 2022-11-12    | F      | Ratlam  | 9823450245 |       14
+ Yathi     |  22 | offline      | 2012-11-12    | M      | Baroda  | 9823345245 |       14
+ Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545 |       15
+ Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545 |       15
+(10 rows)
+
+
+
+store=# select c_name from customer order by c_name;
+  c_name
+-----------
+ Nirav
+ Nitin
+ Omkar
+ Palak
+ Preeti
+ Priyanshi
+ Riona
+ Riona
+ Rohit
+ Yathi
+(10 rows)
+
+
+store=# select c_name from customer order by c_name offset 1;
+  c_name
+-----------
+ Nitin
+ Omkar
+ Palak
+ Preeti
+ Priyanshi
+ Riona
+ Riona
+ Rohit
+ Yathi
+(9 rows)
+
+
+store=# select c_name from customer order by c_name offset 3;
+  c_name
+-----------
+ Palak
+ Preeti
+ Priyanshi
+ Riona
+ Riona
+ Rohit
+ Yathi
+(7 rows)
+
+
+
+store=# select c_name from customer where c_name between 'N' and 'P' order by c_name;
+ c_name
+--------
+ Nirav
+ Nitin
+ Omkar
+(3 rows)
+
+
+                                                             ^
+store=# select c_name , purchase_date from customer where date_part('month',purchase_date)=2;
+ c_name | purchase_date
+--------+---------------
+(0 rows)
+
+
+store=# select c_name , purchase_date from customer where date_part('month',purchase_date)=10;
+ c_name | purchase_date
+--------+---------------
+(0 rows)
+
+
+store=# select c_name , purchase_date from customer where date_part('month',purchase_date)=11;
+ c_name | purchase_date
+--------+---------------
+ Nirav  | 2021-11-02
+ Nitin  | 2022-11-10
+ Palak  | 2022-11-12
+ Yathi  | 2012-11-12
+ Riona  | 2012-11-02
+ Riona  | 2012-11-02
+(6 rows)
+
+
+                                                             ^
+store=# select c_name , purchase_date from customer where date_part('month',purchase_date)=2;
+ c_name | purchase_date
+--------+---------------
+(0 rows)
+
+
+store=# select c_name , purchase_date from customer where date_part('month',purchase_date)=10;
+ c_name | purchase_date
+--------+---------------
+(0 rows)
+
+
+store=# select c_name , purchase_date from customer where date_part('month',purchase_date)=11;
+ c_name | purchase_date
+--------+---------------
+ Nirav  | 2021-11-02
+ Nitin  | 2022-11-10
+ Palak  | 2022-11-12
+ Yathi  | 2012-11-12
+ Riona  | 2012-11-02
+ Riona  | 2012-11-02
+(6 rows)
+                                                             ^
+store=# select c_name , purchase_date from customer where date_part('month',purchase_date)=2;
+ c_name | purchase_date
+--------+---------------
+(0 rows)
+
+
+store=# select c_name , purchase_date from customer where date_part('month',purchase_date)=10;
+ c_name | purchase_date
+--------+---------------
+(0 rows)
+
+
+store=# select c_name , purchase_date from customer where date_part('month',purchase_date)=11;
+ c_name | purchase_date
+--------+---------------
+ Nirav  | 2021-11-02
+ Nitin  | 2022-11-10
+ Palak  | 2022-11-12
+ Yathi  | 2012-11-12
+ Riona  | 2012-11-02
+ Riona  | 2012-11-02
+(6 rows)
+                                                             ^
+store=# select c_name , purchase_date from customer where date_part('month',purchase_date)=2;
+ c_name | purchase_date
+--------+---------------
+(0 rows)
+
+
+store=# select c_name , purchase_date from customer where date_part('month',purchase_date)=10;
+ c_name | purchase_date
+--------+---------------
+(0 rows)
+
+
+store=# select c_name , purchase_date from customer where date_part('month',purchase_date)=11;
+ c_name | purchase_date
+--------+---------------
+ Nirav  | 2021-11-02
+ Nitin  | 2022-11-10
+ Palak  | 2022-11-12
+ Yathi  | 2012-11-12
+ Riona  | 2012-11-02
+ Riona  | 2012-11-02
+(6 rows)
+
+
+
+store=# select c_name , purchase_date from customer where date_part('month',purchase_date)>2;
+  c_name   | purchase_date
+-----------+---------------
+ Nirav     | 2021-11-02
+ Rohit     | 2020-08-02
+ Priyanshi | 2020-09-04
+ Nitin     | 2022-11-10
+ Palak     | 2022-11-12
+ Yathi     | 2012-11-12
+ Riona     | 2012-11-02
+ Riona     | 2012-11-02
+(8 rows)
+
+
+store=# select c_name , purchase_date from customer where date_part('day',purchase_date)>2;
+  c_name   | purchase_date
+-----------+---------------
+ Preeti    | 2012-01-20
+ Priyanshi | 2020-09-04
+ Nitin     | 2022-11-10
+ Palak     | 2022-11-12
+ Yathi     | 2012-11-12
+(5 rows)
+
+
+store=# select c_name , purchase_date from customer where date_part('day',purchase_date)>10;
+ c_name | purchase_date
+--------+---------------
+ Preeti | 2012-01-20
+ Palak  | 2022-11-12
+ Yathi  | 2012-11-12
+(3 rows)
+
+
+store=# select c_name , purchase_date from customer where date_part('day',purchase_date)>16;
+ c_name | purchase_date
+--------+---------------
+ Preeti | 2012-01-20
+(1 row)
+
+
+store=# select c_name , purchase_date from customer where date_part('day',purchase_date)>16 and date_part('day',purchase_date)<22;
+ c_name | purchase_date
+--------+---------------
+ Preeti | 2012-01-20
+(1 row)
+
+
+store=# select c_name , purchase_date from customer where date_part('day',purchase_date)>1 and date_part('day',purchase_date)<20;
+  c_name   | purchase_date
+-----------+---------------
+ Nirav     | 2021-11-02
+ Rohit     | 2020-08-02
+ Priyanshi | 2020-09-04
+ Nitin     | 2022-11-10
+ Palak     | 2022-11-12
+ Yathi     | 2012-11-12
+ Riona     | 2012-11-02
+ Riona     | 2012-11-02
+(8 rows)
+
+
+store=# select c_name , purchase_date from customer where date_part('day',purchase_date)>1 and date_part('day',purchase_date)<10;
+  c_name   | purchase_date
+-----------+---------------
+ Nirav     | 2021-11-02
+ Rohit     | 2020-08-02
+ Priyanshi | 2020-09-04
+ Riona     | 2012-11-02
+ Riona     | 2012-11-02
+(5 rows)
+
+
+
+store=# select c_name , purchase_date from customer where date_part('day',purchase_date)<>1 and date_part('day',purchase_date)<>10;
+  c_name   | purchase_date
+-----------+---------------
+ Preeti    | 2012-01-20
+ Nirav     | 2021-11-02
+ Rohit     | 2020-08-02
+ Priyanshi | 2020-09-04
+ Palak     | 2022-11-12
+ Yathi     | 2012-11-12
+ Riona     | 2012-11-02
+ Riona     | 2012-11-02
+(8 rows)
+
+
+store=# select c_name , purchase_date from customer where date_part('day',purchase_date)>=16;
+ c_name | purchase_date
+--------+---------------
+ Preeti | 2012-01-20
+(1 row)
+
+
+
+store=# select* from items;
+ items_id | prod_name | quantity |   mrp    |    mfg     |  exp_date  |    brand
+----------+-----------+----------+----------+------------+------------+-------------
+        1 | Rice      |       50 |   500.00 | 2022-02-12 | 2024-02-12 | Sona masuri
+        2 | Sugar     |       10 |    50.00 | 2022-03-12 | 2023-12-12 | Sugar crush
+        3 | Shampoo   |      100 |  5000.00 | 2012-07-16 | 2023-10-12 | Dove
+        4 | Cookies   |       20 |   500.00 | 2019-07-16 | 2023-07-12 | Britenia
+        5 | Maggies   |       20 |   200.00 | 2019-09-01 | 2023-07-03 | Nestle
+        6 | Soap      |      110 |  1200.00 | 2019-09-01 | 2021-07-03 | Patanjali
+        7 | Pen       |    11000 | 12000.00 | 2009-09-01 | 2021-09-03 | Cello
+        8 | Condom    |      100 |  1200.00 | 2019-10-01 | 2021-09-03 | Durex
+        9 | Chocolate |      100 |   120.00 | 2019-10-04 | 2021-05-30 | Eclairs
+       10 | Pencil    |    12000 | 12000.00 | 2018-02-22 | 2021-05-30 | Nataraj
+(10 rows)
+
+
+store=# select prod_name ,exp_date-mfg as "life span" from items;
+ prod_name | life span
+-----------+-----------
+ Rice      |       730
+ Sugar     |       640
+ Shampoo   |      4105
+ Cookies   |      1457
+ Maggies   |      1401
+ Soap      |       671
+ Pen       |      4385
+ Condom    |       703
+ Chocolate |       604
+ Pencil    |      1193
+(10 rows)
+
+
+                       ^
+store=# select now() , current_timestamp;
+               now                |        current_timestamp
+----------------------------------+----------------------------------
+ 2022-09-26 08:51:13.236474+05:30 | 2022-09-26 08:51:13.236474+05:30
+(1 row)
+
+
+store=# create table c_info as table customer;
+SELECT 10
+
+store=# create table c_info1 as select age ,c_name from customer;
+SELECT 10
+store=# select *from c_info1;
+ age |  c_name
+-----+-----------
+  23 | Preeti
+  24 | Nirav
+  20 | Rohit
+  30 | Priyanshi
+  21 | Nitin
+  22 | Omkar
+  22 | Palak
+  22 | Yathi
+  23 | Riona
+  23 | Riona
+(10 rows)
+
+
+store=# select *from c_info;
+  c_name   | age | payment_mode | purchase_date | gender |  area   | mobile_no  | quantity
+-----------+-----+--------------+---------------+--------+---------+------------+----------
+ Preeti    |  23 | offline      | 2012-01-20    | F      | Wagodia | 9823389745 |       12
+ Nirav     |  24 | online       | 2021-11-02    | M      | Patan   | 9223344545 |       12
+ Rohit     |  20 | offline      | 2020-08-02    | M      | Valsad  | 9223344234 |       12
+ Priyanshi |  30 | online       | 2020-09-04    | F      | Goa     | 9223344234 |       12
+ Nitin     |  21 | online       | 2022-11-10    | M      | Dwarka  | 9811255681 |       12
+ Omkar     |  22 | online       | 2022-01-01    | M      | Surat   | 9899520245 |       10
+ Palak     |  22 | offline      | 2022-11-12    | F      | Ratlam  | 9823450245 |       14
+ Yathi     |  22 | offline      | 2012-11-12    | M      | Baroda  | 9823345245 |       14
+ Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545 |       15
+ Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545 |       15
+(10 rows)
+
+store=# \copy items (items_id,prod_name,quantity,mrp,mfg,exp_date,brand) from 'C:\Users\Admin\Desktop\sql.csv' delimiter ',' csv header;
+COPY 2
+store=# select * from items;
+ items_id | prod_name | quantity |   mrp    |    mfg     |  exp_date  |    brand
+----------+-----------+----------+----------+------------+------------+-------------
+        1 | Rice      |       50 |   500.00 | 2022-02-12 | 2024-02-12 | Sona masuri
+        2 | Sugar     |       10 |    50.00 | 2022-03-12 | 2023-12-12 | Sugar crush
+        3 | Shampoo   |      100 |  5000.00 | 2012-07-16 | 2023-10-12 | Dove
+        4 | Cookies   |       20 |   500.00 | 2019-07-16 | 2023-07-12 | Britenia
+        5 | Maggies   |       20 |   200.00 | 2019-09-01 | 2023-07-03 | Nestle
+        6 | Soap      |      110 |  1200.00 | 2019-09-01 | 2021-07-03 | Patanjali
+        7 | Pen       |    11000 | 12000.00 | 2009-09-01 | 2021-09-03 | Cello
+        8 | Condom    |      100 |  1200.00 | 2019-10-01 | 2021-09-03 | Durex
+        9 | Chocolate |      100 |   120.00 | 2019-10-04 | 2021-05-30 | Eclairs
+       10 | Pencil    |    12000 | 12000.00 | 2018-02-22 | 2021-05-30 | Nataraj
+       11 | Mobile    |       50 | 40000.00 | 2020-04-21 | 2022-08-21 | Samsung
+       12 | scale     |      100 |   400.00 | 2018-09-12 | 2028-07-20 | Mitra
+(12 rows)
+
+
+                                             ^
+store=# alter table customer add customer_ID varchar(5) ;
+ALTER TABLE
+store=# select* from customer;
+  c_name   | age | payment_mode | purchase_date | gender |  area   | mobile_no  | quantity | customer_id
+-----------+-----+--------------+---------------+--------+---------+------------+----------+-------------
+ Preeti    |  23 | offline      | 2012-01-20    | F      | Wagodia | 9823389745 |       12 |
+ Nirav     |  24 | online       | 2021-11-02    | M      | Patan   | 9223344545 |       12 |
+ Rohit     |  20 | offline      | 2020-08-02    | M      | Valsad  | 9223344234 |       12 |
+ Priyanshi |  30 | online       | 2020-09-04    | F      | Goa     | 9223344234 |       12 |
+ Nitin     |  21 | online       | 2022-11-10    | M      | Dwarka  | 9811255681 |       12 |
+ Omkar     |  22 | online       | 2022-01-01    | M      | Surat   | 9899520245 |       10 |
+ Palak     |  22 | offline      | 2022-11-12    | F      | Ratlam  | 9823450245 |       14 |
+ Yathi     |  22 | offline      | 2012-11-12    | M      | Baroda  | 9823345245 |       14 |
+ Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545 |       15 |
+ Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545 |       15 |
+(10 rows)
+
+                                                       ^
+store=# update customer set customer_id ='c1' where c_name ='Preeti';
+UPDATE 1
+store=# update customer set customer_id ='c2' where c_name ='Nirav';
+UPDATE 1
+store=# update customer set customer_id ='c3' where c_name ='Rohit';
+UPDATE 1
+store=# update customer set customer_id ='c4' where c_name ='Priyanshi';
+UPDATE 1
+store=# update customer set customer_id ='c5' where c_name ='Nitin';
+UPDATE 1
+store=# update customer set customer_id ='c6' where c_name ='Omkar';
+UPDATE 1
+store=# update customer set customer_id ='c7' where c_name ='Palak';
+UPDATE 1
+store=# select *from customer;
+  c_name   | age | payment_mode | purchase_date | gender |  area   | mobile_no  | quantity | customer_id
+-----------+-----+--------------+---------------+--------+---------+------------+----------+-------------
+ Yathi     |  22 | offline      | 2012-11-12    | M      | Baroda  | 9823345245 |       14 |
+ Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545 |       15 |
+ Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545 |       15 |
+ Preeti    |  23 | offline      | 2012-01-20    | F      | Wagodia | 9823389745 |       12 | c1
+ Nirav     |  24 | online       | 2021-11-02    | M      | Patan   | 9223344545 |       12 | c2
+ Rohit     |  20 | offline      | 2020-08-02    | M      | Valsad  | 9223344234 |       12 | c3
+ Priyanshi |  30 | online       | 2020-09-04    | F      | Goa     | 9223344234 |       12 | c4
+ Nitin     |  21 | online       | 2022-11-10    | M      | Dwarka  | 9811255681 |       12 | c5
+ Omkar     |  22 | online       | 2022-01-01    | M      | Surat   | 9899520245 |       10 | c6
+ Palak     |  22 | offline      | 2022-11-12    | F      | Ratlam  | 9823450245 |       14 | c7
+(10 rows)
+
+
+store=# update customer set customer_id ='c8' where c_name ='Yathi';
+UPDATE 1
+store=# update customer set customer_id ='c9' where c_name ='Riona';
+UPDATE 2
+store=# update customer set customer_id ='c10' where c_name ='Riona';
+UPDATE 2
+store=# select *from customer;
+  c_name   | age | payment_mode | purchase_date | gender |  area   | mobile_no  | quantity | customer_id
+-----------+-----+--------------+---------------+--------+---------+------------+----------+-------------
+ Preeti    |  23 | offline      | 2012-01-20    | F      | Wagodia | 9823389745 |       12 | c1
+ Nirav     |  24 | online       | 2021-11-02    | M      | Patan   | 9223344545 |       12 | c2
+ Rohit     |  20 | offline      | 2020-08-02    | M      | Valsad  | 9223344234 |       12 | c3
+ Priyanshi |  30 | online       | 2020-09-04    | F      | Goa     | 9223344234 |       12 | c4
+ Nitin     |  21 | online       | 2022-11-10    | M      | Dwarka  | 9811255681 |       12 | c5
+ Omkar     |  22 | online       | 2022-01-01    | M      | Surat   | 9899520245 |       10 | c6
+ Palak     |  22 | offline      | 2022-11-12    | F      | Ratlam  | 9823450245 |       14 | c7
+ Yathi     |  22 | offline      | 2012-11-12    | M      | Baroda  | 9823345245 |       14 | c8
+ Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545 |       15 | c10
+ Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545 |       15 | c10
+(10 rows)
+
+
+store=# update customer set customer_id ='c9' where c_name ='Riona';
+UPDATE 2
+store=# select *from customer;
+  c_name   | age | payment_mode | purchase_date | gender |  area   | mobile_no  | quantity | customer_id
+-----------+-----+--------------+---------------+--------+---------+------------+----------+-------------
+ Preeti    |  23 | offline      | 2012-01-20    | F      | Wagodia | 9823389745 |       12 | c1
+ Nirav     |  24 | online       | 2021-11-02    | M      | Patan   | 9223344545 |       12 | c2
+ Rohit     |  20 | offline      | 2020-08-02    | M      | Valsad  | 9223344234 |       12 | c3
+ Priyanshi |  30 | online       | 2020-09-04    | F      | Goa     | 9223344234 |       12 | c4
+ Nitin     |  21 | online       | 2022-11-10    | M      | Dwarka  | 9811255681 |       12 | c5
+ Omkar     |  22 | online       | 2022-01-01    | M      | Surat   | 9899520245 |       10 | c6
+ Palak     |  22 | offline      | 2022-11-12    | F      | Ratlam  | 9823450245 |       14 | c7
+ Yathi     |  22 | offline      | 2012-11-12    | M      | Baroda  | 9823345245 |       14 | c8
+ Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545 |       15 | c9
+ Riona     |  23 | online       | 2012-11-02    | F      | Bharuch | 9823344545 |       15 | c9
+(10 rows)
+
+
+store=# delete from customer where c_name='Riona';
+DELETE 2
+store=# select* from customer;
+  c_name   | age | payment_mode | purchase_date | gender |  area   | mobile_no  | quantity | customer_id
+-----------+-----+--------------+---------------+--------+---------+------------+----------+-------------
+ Preeti    |  23 | offline      | 2012-01-20    | F      | Wagodia | 9823389745 |       12 | c1
+ Nirav     |  24 | online       | 2021-11-02    | M      | Patan   | 9223344545 |       12 | c2
+ Rohit     |  20 | offline      | 2020-08-02    | M      | Valsad  | 9223344234 |       12 | c3
+ Priyanshi |  30 | online       | 2020-09-04    | F      | Goa     | 9223344234 |       12 | c4
+ Nitin     |  21 | online       | 2022-11-10    | M      | Dwarka  | 9811255681 |       12 | c5
+ Omkar     |  22 | online       | 2022-01-01    | M      | Surat   | 9899520245 |       10 | c6
+ Palak     |  22 | offline      | 2022-11-12    | F      | Ratlam  | 9823450245 |       14 | c7
+ Yathi     |  22 | offline      | 2012-11-12    | M      | Baroda  | 9823345245 |       14 | c8
+(8 rows)
+
+
+store=# insert into customer values('Riona',22,'offline','2022-12-10','F','Bharuch','9899520243','22','c9');
+INSERT 0 1
+store=# insert into customer values('Yash',25,'onli','2012-2-10','M','Odisha','9899534243','24','c10');
+INSERT 0 1
+store=# select * from customer;
+  c_name   | age | payment_mode | purchase_date | gender |  area   | mobile_no  | quantity | customer_id
+-----------+-----+--------------+---------------+--------+---------+------------+----------+-------------
+ Preeti    |  23 | offline      | 2012-01-20    | F      | Wagodia | 9823389745 |       12 | c1
+ Nirav     |  24 | online       | 2021-11-02    | M      | Patan   | 9223344545 |       12 | c2
+ Rohit     |  20 | offline      | 2020-08-02    | M      | Valsad  | 9223344234 |       12 | c3
+ Priyanshi |  30 | online       | 2020-09-04    | F      | Goa     | 9223344234 |       12 | c4
+ Nitin     |  21 | online       | 2022-11-10    | M      | Dwarka  | 9811255681 |       12 | c5
+ Omkar     |  22 | online       | 2022-01-01    | M      | Surat   | 9899520245 |       10 | c6
+ Palak     |  22 | offline      | 2022-11-12    | F      | Ratlam  | 9823450245 |       14 | c7
+ Yathi     |  22 | offline      | 2012-11-12    | M      | Baroda  | 9823345245 |       14 | c8
+ Riona     |  22 | offline      | 2022-12-10    | F      | Bharuch | 9899520243 |       22 | c9
+ Yash      |  25 | onli         | 2012-02-10    | M      | Odisha  | 9899534243 |       24 | c10
+(10 rows)
+
+
+
+store=# select * from items;
+ items_id | prod_name | quantity |   mrp    |    mfg     |  exp_date  |    brand
+----------+-----------+----------+----------+------------+------------+-------------
+        1 | Rice      |       50 |   500.00 | 2022-02-12 | 2024-02-12 | Sona masuri
+        2 | Sugar     |       10 |    50.00 | 2022-03-12 | 2023-12-12 | Sugar crush
+        3 | Shampoo   |      100 |  5000.00 | 2012-07-16 | 2023-10-12 | Dove
+        4 | Cookies   |       20 |   500.00 | 2019-07-16 | 2023-07-12 | Britenia
+        5 | Maggies   |       20 |   200.00 | 2019-09-01 | 2023-07-03 | Nestle
+        6 | Soap      |      110 |  1200.00 | 2019-09-01 | 2021-07-03 | Patanjali
+        7 | Pen       |    11000 | 12000.00 | 2009-09-01 | 2021-09-03 | Cello
+        8 | Condom    |      100 |  1200.00 | 2019-10-01 | 2021-09-03 | Durex
+        9 | Chocolate |      100 |   120.00 | 2019-10-04 | 2021-05-30 | Eclairs
+       10 | Pencil    |    12000 | 12000.00 | 2018-02-22 | 2021-05-30 | Nataraj
+       11 | Mobile    |       50 | 40000.00 | 2020-04-21 | 2022-08-21 | Samsung
+       12 | scale     |      100 |   400.00 | 2018-09-12 | 2028-07-20 | Mitra
+(12 rows)
+
+
+store=# alter table items add customer_ID varchar(5);
+ALTER TABLE
+store=# select * from items;
+ items_id | prod_name | quantity |   mrp    |    mfg     |  exp_date  |    brand    | customer_id
+----------+-----------+----------+----------+------------+------------+-------------+-------------
+        1 | Rice      |       50 |   500.00 | 2022-02-12 | 2024-02-12 | Sona masuri |
+        2 | Sugar     |       10 |    50.00 | 2022-03-12 | 2023-12-12 | Sugar crush |
+        3 | Shampoo   |      100 |  5000.00 | 2012-07-16 | 2023-10-12 | Dove        |
+        4 | Cookies   |       20 |   500.00 | 2019-07-16 | 2023-07-12 | Britenia    |
+        5 | Maggies   |       20 |   200.00 | 2019-09-01 | 2023-07-03 | Nestle      |
+        6 | Soap      |      110 |  1200.00 | 2019-09-01 | 2021-07-03 | Patanjali   |
+        7 | Pen       |    11000 | 12000.00 | 2009-09-01 | 2021-09-03 | Cello       |
+        8 | Condom    |      100 |  1200.00 | 2019-10-01 | 2021-09-03 | Durex       |
+        9 | Chocolate |      100 |   120.00 | 2019-10-04 | 2021-05-30 | Eclairs     |
+       10 | Pencil    |    12000 | 12000.00 | 2018-02-22 | 2021-05-30 | Nataraj     |
+       11 | Mobile    |       50 | 40000.00 | 2020-04-21 | 2022-08-21 | Samsung     |
+       12 | scale     |      100 |   400.00 | 2018-09-12 | 2028-07-20 | Mitra       |
+(12 rows)
+
+
+store=# update items set customer_id='c1' where items_id=1;
+UPDATE 1
+store=# update items set customer_id='c2' where items_id=2;
+UPDATE 1
+store=# update items set customer_id='c1' where items_id=3;
+UPDATE 1
+store=# update items set customer_id='c3' where items_id=4;
+UPDATE 1
+store=# update items set customer_id='c4' where items_id=5;
+UPDATE 1
+store=# update items set customer_id='c5' where items_id=6;
+UPDATE 1
+store=# update items set customer_id='c6' where items_id=7;
+UPDATE 1
+store=# update items set customer_id='c7' where items_id=8;
+UPDATE 1
+store=# update items set customer_id='c8' where items_id=9;
+UPDATE 1
+store=# update items set customer_id='c9' where items_id=10;
+UPDATE 1
+store=# update items set customer_id='c9' where items_id=11;
+UPDATE 1
+store=# update items set customer_id='c10' where items_id=12;
+UPDATE 1
+store=# select * from items;
+ items_id | prod_name | quantity |   mrp    |    mfg     |  exp_date  |    brand    | customer_id
+----------+-----------+----------+----------+------------+------------+-------------+-------------
+        1 | Rice      |       50 |   500.00 | 2022-02-12 | 2024-02-12 | Sona masuri | c1
+        2 | Sugar     |       10 |    50.00 | 2022-03-12 | 2023-12-12 | Sugar crush | c2
+        3 | Shampoo   |      100 |  5000.00 | 2012-07-16 | 2023-10-12 | Dove        | c1
+        4 | Cookies   |       20 |   500.00 | 2019-07-16 | 2023-07-12 | Britenia    | c3
+        5 | Maggies   |       20 |   200.00 | 2019-09-01 | 2023-07-03 | Nestle      | c4
+        6 | Soap      |      110 |  1200.00 | 2019-09-01 | 2021-07-03 | Patanjali   | c5
+        7 | Pen       |    11000 | 12000.00 | 2009-09-01 | 2021-09-03 | Cello       | c6
+        8 | Condom    |      100 |  1200.00 | 2019-10-01 | 2021-09-03 | Durex       | c7
+        9 | Chocolate |      100 |   120.00 | 2019-10-04 | 2021-05-30 | Eclairs     | c8
+       10 | Pencil    |    12000 | 12000.00 | 2018-02-22 | 2021-05-30 | Nataraj     | c9
+       11 | Mobile    |       50 | 40000.00 | 2020-04-21 | 2022-08-21 | Samsung     | c9
+       12 | scale     |      100 |   400.00 | 2018-09-12 | 2028-07-20 | Mitra       | c10
+(12 rows)
+
+
+store=# alter table items add constraint fk_items foreign key(customer_id) references customer(customer_id);
+ALTER TABLE
+store=#
+
+               ^
+store=# select  c_name, prod_name from customer,items where customer.customer_id = items.customer_id;
+  c_name   | prod_name
+-----------+-----------
+ Preeti    | Rice
+ Nirav     | Sugar
+ Preeti    | Shampoo
+ Rohit     | Cookies
+ Priyanshi | Maggies
+ Nitin     | Soap
+ Omkar     | Pen
+ Palak     | Condom
+ Yathi     | Chocolate
+ Riona     | Pencil
+ Riona     | Mobile
+ Yash      | scale
+(12 rows)
+
+               ^
+store=# select customer.customer_id,c_name, items_id , prod_name from customer inner join items on customer.customer_id = items.customer_id;
+ customer_id |  c_name   | items_id | prod_name
+-------------+-----------+----------+-----------
+ c1          | Preeti    |        1 | Rice
+ c2          | Nirav     |        2 | Sugar
+ c1          | Preeti    |        3 | Shampoo
+ c3          | Rohit     |        4 | Cookies
+ c4          | Priyanshi |        5 | Maggies
+ c5          | Nitin     |        6 | Soap
+ c6          | Omkar     |        7 | Pen
+ c7          | Palak     |        8 | Condom
+ c8          | Yathi     |        9 | Chocolate
+ c9          | Riona     |       10 | Pencil
+ c9          | Riona     |       11 | Mobile
+ c10         | Yash      |       12 | scale
+(12 rows)
+
+
+store=# select items.customer_id,c_name, items_id , prod_name from customer inner join items on customer.customer_id = items.customer_id;
+ customer_id |  c_name   | items_id | prod_name
+-------------+-----------+----------+-----------
+ c1          | Preeti    |        1 | Rice
+ c2          | Nirav     |        2 | Sugar
+ c1          | Preeti    |        3 | Shampoo
+ c3          | Rohit     |        4 | Cookies
+ c4          | Priyanshi |        5 | Maggies
+ c5          | Nitin     |        6 | Soap
+ c6          | Omkar     |        7 | Pen
+ c7          | Palak     |        8 | Condom
+ c8          | Yathi     |        9 | Chocolate
+ c9          | Riona     |       10 | Pencil
+ c9          | Riona     |       11 | Mobile
+ c10         | Yash      |       12 | scale
+(12 rows)
+
+                                                             ^
+store=# select customer.customer_id,c_name, items_id , prod_name from customer full join items on customer.customer_id = items.customer_id;
+ customer_id |  c_name   | items_id | prod_name
+-------------+-----------+----------+-----------
+ c1          | Preeti    |        1 | Rice
+ c2          | Nirav     |        2 | Sugar
+ c1          | Preeti    |        3 | Shampoo
+ c3          | Rohit     |        4 | Cookies
+ c4          | Priyanshi |        5 | Maggies
+ c5          | Nitin     |        6 | Soap
+ c6          | Omkar     |        7 | Pen
+ c7          | Palak     |        8 | Condom
+ c8          | Yathi     |        9 | Chocolate
+ c9          | Riona     |       10 | Pencil
+ c9          | Riona     |       11 | Mobile
+ c10         | Yash      |       12 | scale
+(12 rows)
+
+
+store=# select customer.customer_id,c_name, items_id , prod_name from customer left join items on customer.customer_id = items.customer_id;
+ customer_id |  c_name   | items_id | prod_name
+-------------+-----------+----------+-----------
+ c1          | Preeti    |        1 | Rice
+ c2          | Nirav     |        2 | Sugar
+ c1          | Preeti    |        3 | Shampoo
+ c3          | Rohit     |        4 | Cookies
+ c4          | Priyanshi |        5 | Maggies
+ c5          | Nitin     |        6 | Soap
+ c6          | Omkar     |        7 | Pen
+ c7          | Palak     |        8 | Condom
+ c8          | Yathi     |        9 | Chocolate
+ c9          | Riona     |       10 | Pencil
+ c9          | Riona     |       11 | Mobile
+ c10         | Yash      |       12 | scale
+(12 rows)
+
+
+store=# select customer.customer_id,c_name, items_id , prod_name from customer right join items on customer.customer_id = items.customer_id;
+ customer_id |  c_name   | items_id | prod_name
+-------------+-----------+----------+-----------
+ c1          | Preeti    |        1 | Rice
+ c2          | Nirav     |        2 | Sugar
+ c1          | Preeti    |        3 | Shampoo
+ c3          | Rohit     |        4 | Cookies
+ c4          | Priyanshi |        5 | Maggies
+ c5          | Nitin     |        6 | Soap
+ c6          | Omkar     |        7 | Pen
+ c7          | Palak     |        8 | Condom
+ c8          | Yathi     |        9 | Chocolate
+ c9          | Riona     |       10 | Pencil
+ c9          | Riona     |       11 | Mobile
+ c10         | Yash      |       12 | scale
+(12 rows)
+            
+     Assignment 1 
+
+       
+postgres=# create database world;
+CREATE DATABASE
+postgres=# \c world
+You are now connected to database "world" as user "postgres".
+world=# create table countries(
+world(# country_id serial,
+world(# country_name varchar(32) not null,
+world(# land_area integer not null,
+world(# populattion integer not null,
+world(# date_of_independence date,
+world(# constraint countries_pk primary key(country_id));
+CREATE TABLE
+world=# select * from countries;
+ country_id | country_name | land_area | populattion | date_of_independence
+------------+--------------+-----------+-------------+----------------------
+(0 rows)
+
+
+                         ^
+world=# alter table countries drop populattion;
+ALTER TABLE
+world=# alter table countries drop date_of_independence;
+ALTER TABLE                               ^
+world=# alter table countries add population int;
+ALTER TABLE
+world=# alter table countries add date_of_independence date;
+ALTER TABLE
+world=# select * from countries;
+ country_id | country_name | land_area | population | date_of_independence
+------------+--------------+-----------+------------+----------------------
+(0 rows)
+
+
+world=# \copy countries (country_id,country_name,land_area,population,date_of_independence) from 'C:\Users\Admin\Desktop\sql.csv' delimiter ',' csv header;
+ERROR:  extra data after last expected column
+CONTEXT:  COPY countries, line 2: "1,China,NULL,1440297825,153,9388211"
+world=# alter table drop populattion from countries;
+
+                      ^
+world=# select * from countries;
+ country_id | country_name | land_area | population | date_of_independence
+------------+--------------+-----------+------------+----------------------
+(0 rows)
+
+
+world=# \d countries
+                                              Table "public.countries"
+        Column        |         Type          | Collation | Nullable |                    Default
+----------------------+-----------------------+-----------+----------+-----------------------------------------------
+ country_id           | integer               |           | not null | nextval('countries_country_id_seq'::regclass)
+ country_name         | character varying(32) |           | not null |
+ land_area            | integer               |           | not null |
+ population           | integer               |           |          |
+ date_of_independence | date                  |           |          |
+Indexes:
+    "countries_pk" PRIMARY KEY, btree (country_id)
+
+                                                            ^
+world=# alter table countries alter column country_name drop not null;
+ALTER TABLE
+
+world=# \d countries
+                                              Table "public.countries"
+        Column        |         Type          | Collation | Nullable |                    Default
+----------------------+-----------------------+-----------+----------+-----------------------------------------------
+ country_id           | integer               |           | not null | nextval('countries_country_id_seq'::regclass)
+ country_name         | character varying(32) |           |          |
+ land_area            | integer               |           | not null |
+ population           | integer               |           |          |
+ date_of_independence | date                  |           |          |
+Indexes:
+    "countries_pk" PRIMARY KEY, btree (country_id)
+
+
+
+
+world=# \d countries
+                                              Table "public.countries"
+        Column        |         Type          | Collation | Nullable |                    Default
+----------------------+-----------------------+-----------+----------+-----------------------------------------------
+ country_id           | integer               |           | not null | nextval('countries_country_id_seq'::regclass)
+ country_name         | character varying(32) |           | not null |
+ land_area            | integer               |           | not null |
+ population           | integer               |           |          |
+ date_of_independence | date                  |           |          |
+Indexes:
+    "countries_pk" PRIMARY KEY, btree (country_id)
+
+
+world=# alter table countries alter column country_name drop not null;
+ALTER TABLE
+
+                                                            ^
+world=# \d countries
+                                              Table "public.countries"
+        Column        |         Type          | Collation | Nullable |                    Default
+----------------------+-----------------------+-----------+----------+-----------------------------------------------
+ country_id           | integer               |           | not null | nextval('countries_country_id_seq'::regclass)
+ country_name         | character varying(32) |           |          |
+ land_area            | integer               |           | not null |
+ population           | integer               |           |          |
+ date_of_independence | date                  |           |          |
+Indexes:
+    "countries_pk" PRIMARY KEY, btree (country_id)
+
+
+world=# select* from countries;
+ country_id | country_name | land_area | population | date_of_independence
+------------+--------------+-----------+------------+----------------------
+(0 rows)
+
+
+                                                         ^
+world=# alter table countries alter date_of_independence  type varchar(32);
+ALTER TABLE
+world=# \d countries
+                                              Table "public.countries"
+        Column        |         Type          | Collation | Nullable |                    Default
+----------------------+-----------------------+-----------+----------+-----------------------------------------------
+ country_id           | integer               |           | not null | nextval('countries_country_id_seq'::regclass)
+ country_name         | character varying(32) |           |          |
+ land_area            | integer               |           | not null |
+ population           | integer               |           |          |
+ date_of_independence | character varying(32) |           |          |
+Indexes:
+    "countries_pk" PRIMARY KEY, btree (country_id)
+
+
+world=# \copy countries( country_id,country_name,land_area,population,date_of_independence) from 'C:\Users\Admin\Desktop\sql.csv' delimiter ',' csv header;
+COPY 49
+
+world=# select * from countries;
+ country_id |  country_name  | land_area | population | date_of_independence
+------------+----------------+-----------+------------+----------------------
+          1 | China          |   9388211 | 1440297825 | NULL
+          2 | India          |   2973190 | 1382345085 | 8/15/1947
+          3 | United States  |   9147420 |  331341050 | 07-04-3676
+          4 | Indonesia      |   1811570 |  274021604 | 8/17/1945
+          5 | Pakistan       |    770880 |  221612785 | 8/14/1947
+          6 | Brazil         |   8358140 |  212821986 | 09-07-3722
+          7 | Nigeria        |    910770 |  206984347 | 10-01-1960
+          8 | Bangladesh     |    130170 |  164972348 | 3/26/1971
+          9 | Russia         |  16376870 |  145945524 | 06-12-1992
+         10 | Mexico         |   1943950 |  129166028 | 9/16/3710
+         11 | Japan          |    364555 |  126407422 | NULL
+         12 | Ethiopia       |   1000000 |  115434444 | NULL
+         13 | Philippines    |    298170 |  109830324 | 06-12-3798
+         14 | Egypt          |    995450 |  102659126 | NULL
+         15 | Vietnam        |    310070 |   97490013 | 09-02-1945
+         16 | DR Congo       |   2267050 |   90003954 | NULL
+         17 | Turkey         |    769630 |   84495243 | 10/29/1923
+         18 | Iran           |   1628550 |   84176929 | NULL
+         19 | Germany        |    348560 |   83830972 | NULL
+         20 | Thailand       |    510890 |   69830779 | NULL
+         21 | United Kingdom |    241930 |   67948282 | NULL
+         22 | France         |    547557 |   65298930 | NULL
+         23 | Italy          |    294140 |   60446035 | NULL
+         24 | Tanzania       |    885800 |   60012400 | 12-09-1961
+         25 | South Africa   |   1213090 |   59436725 | 12-11-1931
+         26 | Myanmar        |    653290 |   54473253 | NULL
+         27 | Kenya          |    569140 |   53968739 | 12-12-1963
+         28 | South Korea    |     97230 |   51276977 | NULL
+         29 | Colombia       |   1109500 |   50976248 | NULL
+         30 | Spain          |    498800 |   46757980 | NULL
+         31 | Uganda         |    199810 |   45974931 | 10-09-1962
+         32 | Argentina      |   2736690 |   45267449 | 07-09-3716
+         33 | Algeria        |   2381740 |   43984569 | 07-05-1962
+         34 | Sudan          |   1765048 |   44019263 | 01-01-1956
+         35 | Ukraine        |    579320 |   43686577 | 8/24/1991
+         36 | Iraq           |    434320 |   40372771 | 10-03-1932
+         37 | Afghanistan    |    652860 |   39074280 | 8/19/1919
+         38 | Poland         |    306230 |   37839255 | 11-11-1918
+         39 | Canada         |   9093510 |   37799407 | 07-01-3767
+         40 | Morocco        |    446300 |   36985624 | 11/18/1955
+         41 | Saudi Arabia   |   2149690 |   34905942 | NULL
+-- More  --
+
+world=# select* from countries where date_of_independence='NULL';
+ country_id |  country_name  | land_area | population | date_of_independence
+------------+----------------+-----------+------------+----------------------
+          1 | China          |   9388211 | 1440297825 | NULL
+         11 | Japan          |    364555 |  126407422 | NULL
+         12 | Ethiopia       |   1000000 |  115434444 | NULL
+         14 | Egypt          |    995450 |  102659126 | NULL
+         16 | DR Congo       |   2267050 |   90003954 | NULL
+         18 | Iran           |   1628550 |   84176929 | NULL
+         19 | Germany        |    348560 |   83830972 | NULL
+         20 | Thailand       |    510890 |   69830779 | NULL
+         21 | United Kingdom |    241930 |   67948282 | NULL
+         22 | France         |    547557 |   65298930 | NULL
+         23 | Italy          |    294140 |   60446035 | NULL
+         26 | Myanmar        |    653290 |   54473253 | NULL
+         28 | South Korea    |     97230 |   51276977 | NULL
+         29 | Colombia       |   1109500 |   50976248 | NULL
+         30 | Spain          |    498800 |   46757980 | NULL
+         41 | Saudi Arabia   |   2149690 |   34905942 | NULL
+         49 | Nepal          |    143350 |   29225196 | NULL
+(17 rows)
+
+
+
+world=# select* from countries where land_area<=800000;
+ country_id |  country_name  | land_area | population | date_of_independence
+------------+----------------+-----------+------------+----------------------
+          5 | Pakistan       |    770880 |  221612785 | 8/14/1947
+          8 | Bangladesh     |    130170 |  164972348 | 3/26/1971
+         11 | Japan          |    364555 |  126407422 | NULL
+         13 | Philippines    |    298170 |  109830324 | 06-12-3798
+         15 | Vietnam        |    310070 |   97490013 | 09-02-1945
+         17 | Turkey         |    769630 |   84495243 | 10/29/1923
+         19 | Germany        |    348560 |   83830972 | NULL
+         20 | Thailand       |    510890 |   69830779 | NULL
+         21 | United Kingdom |    241930 |   67948282 | NULL
+         22 | France         |    547557 |   65298930 | NULL
+         23 | Italy          |    294140 |   60446035 | NULL
+         26 | Myanmar        |    653290 |   54473253 | NULL
+         27 | Kenya          |    569140 |   53968739 | 12-12-1963
+         28 | South Korea    |     97230 |   51276977 | NULL
+         30 | Spain          |    498800 |   46757980 | NULL
+         31 | Uganda         |    199810 |   45974931 | 10-09-1962
+         35 | Ukraine        |    579320 |   43686577 | 8/24/1991
+         36 | Iraq           |    434320 |   40372771 | 10-03-1932
+         37 | Afghanistan    |    652860 |   39074280 | 8/19/1919
+         38 | Poland         |    306230 |   37839255 | 11-11-1918
+         40 | Morocco        |    446300 |   36985624 | 11/18/1955
+         42 | Uzbekistan     |    425400 |   33551824 | 09-01-1991
+         45 | Malaysia       |    328550 |   32436963 | 8/31/1957
+         46 | Mozambique     |    786380 |   31398811 | 6/25/1975
+         47 | Ghana          |    227540 |   31181428 | 03-06-1957
+         48 | Yemen          |    527970 |   29935468 | 11/30/1967
+         49 | Nepal          |    143350 |   29225196 | NULL
+(27 rows)
+
+
+world=# select* from countries where population>=2299929299;
+ country_id | country_name | land_area | population | date_of_independence
+------------+--------------+-----------+------------+----------------------
+(0 rows)
+
+
+world=# select* from countries where population>=22999;
+ country_id |  country_name  | land_area | population | date_of_independence
+------------+----------------+-----------+------------+----------------------
+          1 | China          |   9388211 | 1440297825 | NULL
+          2 | India          |   2973190 | 1382345085 | 8/15/1947
+          3 | United States  |   9147420 |  331341050 | 07-04-3676
+          4 | Indonesia      |   1811570 |  274021604 | 8/17/1945
+          5 | Pakistan       |    770880 |  221612785 | 8/14/1947
+          6 | Brazil         |   8358140 |  212821986 | 09-07-3722
+          7 | Nigeria        |    910770 |  206984347 | 10-01-1960
+          8 | Bangladesh     |    130170 |  164972348 | 3/26/1971
+          9 | Russia         |  16376870 |  145945524 | 06-12-1992
+         10 | Mexico         |   1943950 |  129166028 | 9/16/3710
+         11 | Japan          |    364555 |  126407422 | NULL
+         12 | Ethiopia       |   1000000 |  115434444 | NULL
+         13 | Philippines    |    298170 |  109830324 | 06-12-3798
+         14 | Egypt          |    995450 |  102659126 | NULL
+         15 | Vietnam        |    310070 |   97490013 | 09-02-1945
+         16 | DR Congo       |   2267050 |   90003954 | NULL
+         17 | Turkey         |    769630 |   84495243 | 10/29/1923
+         18 | Iran           |   1628550 |   84176929 | NULL
+         19 | Germany        |    348560 |   83830972 | NULL
+         20 | Thailand       |    510890 |   69830779 | NULL
+         21 | United Kingdom |    241930 |   67948282 | NULL
+         22 | France         |    547557 |   65298930 | NULL
+         23 | Italy          |    294140 |   60446035 | NULL
+         24 | Tanzania       |    885800 |   60012400 | 12-09-1961
+         25 | South Africa   |   1213090 |   59436725 | 12-11-1931
+         26 | Myanmar        |    653290 |   54473253 | NULL
+         27 | Kenya          |    569140 |   53968739 | 12-12-1963
+         28 | South Korea    |     97230 |   51276977 | NULL
+         29 | Colombia       |   1109500 |   50976248 | NULL
+         30 | Spain          |    498800 |   46757980 | NULL
+         31 | Uganda         |    199810 |   45974931 | 10-09-1962
+         32 | Argentina      |   2736690 |   45267449 | 07-09-3716
+         33 | Algeria        |   2381740 |   43984569 | 07-05-1962
+         34 | Sudan          |   1765048 |   44019263 | 01-01-1956
+         35 | Ukraine        |    579320 |   43686577 | 8/24/1991
+         36 | Iraq           |    434320 |   40372771 | 10-03-1932
+         37 | Afghanistan    |    652860 |   39074280 | 8/19/1919
+         38 | Poland         |    306230 |   37839255 | 11-11-1918
+         39 | Canada         |   9093510 |   37799407 | 07-01-3767
+         40 | Morocco        |    446300 |   36985624 | 11/18/1955
+         41 | Saudi Arabia   |   2149690 |   34905942 | NULL
+-- More  --
+
+
+                     ^
+world=# select* from countries where country_name='India';
+ country_id | country_name | land_area | population | date_of_independence
+------------+--------------+-----------+------------+----------------------
+          2 | India        |   2973190 | 1382345085 | 8/15/1947
+(1 row)
+
+
+
+
+
+

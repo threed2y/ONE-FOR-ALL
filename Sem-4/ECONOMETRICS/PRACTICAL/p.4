@@ -1,0 +1,30 @@
+---
+title: "Autocorralion"
+author: "Mahek"
+date: '2022-03-11'
+output: word_document
+---
+
+```{r}
+data= read.csv("M:/M.sc/MSC sem 4/Eco/Eco lab -2022/p.4.autocorr.ddata.csv")
+print(data)
+
+acf(data)
+```
+
+```{r}
+df= read.csv("M:/M.sc/MSC sem 4/Eco/Eco lab -2022/p.3/eco data.csv")
+#fit a regression model
+model <- lm(Over.All.AQI~PM10, data=df)
+
+#view model summary
+summary(model)
+
+library(lmtest)
+
+#perform Breusch-Pagan Test
+bptest(model)
+
+```
+
+

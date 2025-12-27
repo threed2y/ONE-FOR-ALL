@@ -1,0 +1,89 @@
+select * from country;
+select code, name, population from country;
+select 
+  code "Country Code", 
+  name "Country", 
+  population "Population"
+from country;
+
+select 
+  code as "Country Code", 
+  name as "Country", 
+  population as "Population"
+from country;
+
+select 
+  code "Country Code", 
+  name "Country", 
+  population "Population"
+from country
+where population >= 1000000;
+
+select 
+  code "Country Code", 
+  name "Country", 
+  population "Population"
+from country
+where population >= 1000000
+limit 20;
+
+select 
+  code "Country Code", 
+  name "Country", 
+  population "Population"
+from country
+where population >= 1000000
+order by population;
+
+select 
+  code "Country Code", 
+  name "Country", 
+  population "Population"
+from country
+where population >= 1000000
+order by population desc;
+
+select * from city
+order by countrycode, population desc;
+
+select * from city
+where countrycode = 'IND'
+order by population desc;
+
+select * from city
+where population >= 5000000
+order by population desc;
+
+select city.name, country.name, city.population 
+from city, country
+where countrycode = code and city.population >= 5000000
+order by city.population desc;
+
+select 
+  code "Country Code", 
+  name "Country", 
+  population/100000  "Population (Lac)"
+from country
+where population >= 1000000
+order by population desc;
+
+select 
+  code "Country Code", 
+  upper(name) "Country", 
+  population/100000  "Population (Lac)"
+from country
+where population >= 1000000
+order by population desc;
+
+select * from countrylanguage limit 20;
+
+select count(language) from countrylanguage;
+
+select 
+  country.name "Country",
+  count(language) "No of Languages"
+from countrylanguage, country
+where countrycode = code
+group by country.name;
+
+select count(distinct(language)) from countrylanguage;
