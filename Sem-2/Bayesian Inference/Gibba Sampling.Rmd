@@ -1,0 +1,66 @@
+---
+title: "Gibbs Sampling"
+author: "V A Kalamkar"
+date: "2024-03-28"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Problem
+
+For a population with parameters ($\alpha$,$\beta$), the posterior density is given by, $$
+\pi^*(\alpha, \beta)\propto exp\left(-\frac {\alpha ^2 \beta ^2 + \alpha ^2 + \beta ^2 - 8\alpha - 8\beta}{2}\right)
+$$
+
+The conditional densities for the above posterior are,
+
+$\beta|\alpha \sim N\left(\frac{4}{1+\alpha^2},\frac{1}{1+\alpha^2}\right)$, and
+
+$\alpha|\beta \sim N\left(\frac{4}{1+\beta^2},\frac{1}{1+\beta^2}\right)$ respectively.
+
+Use Gibbs sampling to generate 1000 observations from the posterior distribution.
+
+```{r}
+n = 1000
+m = 500 # Number of initial observations to be discarded
+a = numeric(m+n)
+b = numeric(m+n)
+# initialize
+a[1] = 2
+b[1] = 2
+for (i in 2:(m+n)) {
+  a[i] = rnorm(1, mean = 4/(1+b[i-1]^2), sd = sqrt(1/(1+b[i-1]^2)))
+  b[i] = rnorm(1, mean = 4/(1+a[i]^2), sd = sqrt(1/(1+a[i]^2)))
+}
+```
+
+Lets look at first few simulated values
+
+```{r}
+cat('Initial Alpha values:\n')
+head(a)
+cat('Initial Beta values:\n')
+head(b)
+```
+
+## Bayes estimates of $\alpha$ and $\beta$
+
+```{r}
+cat('Mean alpha = ', mean(a[-(1:m)]),'\n')
+cat('Mean beta = ', mean(b[-(1:m)]))
+```
+
+### Histogram of $\alpha$
+
+```{r}
+hist(a[-(1:m)])
+```
+
+### Histogram of $\beta$
+
+```{r}
+hist(b[-(1:m)])
+```

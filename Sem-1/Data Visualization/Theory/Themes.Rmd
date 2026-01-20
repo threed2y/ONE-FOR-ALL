@@ -1,0 +1,109 @@
+---
+title: "ggplot Themes"
+output: html_notebook
+---
+
+ggplot provides a *Theme System* to provide a fine control over the **non-data elements** of the plot. Themes help us make the plot aesthetically pleasing or match an existing style guide. Themes give us control over the things like fonts, ticks, and backgrounds.
+
+This separation of control into data and non-data elements of a plot makes it very easy to design a plot. While using ggplot, we first determine how the data is displayed in the plot. Once the data is displayed properly, we edit every detail of the plot using the theming system.
+
+The theming system is composed of four main components:
+
+-   Theme **elements**: These are the non-data elements that you can control. For example,
+
+    -   `plot.title` element controls the appearance of the title of the plot title;
+
+    -   `axis.ticks.x`, element controls the ticks on the x axis;
+
+    -   `legend.key.height` element controls the height of the keys in the legend.
+
+-   **Element function**: Each element is associated with an element function, which describes the visual properties of the element. For example,
+
+    -   `element_text` function sets the font size, colour and face of text elements like `plot.title`.
+
+-   **`theme` function**: This function allows you to override the default theme elements by calling element functions, like `theme(plot.title = element_text(colour = "red"))`.
+
+-   Complete **themes**: These are the complete theme specifications comprising specifications of all theme elements. For example,`theme_grey` function sets all of the theme elements to the values that are designed to work together harmoniously.
+
+To understand these components, let us first prepare a scatter plot.
+
+```{r}
+library(ggplot2)
+splot = ggplot(mpg, aes(cty, hwy, color = factor(cyl))) +
+  geom_jitter() + 
+  geom_abline(colour = "grey50", size = 1)
+splot
+```
+
+The graph has served its purpose to convey the following information. '
+
+-   The mileage in city is highly correlated with mileage on highway.
+
+-   Both are highly related with the number of cylinders.
+
+-   The mileage on highway is always higher than that in city.
+
+-   The difference between the two increases with mileage in city.
+
+Now we are interested in improving the appearance of the plot. For this, we may consider the things such as
+
+-   Improving axes labels
+
+-   Adding plot title
+
+-   adjusting colors
+
+This is accomplished through the following code.
+
+```{r}
+labelled = splot +
+  labs(
+    x = "City mileage",
+    y = "Highway mileage",
+    colour = "Cylinders",
+    title = "Correlation between Highway and city mileage"
+  ) +
+  scale_colour_brewer(palette = "Set5")
+labelled
+```
+
+### Applying Theme
+
+#### Complete Themes
+
+Complete Themes are easiest to apply. ggplot comes with a number of built-in themes. `theme_grey` is the signature ggplot2 theme with a light grey background and white gridlines. There are totally 14 built_in themes including `theme_bw`, `theme_classic`, `theme_dark`, `theme_grey`, and `theme_light`. In the graph produced above, the default theme `theme_gey` has been applied.
+
+In the next code, we apply `theme_bw`.
+
+```{r}
+labelled + theme_bw()
+```
+
+#### Exercise
+
+1.  Try applying other built-in themes and see the results.
+2.  Built-in themes also accept parameters. Explore these parameters and understand their effect.
+
+Apart from the built-in themes in ggplot2, other packages also provide themes. `ggthemes` is one such package specifically developed to provide themes.
+
+The default theme can be changed with `theme_set` function.
+
+### Modifying theme components
+
+Modify an individual theme component you use code like
+
+`plot + theme(element.name = element_function())`.
+In the following code, we are modifying the components `plot.title`, `legend.background`, `legend.position`, `axis.ticks`, `panel.grid.major`, and `panel.grid.minor`.
+
+```{r}
+labelled +
+  theme_bw() + 
+  theme(
+    plot.title = element_text(face = "bold", size = 12),
+    legend.background = element_rect(fill = "white", size = 0.5, colour = "green"),
+    legend.position = c(0.1, 0.),
+    axis.ticks = element_line(colour = "grey70", size = 0.2),
+    panel.grid.major = element_line(colour = "grey70", size = 0.2),
+    panel.grid.minor = element_blank()
+  )
+```

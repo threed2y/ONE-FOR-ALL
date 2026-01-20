@@ -1,0 +1,43 @@
+# Metropolis Hastings Algorithm
+
+First we define the Posterior distribution from which we want to simulate the sample.
+
+```{r}
+beta = 3
+xi = 1.4
+dpost = function(alpha, Eta, x) {
+  fx = dweibull(x, shape = alpha, scale = Eta^(-1/alpha))
+  L = prod(fx)*dexp(alpha, rate = 1)*dgamma(Eta, shape=beta, rate = xi)
+  return(L)
+}
+```
+
+Next we define the proposal distribution to be used.
+
+```{r}
+dprop = function(a, e, a0, e0){
+  return(dexp(a, 1/a0)*dexp(e, 1/e0))
+}
+```
+
+Having defined the posterior distribution (the target) and the proposal distribution, now we can implement the Metropolis-Hastings algorithm as shown below.
+
+```{r}
+x = rweibull(25, shape = 1.2, scale = 2^(-1/1.2))
+n_terms <- 1000
+alpha = numeric(n_terms)
+eta = numeric(n_terms)
+alpha[1] = 1.1; eta[1]=2.1  # initial values
+for (i in 2:n_terms) {
+  a = rexp(1, rate = 1/alpha[i-1])
+  e = rexp(1, rate = 1/eta[i-1])
+  # Compute the acceptance probability
+  p = dpost(a, e, x)*dprop(alpha[i-1], eta[i-1], a, e)/
+      (dpost(alpha[i-1], eta[i-1], x)*dprop(a, e, alpha[i-1], eta[i-1]))
+  if (runif(1) < p) {
+    alpha[i] <- a; eta[i] = e
+  } else {
+      alpha[i] <- alpha[i-1]; eta[i] = eta[i-1]
+  }
+}
+```

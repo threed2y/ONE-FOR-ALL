@@ -1,0 +1,83 @@
+---
+title: 'ggplot + plotly'
+output:
+  html_document: default
+  pdf_document: default
+date: "2025-08-13"
+---
+
+
+
+```{r}
+
+## AN INTRO TO GGPLOT + PLOTLY TUTORIALS 
+
+# INSTALL PACKAGES
+
+library(ggplot2)
+library(plotly)
+
+# CREATE A BASIC GGPLOT2 PLOT
+
+p <- ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point() +
+  labs(title = "Car Weight vs. MPG",
+       x = "Weight (1000 lbs)",
+       y = "Miles Per Gallon")
+  
+print(p)
+
+
+# CUSTOMIZE THROUGH GGPLOT2 
+
+p2 <- ggplot(mtcars, aes(x = wt, y = mpg, color = factor(cyl))) +
+  geom_point(size = 3) +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "MPG vs Weight by Cylinder Count",
+       x = "Weight (1000 lbs)",
+       y = "MPG",
+       color = "Cylinders")
+
+print(p2)
+
+# Change point color by a factor (cyl) #
+
+# Add smoothing line (geom_smooth) #
+
+# CONVERT GGPLOT2 PLOT TO INTERACTIVE PLOTLY PLOT
+
+interactive_plot <- ggplotly(p2) %>%
+  layout(title = "Interactive MPG vs Weight",
+         xaxis = list(title = "Car Weight"),
+         yaxis = list(title = "Miles Per Gallon"))
+
+interactive_plot
+
+# USING PLOTLY WITHOUT GGPLOT2 
+
+plot_ly(data = mtcars, x = ~wt, y = ~mpg, type = 'scatter', mode = 'markers',
+        color = ~factor(cyl), marker = list(size = 10)) %>%
+  layout(title = "Plotly Scatter Plot",
+         xaxis = list(title = "Weight"),
+         yaxis = list(title = "MPG"))
+
+# SAVING THE PLOTS 
+
+ggsave("myplot.png", p2, width = 6, height = 4)
+
+htmlwidgets::saveWidget(interactive_plot, "interactive_plot.html")
+
+## Remember aesthetics (aes()) control mapping of variables. ##
+
+## Layers are additive: + adds geoms, themes, labels. ##
+
+## geom_point(), geom_line(), geom_smooth() are common geoms. ##
+
+## ggplotly() converts static ggplot2 objects to interactive plotly objects. ##
+
+## Use layout() in plotly to customize titles and axis labels after conversion.V ##
+
+
+
+```
+

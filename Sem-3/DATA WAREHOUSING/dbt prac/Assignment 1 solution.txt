@@ -1,0 +1,1256 @@
+Assignment 1
+Database postgres sql
+Nitin- Choudhary
+Msc Final
+
+       
+postgres=# create database world;
+CREATE DATABASE
+postgres=# \c world
+You are now connected to database "world" as user "postgres".
+world=# create table countries(
+world(# country_id serial,
+world(# country_name varchar(32) not null,
+world(# land_area integer not null,
+world(# populattion integer not null,
+world(# date_of_independence date,
+world(# constraint countries_pk primary key(country_id));
+CREATE TABLE
+world=# select * from countries;
+ country_id | country_name | land_area | populattion | date_of_independence
+------------+--------------+-----------+-------------+----------------------
+(0 rows)
+
+
+                         ^
+world=# alter table countries drop populattion;
+ALTER TABLE
+world=# alter table countries drop date_of_independence;
+ALTER TABLE                               ^
+world=# alter table countries add population int;
+ALTER TABLE
+world=# alter table countries add date_of_independence date;
+ALTER TABLE
+world=# select * from countries;
+ country_id | country_name | land_area | population | date_of_independence
+------------+--------------+-----------+------------+----------------------
+(0 rows)
+
+
+world=# \copy countries (country_id,country_name,land_area,population,date_of_independence) from 'C:\Users\Admin\Desktop\sql.csv' delimiter ',' csv header;
+ERROR:  extra data after last expected column
+CONTEXT:  COPY countries, line 2: "1,China,NULL,1440297825,153,9388211"
+world=# alter table drop populattion from countries;
+
+                      ^
+world=# select * from countries;
+ country_id | country_name | land_area | population | date_of_independence
+------------+--------------+-----------+------------+----------------------
+(0 rows)
+
+
+world=# \d countries
+                                              Table "public.countries"
+        Column        |         Type          | Collation | Nullable |                    Default
+----------------------+-----------------------+-----------+----------+-----------------------------------------------
+ country_id           | integer               |           | not null | nextval('countries_country_id_seq'::regclass)
+ country_name         | character varying(32) |           | not null |
+ land_area            | integer               |           | not null |
+ population           | integer               |           |          |
+ date_of_independence | date                  |           |          |
+Indexes:
+    "countries_pk" PRIMARY KEY, btree (country_id)
+
+                                                            ^
+world=# alter table countries alter column country_name drop not null;
+ALTER TABLE
+
+world=# \d countries
+                                              Table "public.countries"
+        Column        |         Type          | Collation | Nullable |                    Default
+----------------------+-----------------------+-----------+----------+-----------------------------------------------
+ country_id           | integer               |           | not null | nextval('countries_country_id_seq'::regclass)
+ country_name         | character varying(32) |           |          |
+ land_area            | integer               |           | not null |
+ population           | integer               |           |          |
+ date_of_independence | date                  |           |          |
+Indexes:
+    "countries_pk" PRIMARY KEY, btree (country_id)
+
+
+
+
+world=# \d countries
+                                              Table "public.countries"
+        Column        |         Type          | Collation | Nullable |                    Default
+----------------------+-----------------------+-----------+----------+-----------------------------------------------
+ country_id           | integer               |           | not null | nextval('countries_country_id_seq'::regclass)
+ country_name         | character varying(32) |           | not null |
+ land_area            | integer               |           | not null |
+ population           | integer               |           |          |
+ date_of_independence | date                  |           |          |
+Indexes:
+    "countries_pk" PRIMARY KEY, btree (country_id)
+
+
+world=# alter table countries alter column country_name drop not null;
+ALTER TABLE
+
+                                                            ^
+world=# \d countries
+                                              Table "public.countries"
+        Column        |         Type          | Collation | Nullable |                    Default
+----------------------+-----------------------+-----------+----------+-----------------------------------------------
+ country_id           | integer               |           | not null | nextval('countries_country_id_seq'::regclass)
+ country_name         | character varying(32) |           |          |
+ land_area            | integer               |           | not null |
+ population           | integer               |           |          |
+ date_of_independence | date                  |           |          |
+Indexes:
+    "countries_pk" PRIMARY KEY, btree (country_id)
+
+
+world=# select* from countries;
+ country_id | country_name | land_area | population | date_of_independence
+------------+--------------+-----------+------------+----------------------
+(0 rows)
+
+
+                                                         ^
+world=# alter table countries alter date_of_independence  type varchar(32);
+ALTER TABLE
+world=# \d countries
+                                              Table "public.countries"
+        Column        |         Type          | Collation | Nullable |                    Default
+----------------------+-----------------------+-----------+----------+-----------------------------------------------
+ country_id           | integer               |           | not null | nextval('countries_country_id_seq'::regclass)
+ country_name         | character varying(32) |           |          |
+ land_area            | integer               |           | not null |
+ population           | integer               |           |          |
+ date_of_independence | character varying(32) |           |          |
+Indexes:
+    "countries_pk" PRIMARY KEY, btree (country_id)
+
+
+world=# \copy countries( country_id,country_name,land_area,population,date_of_independence) from 'C:\Users\Admin\Desktop\sql.csv' delimiter ',' csv header;
+COPY 49
+
+world=# select * from countries;
+ country_id |  country_name  | land_area | population | date_of_independence
+------------+----------------+-----------+------------+----------------------
+          1 | China          |   9388211 | 1440297825 | NULL
+          2 | India          |   2973190 | 1382345085 | 8/15/1947
+          3 | United States  |   9147420 |  331341050 | 07-04-3676
+          4 | Indonesia      |   1811570 |  274021604 | 8/17/1945
+          5 | Pakistan       |    770880 |  221612785 | 8/14/1947
+          6 | Brazil         |   8358140 |  212821986 | 09-07-3722
+          7 | Nigeria        |    910770 |  206984347 | 10-01-1960
+          8 | Bangladesh     |    130170 |  164972348 | 3/26/1971
+          9 | Russia         |  16376870 |  145945524 | 06-12-1992
+         10 | Mexico         |   1943950 |  129166028 | 9/16/3710
+         11 | Japan          |    364555 |  126407422 | NULL
+         12 | Ethiopia       |   1000000 |  115434444 | NULL
+         13 | Philippines    |    298170 |  109830324 | 06-12-3798
+         14 | Egypt          |    995450 |  102659126 | NULL
+         15 | Vietnam        |    310070 |   97490013 | 09-02-1945
+         16 | DR Congo       |   2267050 |   90003954 | NULL
+         17 | Turkey         |    769630 |   84495243 | 10/29/1923
+         18 | Iran           |   1628550 |   84176929 | NULL
+         19 | Germany        |    348560 |   83830972 | NULL
+         20 | Thailand       |    510890 |   69830779 | NULL
+         21 | United Kingdom |    241930 |   67948282 | NULL
+         22 | France         |    547557 |   65298930 | NULL
+         23 | Italy          |    294140 |   60446035 | NULL
+         24 | Tanzania       |    885800 |   60012400 | 12-09-1961
+         25 | South Africa   |   1213090 |   59436725 | 12-11-1931
+         26 | Myanmar        |    653290 |   54473253 | NULL
+         27 | Kenya          |    569140 |   53968739 | 12-12-1963
+         28 | South Korea    |     97230 |   51276977 | NULL
+         29 | Colombia       |   1109500 |   50976248 | NULL
+         30 | Spain          |    498800 |   46757980 | NULL
+         31 | Uganda         |    199810 |   45974931 | 10-09-1962
+         32 | Argentina      |   2736690 |   45267449 | 07-09-3716
+         33 | Algeria        |   2381740 |   43984569 | 07-05-1962
+         34 | Sudan          |   1765048 |   44019263 | 01-01-1956
+         35 | Ukraine        |    579320 |   43686577 | 8/24/1991
+         36 | Iraq           |    434320 |   40372771 | 10-03-1932
+         37 | Afghanistan    |    652860 |   39074280 | 8/19/1919
+         38 | Poland         |    306230 |   37839255 | 11-11-1918
+         39 | Canada         |   9093510 |   37799407 | 07-01-3767
+         40 | Morocco        |    446300 |   36985624 | 11/18/1955
+         41 | Saudi Arabia   |   2149690 |   34905942 | NULL
+-- More  --
+
+world=# select* from countries where date_of_independence='NULL';
+ country_id |  country_name  | land_area | population | date_of_independence
+------------+----------------+-----------+------------+----------------------
+          1 | China          |   9388211 | 1440297825 | NULL
+         11 | Japan          |    364555 |  126407422 | NULL
+         12 | Ethiopia       |   1000000 |  115434444 | NULL
+         14 | Egypt          |    995450 |  102659126 | NULL
+         16 | DR Congo       |   2267050 |   90003954 | NULL
+         18 | Iran           |   1628550 |   84176929 | NULL
+         19 | Germany        |    348560 |   83830972 | NULL
+         20 | Thailand       |    510890 |   69830779 | NULL
+         21 | United Kingdom |    241930 |   67948282 | NULL
+         22 | France         |    547557 |   65298930 | NULL
+         23 | Italy          |    294140 |   60446035 | NULL
+         26 | Myanmar        |    653290 |   54473253 | NULL
+         28 | South Korea    |     97230 |   51276977 | NULL
+         29 | Colombia       |   1109500 |   50976248 | NULL
+         30 | Spain          |    498800 |   46757980 | NULL
+         41 | Saudi Arabia   |   2149690 |   34905942 | NULL
+         49 | Nepal          |    143350 |   29225196 | NULL
+(17 rows)
+
+
+
+world=# select* from countries where land_area<=800000;
+ country_id |  country_name  | land_area | population | date_of_independence
+------------+----------------+-----------+------------+----------------------
+          5 | Pakistan       |    770880 |  221612785 | 8/14/1947
+          8 | Bangladesh     |    130170 |  164972348 | 3/26/1971
+         11 | Japan          |    364555 |  126407422 | NULL
+         13 | Philippines    |    298170 |  109830324 | 06-12-3798
+         15 | Vietnam        |    310070 |   97490013 | 09-02-1945
+         17 | Turkey         |    769630 |   84495243 | 10/29/1923
+         19 | Germany        |    348560 |   83830972 | NULL
+         20 | Thailand       |    510890 |   69830779 | NULL
+         21 | United Kingdom |    241930 |   67948282 | NULL
+         22 | France         |    547557 |   65298930 | NULL
+         23 | Italy          |    294140 |   60446035 | NULL
+         26 | Myanmar        |    653290 |   54473253 | NULL
+         27 | Kenya          |    569140 |   53968739 | 12-12-1963
+         28 | South Korea    |     97230 |   51276977 | NULL
+         30 | Spain          |    498800 |   46757980 | NULL
+         31 | Uganda         |    199810 |   45974931 | 10-09-1962
+         35 | Ukraine        |    579320 |   43686577 | 8/24/1991
+         36 | Iraq           |    434320 |   40372771 | 10-03-1932
+         37 | Afghanistan    |    652860 |   39074280 | 8/19/1919
+         38 | Poland         |    306230 |   37839255 | 11-11-1918
+         40 | Morocco        |    446300 |   36985624 | 11/18/1955
+         42 | Uzbekistan     |    425400 |   33551824 | 09-01-1991
+         45 | Malaysia       |    328550 |   32436963 | 8/31/1957
+         46 | Mozambique     |    786380 |   31398811 | 6/25/1975
+         47 | Ghana          |    227540 |   31181428 | 03-06-1957
+         48 | Yemen          |    527970 |   29935468 | 11/30/1967
+         49 | Nepal          |    143350 |   29225196 | NULL
+(27 rows)
+
+
+world=# select* from countries where population>=2299929299;
+ country_id | country_name | land_area | population | date_of_independence
+------------+--------------+-----------+------------+----------------------
+(0 rows)
+
+
+world=# select* from countries where population>=22999;
+ country_id |  country_name  | land_area | population | date_of_independence
+------------+----------------+-----------+------------+----------------------
+          1 | China          |   9388211 | 1440297825 | NULL
+          2 | India          |   2973190 | 1382345085 | 8/15/1947
+          3 | United States  |   9147420 |  331341050 | 07-04-3676
+          4 | Indonesia      |   1811570 |  274021604 | 8/17/1945
+          5 | Pakistan       |    770880 |  221612785 | 8/14/1947
+          6 | Brazil         |   8358140 |  212821986 | 09-07-3722
+          7 | Nigeria        |    910770 |  206984347 | 10-01-1960
+          8 | Bangladesh     |    130170 |  164972348 | 3/26/1971
+          9 | Russia         |  16376870 |  145945524 | 06-12-1992
+         10 | Mexico         |   1943950 |  129166028 | 9/16/3710
+         11 | Japan          |    364555 |  126407422 | NULL
+         12 | Ethiopia       |   1000000 |  115434444 | NULL
+         13 | Philippines    |    298170 |  109830324 | 06-12-3798
+         14 | Egypt          |    995450 |  102659126 | NULL
+         15 | Vietnam        |    310070 |   97490013 | 09-02-1945
+         16 | DR Congo       |   2267050 |   90003954 | NULL
+         17 | Turkey         |    769630 |   84495243 | 10/29/1923
+         18 | Iran           |   1628550 |   84176929 | NULL
+         19 | Germany        |    348560 |   83830972 | NULL
+         20 | Thailand       |    510890 |   69830779 | NULL
+         21 | United Kingdom |    241930 |   67948282 | NULL
+         22 | France         |    547557 |   65298930 | NULL
+         23 | Italy          |    294140 |   60446035 | NULL
+         24 | Tanzania       |    885800 |   60012400 | 12-09-1961
+         25 | South Africa   |   1213090 |   59436725 | 12-11-1931
+         26 | Myanmar        |    653290 |   54473253 | NULL
+         27 | Kenya          |    569140 |   53968739 | 12-12-1963
+         28 | South Korea    |     97230 |   51276977 | NULL
+         29 | Colombia       |   1109500 |   50976248 | NULL
+         30 | Spain          |    498800 |   46757980 | NULL
+         31 | Uganda         |    199810 |   45974931 | 10-09-1962
+         32 | Argentina      |   2736690 |   45267449 | 07-09-3716
+         33 | Algeria        |   2381740 |   43984569 | 07-05-1962
+         34 | Sudan          |   1765048 |   44019263 | 01-01-1956
+         35 | Ukraine        |    579320 |   43686577 | 8/24/1991
+         36 | Iraq           |    434320 |   40372771 | 10-03-1932
+         37 | Afghanistan    |    652860 |   39074280 | 8/19/1919
+         38 | Poland         |    306230 |   37839255 | 11-11-1918
+         39 | Canada         |   9093510 |   37799407 | 07-01-3767
+         40 | Morocco        |    446300 |   36985624 | 11/18/1955
+         41 | Saudi Arabia   |   2149690 |   34905942 | NULL
+-- More  --
+
+
+                     ^
+world=# select* from countries where country_name='India';
+ country_id | country_name | land_area | population | date_of_independence
+------------+--------------+-----------+------------+----------------------
+          2 | India        |   2973190 | 1382345085 | 8/15/1947
+(1 row)
+
+
+world=# select country_id , country_name from countries where land_area<=200302;
+ country_id | country_name
+------------+--------------
+          8 | Bangladesh
+         28 | South Korea
+         31 | Uganda
+         49 | Nepal
+(4 rows)
+
+world=# select count(land_area) from countries;
+ count
+-------
+    49
+(1 row)
+
+                                                               ^
+world=# select count(land_area) from countries where country_name='Myanmar';
+ count
+-------
+     1
+(1 row)
+
+world=# select distinct(country_id) from countries;
+ country_id
+------------
+         22
+         42
+         40
+         43
+         15
+         48
+         19
+          5
+         29
+          4
+         10
+         35
+          6
+         31
+         14
+         13
+          2
+          7
+         38
+         47
+         20
+          1
+         18
+         27
+          8
+         44
+         11
+          9
+         26
+         30
+         21
+          3
+         17
+         37
+         28
+         34
+         45
+         39
+         36
+         16
+         41
+-- More  --
+
+
+world=# select distinct(country_name) from countries;
+  country_name
+----------------
+ Bangladesh
+ Indonesia
+ Uganda
+ Uzbekistan
+ Colombia
+ Saudi Arabia
+ Ukraine
+ Algeria
+ France
+ Ghana
+ Malaysia
+ Kenya
+ Philippines
+ United States
+ Turkey
+ Nigeria
+ China
+ Angola
+ Spain
+ Thailand
+ DR Congo
+ Italy
+ United Kingdom
+ Germany
+ Canada
+ South Korea
+ Argentina
+ Egypt
+ Afghanistan
+ India
+ Iran
+ Vietnam
+ South Africa
+ Peru
+ Japan
+ Iraq
+ Mozambique
+ Russia
+ Pakistan
+ Brazil
+ Ethiopia
+-- More  --
+
+
+world=# select count(distinct(population)) from countries;
+ count
+-------
+    49
+(1 row)
+
+
+world=# select count(population) from countries where population<=123432;
+ count
+-------
+     0
+(1 row)
+
+
+world=# select count(population) from countries where land_area<=123432;
+ count
+-------
+     1
+(1 row)
+
+
+world=# \d countries;
+                                              Table "public.countries"
+        Column        |         Type          | Collation | Nullable |                    Default
+----------------------+-----------------------+-----------+----------+-----------------------------------------------
+ country_id           | integer               |           | not null | nextval('countries_country_id_seq'::regclass)
+ country_name         | character varying(32) |           |          |
+ land_area            | integer               |           | not null |
+ population           | integer               |           |          |
+ date_of_independence | character varying(32) |           |          |
+Indexes:
+    "countries_pk" PRIMARY KEY, btree (country_id)
+
+
+world=# select min(land_area) from countries;
+  min
+-------
+ 97230
+(1 row)
+
+
+world=# select max(land_area) from countries;
+   max
+----------
+ 16376870
+(1 row)
+
+
+world=# select min(country_name) from countries;
+     min
+-------------
+ Afghanistan
+(1 row)
+
+
+world=# select max(country_name) from countries;
+  max
+-------
+ Yemen
+(1 row)
+
+
+world=# select min(population) from countries;
+   min
+----------
+ 29225196
+(1 row)
+
+
+world=# select max(population) from countries;
+    max
+------------
+ 1440297825
+(1 row)
+
+
+world=# select avg(land_area) from countries;
+         avg
+----------------------
+ 1880122.061224489796
+(1 row)
+
+
+world=#
+world=# select avg(population) from countries;
+        avg
+--------------------
+ 137713987.77551020
+(1 row)
+
+                                                     ^
+world=# select avg(population) as population_average from countries;
+ population_average
+--------------------
+ 137713987.77551020
+(1 row)
+
+
+world=# select avg(land_area) as area_average from countries;
+     area_average
+----------------------
+ 1880122.061224489796
+(1 row)
+
+world=# select *from countries where country_name= 'America';
+ country_id | country_name | land_area | population | date_of_independence
+------------+--------------+-----------+------------+----------------------
+(0 rows)
+
+
+
+
+world=# select *from countries where country_name= 'Turkey';
+ country_id | country_name | land_area | population | date_of_independence
+------------+--------------+-----------+------------+----------------------
+         17 | Turkey       |    769630 |   84495243 | 10/29/1923
+(1 row)
+
+
+world=# select country_name , land_area from countries where country_id<=10;
+ country_name  | land_area
+---------------+-----------
+ China         |   9388211
+ India         |   2973190
+ United States |   9147420
+ Indonesia     |   1811570
+ Pakistan      |    770880
+ Brazil        |   8358140
+ Nigeria       |    910770
+ Bangladesh    |    130170
+ Russia        |  16376870
+ Mexico        |   1943950
+(10 rows)
+
+world=# select country_name , land_area from countries where country_id<10;
+ country_name  | land_area
+---------------+-----------
+ China         |   9388211
+ India         |   2973190
+ United States |   9147420
+ Indonesia     |   1811570
+ Pakistan      |    770880
+ Brazil        |   8358140
+ Nigeria       |    910770
+ Bangladesh    |    130170
+ Russia        |  16376870
+(9 rows)
+
+world=# select distict(country_name) from countries order by population;
+ERROR:  function distict(character varying) does not exist
+LINE 1: select distict(country_name) from countries order by populat...
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+world=# select distinct(country_name) from countries order by population;
+ERROR:  for SELECT DISTINCT, ORDER BY expressions must appear in select list
+LINE 1: ...ct distinct(country_name) from countries order by population...
+                                                             ^
+world=# select distinct(country_name) from countries order by country_id;
+ERROR:  for SELECT DISTINCT, ORDER BY expressions must appear in select list
+LINE 1: ...ct distinct(country_name) from countries order by country_id...
+
+                     ^
+world=# select* from countries order by population;
+ country_id |  country_name  | land_area | population | date_of_independence
+------------+----------------+-----------+------------+----------------------
+         49 | Nepal          |    143350 |   29225196 | NULL
+         48 | Yemen          |    527970 |   29935468 | 11/30/1967
+         47 | Ghana          |    227540 |   31181428 | 03-06-1957
+         46 | Mozambique     |    786380 |   31398811 | 6/25/1975
+         45 | Malaysia       |    328550 |   32436963 | 8/31/1957
+         44 | Angola         |   1246700 |   33032075 | 11-11-1975
+         43 | Peru           |   1280000 |   33050211 | 7/28/3721
+         42 | Uzbekistan     |    425400 |   33551824 | 09-01-1991
+         41 | Saudi Arabia   |   2149690 |   34905942 | NULL
+         40 | Morocco        |    446300 |   36985624 | 11/18/1955
+         39 | Canada         |   9093510 |   37799407 | 07-01-3767
+         38 | Poland         |    306230 |   37839255 | 11-11-1918
+         37 | Afghanistan    |    652860 |   39074280 | 8/19/1919
+         36 | Iraq           |    434320 |   40372771 | 10-03-1932
+         35 | Ukraine        |    579320 |   43686577 | 8/24/1991
+         33 | Algeria        |   2381740 |   43984569 | 07-05-1962
+         34 | Sudan          |   1765048 |   44019263 | 01-01-1956
+         32 | Argentina      |   2736690 |   45267449 | 07-09-3716
+         31 | Uganda         |    199810 |   45974931 | 10-09-1962
+         30 | Spain          |    498800 |   46757980 | NULL
+         29 | Colombia       |   1109500 |   50976248 | NULL
+         28 | South Korea    |     97230 |   51276977 | NULL
+         27 | Kenya          |    569140 |   53968739 | 12-12-1963
+         26 | Myanmar        |    653290 |   54473253 | NULL
+         25 | South Africa   |   1213090 |   59436725 | 12-11-1931
+         24 | Tanzania       |    885800 |   60012400 | 12-09-1961
+         23 | Italy          |    294140 |   60446035 | NULL
+         22 | France         |    547557 |   65298930 | NULL
+         21 | United Kingdom |    241930 |   67948282 | NULL
+         20 | Thailand       |    510890 |   69830779 | NULL
+         19 | Germany        |    348560 |   83830972 | NULL
+         18 | Iran           |   1628550 |   84176929 | NULL
+         17 | Turkey         |    769630 |   84495243 | 10/29/1923
+         16 | DR Congo       |   2267050 |   90003954 | NULL
+         15 | Vietnam        |    310070 |   97490013 | 09-02-1945
+         14 | Egypt          |    995450 |  102659126 | NULL
+         13 | Philippines    |    298170 |  109830324 | 06-12-3798
+         12 | Ethiopia       |   1000000 |  115434444 | NULL
+         11 | Japan          |    364555 |  126407422 | NULL
+         10 | Mexico         |   1943950 |  129166028 | 9/16/3710
+          9 | Russia         |  16376870 |  145945524 | 06-12-1992
+-- More  --
+
+
+world=# select* from countries order by population desc;
+ country_id |  country_name  | land_area | population | date_of_independence
+------------+----------------+-----------+------------+----------------------
+          1 | China          |   9388211 | 1440297825 | NULL
+          2 | India          |   2973190 | 1382345085 | 8/15/1947
+          3 | United States  |   9147420 |  331341050 | 07-04-3676
+          4 | Indonesia      |   1811570 |  274021604 | 8/17/1945
+          5 | Pakistan       |    770880 |  221612785 | 8/14/1947
+          6 | Brazil         |   8358140 |  212821986 | 09-07-3722
+          7 | Nigeria        |    910770 |  206984347 | 10-01-1960
+          8 | Bangladesh     |    130170 |  164972348 | 3/26/1971
+          9 | Russia         |  16376870 |  145945524 | 06-12-1992
+         10 | Mexico         |   1943950 |  129166028 | 9/16/3710
+         11 | Japan          |    364555 |  126407422 | NULL
+         12 | Ethiopia       |   1000000 |  115434444 | NULL
+         13 | Philippines    |    298170 |  109830324 | 06-12-3798
+         14 | Egypt          |    995450 |  102659126 | NULL
+         15 | Vietnam        |    310070 |   97490013 | 09-02-1945
+         16 | DR Congo       |   2267050 |   90003954 | NULL
+         17 | Turkey         |    769630 |   84495243 | 10/29/1923
+         18 | Iran           |   1628550 |   84176929 | NULL
+         19 | Germany        |    348560 |   83830972 | NULL
+         20 | Thailand       |    510890 |   69830779 | NULL
+         21 | United Kingdom |    241930 |   67948282 | NULL
+         22 | France         |    547557 |   65298930 | NULL
+         23 | Italy          |    294140 |   60446035 | NULL
+         24 | Tanzania       |    885800 |   60012400 | 12-09-1961
+         25 | South Africa   |   1213090 |   59436725 | 12-11-1931
+         26 | Myanmar        |    653290 |   54473253 | NULL
+         27 | Kenya          |    569140 |   53968739 | 12-12-1963
+         28 | South Korea    |     97230 |   51276977 | NULL
+         29 | Colombia       |   1109500 |   50976248 | NULL
+         30 | Spain          |    498800 |   46757980 | NULL
+         31 | Uganda         |    199810 |   45974931 | 10-09-1962
+         32 | Argentina      |   2736690 |   45267449 | 07-09-3716
+         34 | Sudan          |   1765048 |   44019263 | 01-01-1956
+         33 | Algeria        |   2381740 |   43984569 | 07-05-1962
+         35 | Ukraine        |    579320 |   43686577 | 8/24/1991
+         36 | Iraq           |    434320 |   40372771 | 10-03-1932
+         37 | Afghanistan    |    652860 |   39074280 | 8/19/1919
+         38 | Poland         |    306230 |   37839255 | 11-11-1918
+         39 | Canada         |   9093510 |   37799407 | 07-01-3767
+         40 | Morocco        |    446300 |   36985624 | 11/18/1955
+         41 | Saudi Arabia   |   2149690 |   34905942 | NULL
+-- More  --
+
+
+world=# select * from countries where countries_name=' ';
+ERROR:  column "countries_name" does not exist
+LINE 1: select * from countries where countries_name=' ';
+                                      ^
+HINT:  Perhaps you meant to reference the column "countries.country_name".
+world=#
+
+world=# select * from countries where population <> 29225196;
+ country_id |  country_name  | land_area | population | date_of_independence
+------------+----------------+-----------+------------+----------------------
+          1 | China          |   9388211 | 1440297825 | NULL
+          2 | India          |   2973190 | 1382345085 | 8/15/1947
+          3 | United States  |   9147420 |  331341050 | 07-04-3676
+          4 | Indonesia      |   1811570 |  274021604 | 8/17/1945
+          5 | Pakistan       |    770880 |  221612785 | 8/14/1947
+          6 | Brazil         |   8358140 |  212821986 | 09-07-3722
+          7 | Nigeria        |    910770 |  206984347 | 10-01-1960
+          8 | Bangladesh     |    130170 |  164972348 | 3/26/1971
+          9 | Russia         |  16376870 |  145945524 | 06-12-1992
+         10 | Mexico         |   1943950 |  129166028 | 9/16/3710
+         11 | Japan          |    364555 |  126407422 | NULL
+         12 | Ethiopia       |   1000000 |  115434444 | NULL
+         13 | Philippines    |    298170 |  109830324 | 06-12-3798
+         14 | Egypt          |    995450 |  102659126 | NULL
+         15 | Vietnam        |    310070 |   97490013 | 09-02-1945
+         16 | DR Congo       |   2267050 |   90003954 | NULL
+         17 | Turkey         |    769630 |   84495243 | 10/29/1923
+         18 | Iran           |   1628550 |   84176929 | NULL
+         19 | Germany        |    348560 |   83830972 | NULL
+         20 | Thailand       |    510890 |   69830779 | NULL
+         21 | United Kingdom |    241930 |   67948282 | NULL
+         22 | France         |    547557 |   65298930 | NULL
+         23 | Italy          |    294140 |   60446035 | NULL
+         24 | Tanzania       |    885800 |   60012400 | 12-09-1961
+         25 | South Africa   |   1213090 |   59436725 | 12-11-1931
+         26 | Myanmar        |    653290 |   54473253 | NULL
+         27 | Kenya          |    569140 |   53968739 | 12-12-1963
+         28 | South Korea    |     97230 |   51276977 | NULL
+         29 | Colombia       |   1109500 |   50976248 | NULL
+         30 | Spain          |    498800 |   46757980 | NULL
+         31 | Uganda         |    199810 |   45974931 | 10-09-1962
+         32 | Argentina      |   2736690 |   45267449 | 07-09-3716
+         33 | Algeria        |   2381740 |   43984569 | 07-05-1962
+         34 | Sudan          |   1765048 |   44019263 | 01-01-1956
+         35 | Ukraine        |    579320 |   43686577 | 8/24/1991
+         36 | Iraq           |    434320 |   40372771 | 10-03-1932
+         37 | Afghanistan    |    652860 |   39074280 | 8/19/1919
+         38 | Poland         |    306230 |   37839255 | 11-11-1918
+         39 | Canada         |   9093510 |   37799407 | 07-01-3767
+         40 | Morocco        |    446300 |   36985624 | 11/18/1955
+         41 | Saudi Arabia   |   2149690 |   34905942 | NULL
+         42 | Uzbekistan     |    425400 |   33551824 | 09-01-1991
+         43 | Peru           |   1280000 |   33050211 | 7/28/3721
+         44 | Angola         |   1246700 |   33032075 | 11-11-1975
+         45 | Malaysia       |    328550 |   32436963 | 8/31/1957
+         46 | Mozambique     |    786380 |   31398811 | 6/25/1975
+         47 | Ghana          |    227540 |   31181428 | 03-06-1957
+         48 | Yemen          |    527970 |   29935468 | 11/30/1967
+(48 rows)
+-- More  --
+
+
+world=# select sum(population) as "sum population" from countries;
+ sum population
+----------------
+     6747985401
+(1 row)
+
+
+world=# select sum(land_area) as "sum area" from countries;
+ sum area
+----------
+ 92125981
+(1 row)
+
+
+world=# select * from countries where country_name='India' and population=29935468;
+ country_id | country_name | land_area | population | date_of_independence
+------------+--------------+-----------+------------+----------------------
+(0 rows)
+
+
+world=# select * from countries where country_name='India' and population=1382345085;
+ country_id | country_name | land_area | population | date_of_independence
+------------+--------------+-----------+------------+----------------------
+          2 | India        |   2973190 | 1382345085 | 8/15/1947
+(1 row)
+
+
+
+world=# select * from countries where country_name in ('Ghana','Yemen');
+ country_id | country_name | land_area | population | date_of_independence
+------------+--------------+-----------+------------+----------------------
+         47 | Ghana        |    227540 |   31181428 | 03-06-1957
+         48 | Yemen        |    527970 |   29935468 | 11/30/1967
+(2 rows)
+
+
+world=# select * from countries where country_name like 'Ma%';
+ country_id | country_name | land_area | population | date_of_independence
+------------+--------------+-----------+------------+----------------------
+         45 | Malaysia     |    328550 |   32436963 | 8/31/1957
+(1 row)
+
+
+world=# select * from countries where country_name like '%ra%';
+ country_id | country_name | land_area | population | date_of_independence
+------------+--------------+-----------+------------+----------------------
+          6 | Brazil       |   8358140 |  212821986 | 09-07-3722
+         18 | Iran         |   1628550 |   84176929 | NULL
+         22 | France       |    547557 |   65298930 | NULL
+         35 | Ukraine      |    579320 |   43686577 | 8/24/1991
+         36 | Iraq         |    434320 |   40372771 | 10-03-1932
+         41 | Saudi Arabia |   2149690 |   34905942 | NULL
+(6 rows)
+
+
+world=# select * from countries where country_name like 'In%' and country_name like 'na%';
+ country_id | country_name | land_area | population | date_of_independence
+------------+--------------+-----------+------------+----------------------
+(0 rows)
+
+
+world=# select * from countries where country_name like 'In%' ;
+ country_id | country_name | land_area | population | date_of_independence
+------------+--------------+-----------+------------+----------------------
+          2 | India        |   2973190 | 1382345085 | 8/15/1947
+          4 | Indonesia    |   1811570 |  274021604 | 8/17/1945
+(2 rows)
+
+
+world=# select * from countries where country_name like '__ia';
+ country_id | country_name | land_area | population | date_of_independence
+------------+--------------+-----------+------------+----------------------
+(0 rows)
+
+
+world=# select * from countries where country_name like '_ia';
+ country_id | country_name | land_area | population | date_of_independence
+------------+--------------+-----------+------------+----------------------
+(0 rows)
+
+
+world=# select * from countries where country_name like 'ia';
+ country_id | country_name | land_area | population | date_of_independence
+------------+--------------+-----------+------------+----------------------
+(0 rows)
+
+
+world=# select * from countries where country_name like '-----om';
+ country_id | country_name | land_area | population | date_of_independence
+------------+--------------+-----------+------------+----------------------
+(0 rows)
+
+world=# select * from countries where population like '2%';
+ERROR:  operator does not exist: integer ~~ unknown
+LINE 1: select * from countries where population like '2%';
+                                                 ^
+HINT:  No operator matches the given name and argument types. You might need to add explicit type casts.
+world=# select * from countries where population like '14%';
+ERROR:  operator does not exist: integer ~~ unknown
+LINE 1: select * from countries where population like '14%';
+                                                 ^
+HINT:  No operator matches the given name and argument types. You might need to add explicit type casts.
+world=# select * from countries where population like '%14';
+ERROR:  operator does not exist: integer ~~ unknown
+LINE 1: select * from countries where population like '%14';
+                                                 ^
+HINT:  No operator matches the given name and argument types. You might need to add explicit type casts.
+
+
+world=# select * from countries where population between 220022 and 455599;
+ country_id | country_name | land_area | population | date_of_independence
+------------+--------------+-----------+------------+----------------------
+(0 rows)
+
+
+world=# select * from countries where population between 220 and 4559;
+ country_id | country_name | land_area | population | date_of_independence
+------------+--------------+-----------+------------+----------------------
+(0 rows)
+
+
+world=# select * from countries where population between 220 and 4559000;
+ country_id | country_name | land_area | population | date_of_independence
+------------+--------------+-----------+------------+----------------------
+(0 rows)
+
+
+world=# select * from countries where population between 220 and 45590008;
+ country_id | country_name | land_area | population | date_of_independence
+------------+--------------+-----------+------------+----------------------
+         32 | Argentina    |   2736690 |   45267449 | 07-09-3716
+         33 | Algeria      |   2381740 |   43984569 | 07-05-1962
+         34 | Sudan        |   1765048 |   44019263 | 01-01-1956
+         35 | Ukraine      |    579320 |   43686577 | 8/24/1991
+         36 | Iraq         |    434320 |   40372771 | 10-03-1932
+         37 | Afghanistan  |    652860 |   39074280 | 8/19/1919
+         38 | Poland       |    306230 |   37839255 | 11-11-1918
+         39 | Canada       |   9093510 |   37799407 | 07-01-3767
+         40 | Morocco      |    446300 |   36985624 | 11/18/1955
+         41 | Saudi Arabia |   2149690 |   34905942 | NULL
+         42 | Uzbekistan   |    425400 |   33551824 | 09-01-1991
+         43 | Peru         |   1280000 |   33050211 | 7/28/3721
+         44 | Angola       |   1246700 |   33032075 | 11-11-1975
+         45 | Malaysia     |    328550 |   32436963 | 8/31/1957
+         46 | Mozambique   |    786380 |   31398811 | 6/25/1975
+         47 | Ghana        |    227540 |   31181428 | 03-06-1957
+         48 | Yemen        |    527970 |   29935468 | 11/30/1967
+         49 | Nepal        |    143350 |   29225196 | NULL
+(18 rows)
+
+                                         ^
+world=# select distinct(population) from countries order by population;
+ population
+------------
+   29225196
+   29935468
+   31181428
+   31398811
+   32436963
+   33032075
+   33050211
+   33551824
+   34905942
+   36985624
+   37799407
+   37839255
+   39074280
+   40372771
+   43686577
+   43984569
+   44019263
+   45267449
+   45974931
+   46757980
+   50976248
+   51276977
+   53968739
+   54473253
+   59436725
+   60012400
+   60446035
+   65298930
+   67948282
+   69830779
+   83830972
+   84176929
+   84495243
+   90003954
+   97490013
+  102659126
+  109830324
+  115434444
+  126407422
+  129166028
+  145945524
+-- More  --
+
+world=# select* from countries order by country_name;
+ country_id |  country_name  | land_area | population | date_of_independence
+------------+----------------+-----------+------------+----------------------
+         37 | Afghanistan    |    652860 |   39074280 | 8/19/1919
+         33 | Algeria        |   2381740 |   43984569 | 07-05-1962
+         44 | Angola         |   1246700 |   33032075 | 11-11-1975
+         32 | Argentina      |   2736690 |   45267449 | 07-09-3716
+          8 | Bangladesh     |    130170 |  164972348 | 3/26/1971
+          6 | Brazil         |   8358140 |  212821986 | 09-07-3722
+         39 | Canada         |   9093510 |   37799407 | 07-01-3767
+          1 | China          |   9388211 | 1440297825 | NULL
+         29 | Colombia       |   1109500 |   50976248 | NULL
+         16 | DR Congo       |   2267050 |   90003954 | NULL
+         14 | Egypt          |    995450 |  102659126 | NULL
+         12 | Ethiopia       |   1000000 |  115434444 | NULL
+         22 | France         |    547557 |   65298930 | NULL
+         19 | Germany        |    348560 |   83830972 | NULL
+         47 | Ghana          |    227540 |   31181428 | 03-06-1957
+          2 | India          |   2973190 | 1382345085 | 8/15/1947
+          4 | Indonesia      |   1811570 |  274021604 | 8/17/1945
+         18 | Iran           |   1628550 |   84176929 | NULL
+         36 | Iraq           |    434320 |   40372771 | 10-03-1932
+         23 | Italy          |    294140 |   60446035 | NULL
+         11 | Japan          |    364555 |  126407422 | NULL
+         27 | Kenya          |    569140 |   53968739 | 12-12-1963
+         45 | Malaysia       |    328550 |   32436963 | 8/31/1957
+         10 | Mexico         |   1943950 |  129166028 | 9/16/3710
+         40 | Morocco        |    446300 |   36985624 | 11/18/1955
+         46 | Mozambique     |    786380 |   31398811 | 6/25/1975
+         26 | Myanmar        |    653290 |   54473253 | NULL
+         49 | Nepal          |    143350 |   29225196 | NULL
+          7 | Nigeria        |    910770 |  206984347 | 10-01-1960
+          5 | Pakistan       |    770880 |  221612785 | 8/14/1947
+         43 | Peru           |   1280000 |   33050211 | 7/28/3721
+         13 | Philippines    |    298170 |  109830324 | 06-12-3798
+         38 | Poland         |    306230 |   37839255 | 11-11-1918
+          9 | Russia         |  16376870 |  145945524 | 06-12-1992
+         41 | Saudi Arabia   |   2149690 |   34905942 | NULL
+         25 | South Africa   |   1213090 |   59436725 | 12-11-1931
+         28 | South Korea    |     97230 |   51276977 | NULL
+         30 | Spain          |    498800 |   46757980 | NULL
+         34 | Sudan          |   1765048 |   44019263 | 01-01-1956
+         24 | Tanzania       |    885800 |   60012400 | 12-09-1961
+         20 | Thailand       |    510890 |   69830779 | NULL
+-- More  --
+
+world=# select country_name , length(Country_name) from countries;
+  country_name  | length
+----------------+--------
+ China          |      5
+ India          |      5
+ United States  |     13
+ Indonesia      |      9
+ Pakistan       |      8
+ Brazil         |      6
+ Nigeria        |      7
+ Bangladesh     |     10
+ Russia         |      6
+ Mexico         |      6
+ Japan          |      5
+ Ethiopia       |      8
+ Philippines    |     11
+ Egypt          |      5
+ Vietnam        |      7
+ DR Congo       |      8
+ Turkey         |      6
+ Iran           |      4
+ Germany        |      7
+ Thailand       |      8
+ United Kingdom |     14
+ France         |      6
+ Italy          |      5
+ Tanzania       |      8
+ South Africa   |     12
+ Myanmar        |      7
+ Kenya          |      5
+ South Korea    |     11
+ Colombia       |      8
+ Spain          |      5
+ Uganda         |      6
+ Argentina      |      9
+ Algeria        |      7
+ Sudan          |      5
+ Ukraine        |      7
+ Iraq           |      4
+ Afghanistan    |     11
+ Poland         |      6
+ Canada         |      6
+ Morocco        |      7
+ Saudi Arabia   |     12
+-- More  --
+
+
+world=# select distinct(population) ,length(population) from countries;
+ERROR:  function length(integer) does not exist
+LINE 1: select distinct(population) ,length(population) from countri...
+                                     ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+world=# select distinct(population) ,length(population) from countries;
+
+world=# select population from countries order by population nulls last;
+ population
+------------
+   29225196
+   29935468
+   31181428
+   31398811
+   32436963
+   33032075
+   33050211
+   33551824
+   34905942
+   36985624
+   37799407
+   37839255
+   39074280
+   40372771
+   43686577
+   43984569
+   44019263
+   45267449
+   45974931
+   46757980
+   50976248
+   51276977
+   53968739
+   54473253
+   59436725
+   60012400
+   60446035
+   65298930
+   67948282
+   69830779
+   83830972
+   84176929
+   84495243
+   90003954
+   97490013
+  102659126
+  109830324
+  115434444
+  126407422
+  129166028
+  145945524
+-- More  --
+
+world=# select * from countries  order by land_area limit 1000;
+ country_id |  country_name  | land_area | population | date_of_independence
+------------+----------------+-----------+------------+----------------------
+         28 | South Korea    |     97230 |   51276977 | NULL
+          8 | Bangladesh     |    130170 |  164972348 | 3/26/1971
+         49 | Nepal          |    143350 |   29225196 | NULL
+         31 | Uganda         |    199810 |   45974931 | 10-09-1962
+         47 | Ghana          |    227540 |   31181428 | 03-06-1957
+         21 | United Kingdom |    241930 |   67948282 | NULL
+         23 | Italy          |    294140 |   60446035 | NULL
+         13 | Philippines    |    298170 |  109830324 | 06-12-3798
+         38 | Poland         |    306230 |   37839255 | 11-11-1918
+         15 | Vietnam        |    310070 |   97490013 | 09-02-1945
+         45 | Malaysia       |    328550 |   32436963 | 8/31/1957
+         19 | Germany        |    348560 |   83830972 | NULL
+         11 | Japan          |    364555 |  126407422 | NULL
+         42 | Uzbekistan     |    425400 |   33551824 | 09-01-1991
+         36 | Iraq           |    434320 |   40372771 | 10-03-1932
+         40 | Morocco        |    446300 |   36985624 | 11/18/1955
+         30 | Spain          |    498800 |   46757980 | NULL
+         20 | Thailand       |    510890 |   69830779 | NULL
+         48 | Yemen          |    527970 |   29935468 | 11/30/1967
+         22 | France         |    547557 |   65298930 | NULL
+         27 | Kenya          |    569140 |   53968739 | 12-12-1963
+         35 | Ukraine        |    579320 |   43686577 | 8/24/1991
+         37 | Afghanistan    |    652860 |   39074280 | 8/19/1919
+         26 | Myanmar        |    653290 |   54473253 | NULL
+         17 | Turkey         |    769630 |   84495243 | 10/29/1923
+          5 | Pakistan       |    770880 |  221612785 | 8/14/1947
+         46 | Mozambique     |    786380 |   31398811 | 6/25/1975
+         24 | Tanzania       |    885800 |   60012400 | 12-09-1961
+          7 | Nigeria        |    910770 |  206984347 | 10-01-1960
+         14 | Egypt          |    995450 |  102659126 | NULL
+         12 | Ethiopia       |   1000000 |  115434444 | NULL
+         29 | Colombia       |   1109500 |   50976248 | NULL
+         25 | South Africa   |   1213090 |   59436725 | 12-11-1931
+         44 | Angola         |   1246700 |   33032075 | 11-11-1975
+         43 | Peru           |   1280000 |   33050211 | 7/28/3721
+         18 | Iran           |   1628550 |   84176929 | NULL
+         34 | Sudan          |   1765048 |   44019263 | 01-01-1956
+          4 | Indonesia      |   1811570 |  274021604 | 8/17/1945
+         10 | Mexico         |   1943950 |  129166028 | 9/16/3710
+         41 | Saudi Arabia   |   2149690 |   34905942 | NULL
+         16 | DR Congo       |   2267050 |   90003954 | NULL
+         33 | Algeria        |   2381740 |   43984569 | 07-05-1962
+         32 | Argentina      |   2736690 |   45267449 | 07-09-3716
+          2 | India          |   2973190 | 1382345085 | 8/15/1947
+          6 | Brazil         |   8358140 |  212821986 | 09-07-3722
+         39 | Canada         |   9093510 |   37799407 | 07-01-3767
+          3 | United States  |   9147420 |  331341050 | 07-04-3676
+          1 | China          |   9388211 | 1440297825 | NULL
+          9 | Russia         |  16376870 |  145945524 | 06-12-1992
+(49 rows)
+
+
+world=#
+world=# select * from countries  order by desc land_area limit 1000;
+ERROR:  syntax error at or near "desc"
+LINE 1: select * from countries  order by desc land_area limit 1000;
+                                          ^
+world=# select * from countries  order by desc land_area desc limit 1000;
+ERROR:  syntax error at or near "desc"
+LINE 1: select * from countries  order by desc land_area desc limit ...
+                                          ^
+world=# select * from countries  order by land_area desc limit 1000;
+ country_id |  country_name  | land_area | population | date_of_independence
+------------+----------------+-----------+------------+----------------------
+          9 | Russia         |  16376870 |  145945524 | 06-12-1992
+          1 | China          |   9388211 | 1440297825 | NULL
+          3 | United States  |   9147420 |  331341050 | 07-04-3676
+         39 | Canada         |   9093510 |   37799407 | 07-01-3767
+          6 | Brazil         |   8358140 |  212821986 | 09-07-3722
+          2 | India          |   2973190 | 1382345085 | 8/15/1947
+         32 | Argentina      |   2736690 |   45267449 | 07-09-3716
+         33 | Algeria        |   2381740 |   43984569 | 07-05-1962
+         16 | DR Congo       |   2267050 |   90003954 | NULL
+         41 | Saudi Arabia   |   2149690 |   34905942 | NULL
+         10 | Mexico         |   1943950 |  129166028 | 9/16/3710
+          4 | Indonesia      |   1811570 |  274021604 | 8/17/1945
+         34 | Sudan          |   1765048 |   44019263 | 01-01-1956
+         18 | Iran           |   1628550 |   84176929 | NULL
+         43 | Peru           |   1280000 |   33050211 | 7/28/3721
+         44 | Angola         |   1246700 |   33032075 | 11-11-1975
+         25 | South Africa   |   1213090 |   59436725 | 12-11-1931
+         29 | Colombia       |   1109500 |   50976248 | NULL
+         12 | Ethiopia       |   1000000 |  115434444 | NULL
+         14 | Egypt          |    995450 |  102659126 | NULL
+          7 | Nigeria        |    910770 |  206984347 | 10-01-1960
+         24 | Tanzania       |    885800 |   60012400 | 12-09-1961
+         46 | Mozambique     |    786380 |   31398811 | 6/25/1975
+          5 | Pakistan       |    770880 |  221612785 | 8/14/1947
+         17 | Turkey         |    769630 |   84495243 | 10/29/1923
+         26 | Myanmar        |    653290 |   54473253 | NULL
+         37 | Afghanistan    |    652860 |   39074280 | 8/19/1919
+         35 | Ukraine        |    579320 |   43686577 | 8/24/1991
+         27 | Kenya          |    569140 |   53968739 | 12-12-1963
+         22 | France         |    547557 |   65298930 | NULL
+         48 | Yemen          |    527970 |   29935468 | 11/30/1967
+         20 | Thailand       |    510890 |   69830779 | NULL
+         30 | Spain          |    498800 |   46757980 | NULL
+         40 | Morocco        |    446300 |   36985624 | 11/18/1955
+         36 | Iraq           |    434320 |   40372771 | 10-03-1932
+         42 | Uzbekistan     |    425400 |   33551824 | 09-01-1991
+         11 | Japan          |    364555 |  126407422 | NULL
+         19 | Germany        |    348560 |   83830972 | NULL
+         45 | Malaysia       |    328550 |   32436963 | 8/31/1957
+         15 | Vietnam        |    310070 |   97490013 | 09-02-1945
+         38 | Poland         |    306230 |   37839255 | 11-11-1918
+-- More  --
+
+                                                             ^
+world=# select  distinct(country_name) , length(country_name) as "Length of country" from countries order by length(coutry__name) desc limit 1300;
+ERROR:  column "coutry__name" does not exist
+LINE 1: ...Length of country" from countries order by length(coutry__na...
+                                                             ^
+HINT:  Perhaps you meant to reference the column "countries.country_name".
+world=# select  distinct(country_name) , length(country_name) as "Length of country" from countries order by length(coutry__name) desc;
+ERROR:  column "coutry__name" does not exist
+LINE 1: ...Length of country" from countries order by length(coutry__na...
+                                                             ^
+HINT:  Perhaps you meant to reference the column "countries.country_name".
+world=# select  distinct(country_name) , length(country_name) as "Length of country" from countries order ;
+ERROR:  syntax error at or near ";"
+LINE 1: ...(country_name) as "Length of country" from countries order ;
+                                                                      ^
+world=# select  distinct(country_name) , length(country_name) as "Length of country" from countries ;
+  country_name  | Length of country
+----------------+-------------------
+ Afghanistan    |                11
+ Vietnam        |                 7
+ Italy          |                 5
+ Poland         |                 6
+ DR Congo       |                 8
+ Pakistan       |                 8
+ India          |                 5
+ Argentina      |                 9
+ Brazil         |                 6
+ Germany        |                 7
+ South Korea    |                11
+ Peru           |                 4
+ Yemen          |                 5
+ Bangladesh     |                10
+ Spain          |                 5
+ Tanzania       |                 8
+ Egypt          |                 5
+ Japan          |                 5
+ China          |                 5
+ Algeria        |                 7
+ Indonesia      |                 9
+ Turkey         |                 6
+ Philippines    |                11
+ Canada         |                 6
+ Saudi Arabia   |                12
+ Colombia       |                 8
+ Malaysia       |                 8
+ Nigeria        |                 7
+ Uzbekistan     |                10
+ United States  |                13
+ Iraq           |                 4
+ Morocco        |                 7
+ Nepal          |                 5
+ Ukraine        |                 7
+ Mexico         |                 6
+ Sudan          |                 5
+ Kenya          |                 5
+ France         |                 6
+ Ghana          |                 5
+ South Africa   |                12
+ Iran           |                 4
+ Russia         |                 6
+ Myanmar        |                 7
+ Ethiopia       |                 8
+ Uganda         |                 6
+ Mozambique     |                10
+ United Kingdom |                14
+ Angola         |                 6
+ Thailand       |                 8
+(49 rows)

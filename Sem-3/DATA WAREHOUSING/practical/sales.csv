@@ -1,0 +1,31 @@
+sales_id,Location ID,Date,Category,Sales
+s1,L3,05-05-2020,Electronics,45671
+s2,L3,03-10-2020,Clothing,78472
+s3,L1,25-05-2021,Home applicants,56952
+s4,L2,03-02-2021,Home applicants,84695
+s5,L2,03-11-2020,Electronics,59955
+s6,L3,07-10-2020,Electronics,68404
+s7,L2,10-10-2020,Clothing,76066
+s8,L2,17-09-2021,Electronics,83605
+s9,L1,02-04-2020,Clothing,20249
+s10,L1,12-09-2021,Home applicants,63087
+s11,L2,18-07-2021,Clothing,84783
+s12,L3,17-11-2019,Electronics,18643
+s13,L3,11-10-2019,Home applicants,67640
+s14,L3,14-08-2021,Electronics,36565
+s15,L3,05-10-2021,Electronics,85463
+s16,L1,28-06-2019,Clothing,23009
+s17,L3,29-04-2021,Clothing,52007
+s18,L1,15-01-2019,Clothing,66995
+s19,L3,25-11-2020,Home applicants,44964
+s20,L1,28-07-2019,Electronics,22033
+s21,L1,17-12-2020,Home applicants,13931
+s22,L2,20-04-2019,Clothing,50055
+s23,L3,01-09-2019,Home applicants,28449
+s24,L3,24-05-2020,Electronics,58394
+s25,L3,07-12-2019,Clothing,56530
+s26,L1,05-03-2019,Electronics,35678
+s27,L1,22-09-2021,Home applicants,51555
+s28,L1,21-10-2019,Home applicants,60484
+s29,L3,04-07-2019,Electronics,63081
+s30,L3,03-02-2020,Clothing,12911

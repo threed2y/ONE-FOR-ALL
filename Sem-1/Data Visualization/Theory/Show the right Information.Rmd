@@ -1,0 +1,151 @@
+---
+title: "Showing the right information"
+author: "Vipul Kalamkar"
+date: "8/27/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Communicating the right information
+
+Often grammatically correct statements do not produce the intended visual. This may happen if ggplot does not have all the information it needs to produce the visual that conveys what we intend to convey. This may also happen if the mappings are inappropriate.
+
+To understand this, let's create a visual based on the `gapminder` dataset. This dataset is available in the `gapminder` package.
+
+```{r}
+library(gapminder)
+gapminder
+```
+
+The dataset is extracted from a larger data compiled by [Gapminder](https://www.gapminder.org/data/). The data provides information on the three variables Life Expectancy, Population, and per capita gdp for different countries over the years.
+
+Suppose we want to plot the trajectory of life expectancy over time for each country in the data. So, we map `year` to X and `lifeExp` to Y.
+
+```{r}
+library(ggplot2)
+p = ggplot(data = gapminder, mapping = aes(x = year, y = lifeExp))
+p + geom_line()
+```
+
+Something appears to have gone wrong !
+
+Our code has successfully produced a plot. However, the plot doesn't convey what we intended. The problem here is that `ggplot` does not know that the yearly observations in the data are grouped by country. We need to tell this to `ggplot`. Because we didn't, `geom_line` tries to join up all the lines for each particular year in the order they appear in the dataset. The result is a meaningless plot.
+
+To address the problem with above plot, we map the "country" variable to `group` aesthetic as shown below.
+
+```{r}
+p = ggplot(data = gapminder, mapping = aes(x = year, y = lifeExp))
+p + geom_line(aes(group = country))
+```
+
+Now the plot shows a separate trajectory of life expectancy for each country. Although the plot now shows the data properly, it is still not providing much information except the general trend that life expectancy has increased over the years. This is because, there are a lot of lines representing a large number of countries. Even displaying line for each country in a different color doesn't make the graph very informative as shown below. There is simply too much information contained in the visual to comprehend.
+
+```{r}
+p = ggplot(data = gapminder, mapping = aes(x = year, y = lifeExp))
+p + geom_line(aes(group = country, color = country), show.legend = FALSE)
+```
+
+Note that we have set the parameter `show.legend` to `FALSE` because otherwise legend would take up the entire space.
+
+One option to manage the amount of information that goes into a single plot is to *facet* the data by some third variable, the faceting variable. In this technique, a separate panel is drawn for each value of the faceting variable.
+
+```{r}
+p = ggplot(data = gapminder, mapping = aes(x = year, y = lifeExp))
+p + 
+  geom_line(aes(group = country, color = country), show.legend = FALSE)+
+  facet_wrap(~continent)
+```
+
+Observe that the overall layout of the figure minimizes the duplication of axis labels and other scales. Each panel now represents less amount of information than before. However, adding a smoother makes the graph more effective as shown below.
+
+```{r}
+p = ggplot(data = gapminder, mapping = aes(x = year, y = lifeExp))
+p + 
+  geom_line(aes(group = country), color = "gray70", show.legend = FALSE)+
+  geom_smooth(size = 1.1, method = "loess", se = FALSE)+
+  facet_wrap(~continent) + 
+  labs(x = "Year",
+       y = "Life Expectancy",
+       title = "Life expectancy on five continents")
+```
+
+The faceting is best used when we want a series of small multiple plots based on a single categorical variable. The panels will be laid out in order and then wrapped into a grid.
+
+### Ignoring the grouping variable
+
+Suppose we want to crate a bar chart displaying number of countries in different continents. To achieve this, we can use the following code.
+
+```{r}
+ggplot(data = gapminder) +
+  geom_bar(aes(x = continent))
+```
+
+Recall that `geom_bar` uses "count" as the default stat. The help page of `stat_count` shows that it computes two variables "count" and "prop". By default, `geom_bar` uses the variable "count" for Y-axis. Instead, suppose, we want to draw the bars with height proportional to "prop" variable. To do so, we write the following code.
+
+```{r}
+ggplot(data = gapminder) +
+  geom_bar(aes(x = continent, y = ..prop..))
+```
+
+Note that the variables computed by `stat_` functions have two periods before and after the name to avoid conflicts with the variable names used in the dataset.
+
+The graph, however, is not useful as it shows all "prop" values to be equal to 1. This is because, the computed "prop" is using "total number of observations in a group" as denominator instead of using "total number of observations" by ignoring the groups. To convey this to `stat_count`, we need to map a constant value to the `group` aesthetic. This is shown in the following code.
+
+```{r}
+ggplot(data = gapminder) +
+  geom_bar(aes(x = continent, y = ..prop.., group = 1))
+```
+
+### Histogram
+
+For creating histograms and density plots, we will use the dataframe `midwest` containing a cross section data on counties in several midwestern states of the United States.
+
+```{r}
+midwest
+```
+
+The variable "area" measures the geographical areas of counties in square miles. We prepare a histogram for the "area"variable using the code given below.
+
+```{r}
+p = ggplot(data = midwest, mapping = aes(x = area))
+p + geom_histogram()
+```
+
+Note that the histogram does reflect the nature of the distribution. A notification from ggplot reflects two things. First, it indicates that a the statistical transformation `stat_bin` is utilized here. Second, it says that `bins` parameter is set to 30. These are the default settings, which can be overridden if required.
+
+Specifically, the `bins` parameter must be fine tuned to properly represent the nature of the distribution. For example, setting `bins` parameter to 10 provides a better idea of the nature of distribution.
+
+```{r}
+p + geom_histogram(bins = 10)
+```
+
+Note that the histogram now represents the nature of distribution more clearly as compared to the earlier one. The appearance of the histogram can be further improved by specifying the additional parameters as shown below.
+
+```{r}
+p + geom_histogram(bins = 10, fill = "cyan", color = "blue")
+```
+
+### Density plot
+
+In general, the nature of the distribution become more clearer as the number of bins increase. However, a higher number of bins requires bigger amount of data.
+
+*Frequency curve* is a graphical representation that is designed to capture the population behavior of the distribution from the sample at hand. It achieves this by estimating the density function and plotting it on a two dimensional plane as shown below.
+
+```{r}
+p+ geom_density()
+```
+
+The density estimation used by `stat_density` a popular density estimation method called the *Kernel density estimation*. The Kernel density estimation uses a smoothing parameter called the *bandwidth*, and is specified by the parameter `bw,` which is typically a small number between 0 and 1.
+
+In the code given below we specify a bandwidth to obtain a smoother density curve.
+
+```{r}
+p+ geom_density(bw = 0.007)
+```
+
+```{r}
+p+ geom_density(aes(y = ..scaled..), bw = 0.007)
+```

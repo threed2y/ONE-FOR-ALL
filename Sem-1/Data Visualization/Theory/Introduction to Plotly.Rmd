@@ -1,0 +1,81 @@
+---
+title: "Interactive Data Visualization"
+output:
+  html_document:
+    df_print: paged
+---
+
+## Why Interactive
+
+The visualizations we have seen so far using ggplot2 were *static*. That is, one created, these visualizations do not change. Although static visualizations of the data are useful, they present only the view that their creators intended to present. In other words, static data visualizations only provide *pre-determined* views of the data. Thus, if we want to visualize data from multiple perspectives, we need to generate multiple static views for the same data. Static visualizations are suitable when we want to publish them on static media such as print media.
+
+On an interactive publishing media such as Web, it is useful to add interactivity to the data visualizations.
+
+-   Interactive visualizations enable their viewers to explore the data for themselves.
+
+-   Interactive visualizations help viewers to find answers to their questions which may arise when they look at the visualizations.
+
+-   Interactivity encourage engagement of viewers with the data.
+
+Benefits of publishing on the web are well understood. It is the quickest way to reach a global audience.
+
+It is useful to be aware of the technologies underlying interactive data visualizations on Web.
+
+### html and Javascript
+
+When its comes to publishing on the Web, html and Javascript are the de facto technologies. Every Webpage is encoded in html, and Javascript is a scripting language for front-end as well as back-end programming. It is useful to be familiar with these technologies when we design for Web.
+
+### D3.js
+
+*Data Driven Documents* (or D3 for short) is a "JavaScript library" for visualizing data using web standards. The library, referred to as [D3.js](https://d3js.org/), combines powerful visualization and interaction techniques with a data-driven approach to the presentation and manipulation of Webpages.
+
+### WebGL
+
+[WebGL](https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API) is a Javascript API comprising a Graphical Library for presenting interactive 2D and 3D graphics on any compatible Web browser. stackgl is an opensource software ecosystem for WebGL.
+
+## Plotly
+
+Plotly.js is a Javascript library built on the top of D3.js and stackgl providing high level functions for creating interactive 2D and 3D data visualizations. Plotly.js helps in development of webpages that contain interactive data visualizations. Knowledge of Javascript is necessary for taking direct benefit of Plotly.js library.
+
+Fortunately, the `plotly` package has been developed for the R platform that provides the capabilities of Plotly.js to R programmers without requiring knowledge of Javascript.
+
+It is necessary to install `plotly` package before we can use it. Once installed, we load the package using the following code.
+
+```{r}
+library(plotly)
+```
+
+There are two main ways to creating graphs using `plotly`, the plotly objects.
+
+1.  By transforming a `ggplot2` object using `ggplotly` function into a `plotly` object.
+
+2.  Directly creating a `plotly` object using `plot_ly`/`plot_geo`/`plot_mapbox` function.
+
+The first approach is obviously convenient as we are already familiar with ggplot. in the following code we transform a static scatter plot created by ggplot into an interactive one.
+
+```{r}
+mpg
+```
+
+```{r}
+splot = ggplot (data = mpg) + 
+          geom_point(mapping = aes(x = displ, 
+                                   y = hwy,
+                                   color = class,
+                                   fill = class))
+ggplotly(splot)
+```
+
+The same interactive graph can be created using the second approach as shown below.
+
+```{r}
+plot_ly(mpg, x = ~displ, 
+             y = ~hwy,
+             color = ~class
+        )
+```
+
+### Exercise
+
+1.  Create different data visualizations using ggplot and transform them using `ggplotly` function. Observe the interactivity introduced by plotly.
+2.  Try to develop visualizations created above using second approach, that is, using the function `plot_ly`.

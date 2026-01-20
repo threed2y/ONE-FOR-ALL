@@ -1,0 +1,256 @@
+---
+title: "plotly6"
+author: "vandana"
+date: "2022-09-10"
+output: html_document
+---
+
+```{r}
+library(plotly)
+```
+
+
+```{r}
+splot=ggplot(data=mpg)+geom_point(mapping = aes(x=displ,y=hwy,color=class,fill=class))
+splot
+ggplotly(splot)
+
+```
+
+
+```{r}
+plot_ly(data=mpg,x=~displ,y=~hwy,color=~class)
+```
+
+
+```{r}
+bplot=ggplot(data=mpg)+
+  geom_bar(mapping = aes(x=displ,y=hwy,fill=class),stat="identity")
+bplot
+ggplotly(bplot)
+
+```
+
+
+```{r}
+library(plotly)
+bchart=plot_ly(diamonds,x=~cut,color=~clarity,colors="Accent")
+bchart
+```
+
+
+```{r}
+plot_ly(diamonds,x=~cut,color=I("pink"))
+```
+
+
+```{r}
+p=plot_ly(diamonds,x=~price)
+p=add_boxplot(p,color=~cut)
+  layout(p,
+         title="Price for diiferent cut qualities",
+         legend=list(title=list(text="cut"))
+         )
+```
+
+
+```{r}
+layout(
+  add_boxplot(
+    plot_ly(diamonds,x=~price),
+    color=~cut),
+  title = "Price for different cut qualities",
+  legend = list(title=list(text="clarity"))
+  )
+```
+
+
+```{r}
+diamonds%>%
+  plot_ly(x=~price)%>%
+  add_boxplot(color=~cut)%>%
+  layout(title="Price for different cut qualities",
+         legend=list(title=list(text="clarity")))
+```
+
+
+```{r}
+data("economics",package="ggplot2")
+economics%>%
+  arrange(psavert)%>%
+  plot_ly(x=~date,y=~psavert)%>%
+  add_lines()
+```
+```{r}
+library(plotly)
+p=plot_ly(data=economics,x=~date)%>%
+  add_trace(y=~uempmed,
+            type="scatter",
+            mode="markers",
+            name="unmployment",
+            marker=list(color="blue"))%>%
+   add_trace(
+     type="scatter",
+     mode="lines",
+     y=~fitted(loess(uempmed~as.numeric(date))),
+     name="loess",
+     line=list(color="red",dash="dashed"))%>%
+  layout(
+    title="unemployment",
+    xaxis=list(title="time",showgrid=F),
+    yaxis=list(title="uidx")
+  )
+p
+```
+
+
+```{r}
+names = c("Preeti", "Sheetal", "Vandana", "Karan", "Jaydip",
+          "Ayush", "Aman", "Deep", "Priyanka", "Nitu")
+Emarks = c(41, 36, 27, 31, 26, 22, 33, 25, 30, 23)
+MT = c(22, 24, 18, 20, 20, 14, 21, 19, 22, 15)
+DV = c(25, 22, 17, 21, 23, 16, 24, 20, 24, 14)
+Marks = data.frame(Emarks, MT, DV)
+rownames(Marks) = names
+Marks
+```
+
+
+```{r}
+p=ggplot(data=Marks,aes(x=Emarks))+
+  geom_point(aes(y=MT),col="blue")+
+  geom_point(aes(y=DV),col="red")
+p1=ggplotly(p)
+p1
+```
+
+
+```{r}
+p2=plot_ly(data=Marks)%>%
+  add_markers(x=Emarks,y=MT,name="measure theory")%>%
+  add_markers(x=Emarks,y=DV,name="Data visualization")
+p2
+```
+
+
+```{r}
+ggplotly(p,dynamicTicks = TRUE)
+
+```
+
+
+```{r}
+ggplotly(p,dynamicTicks = TRUE)%>%
+  rangeslider()
+```
+
+
+```{r}
+ggplotly(p,dynamicTicks = TRUE)%>%
+  layout(hovermode='x')
+```
+
+
+```{r}
+plotly_json(p1)
+```
+
+
+```{r}
+style(p1,text=rownames(Marks))
+```
+
+
+```{r}
+style(p1,text=rownames(Marks),hoverinfo="text+x+y")
+```
+
+
+```{r}
+style(p1, text = rownames(Marks), hovertemplate = "%{text}:(%{x},%{y})")
+```
+
+
+```{r}
+style(p1, name = "Measure Theory", traces = c(1)) %>%
+style(name = "Data Visualization", traces = c(2)) %>%
+style(p1, text = rownames(Marks), hovertemplate = "%{text}:(%{x},%{y})")
+```
+
+
+```{r}
+ggplotly(p, width = 900) %>%
+style(p1, name = "Measure Theory", traces = c(1)) %>%
+style(name = "Data Visualization", traces = c(2)) %>%
+style(p1, text = rownames(Marks), hovertemplate = "%{text}:(%{x},%{y})")
+```
+
+
+```{r}
+library(rnaturalearth)
+library(ggplot2)
+```
+
+
+```{r}
+world <- ne_countries(scale = "medium", returnclass = "sf")
+class(world)
+```
+
+
+```{r}
+ggplot(data = world) +
+    geom_sf()
+```
+
+
+```{r}
+ggplot(data = world) +
+    geom_sf() +
+    coord_sf(xlim = c(67, 100), ylim = c(5, 40))
+```
+
+
+```{r}
+colnames(world)
+```
+
+
+```{r}
+ggplot(data = world) +
+    geom_sf(mapping = aes(fill = abbrev), show.legend = FALSE)
+
+```
+
+
+```{r}
+cities = data.frame(list(long = c(77.1025, 73.1812), lat = c(28.7041, 22.3072)))
+ggplot(data = world) +
+  geom_sf(mapping = aes(fill = abbrev), show.legend = FALSE) +
+  coord_sf(xlim = c(65, 100), ylim = c(5, 40)) +
+  geom_point(data = cities, aes(x = long, y = lat), colour = "red")
+```
+
+
+```{r}
+cities = data.frame(list(long = c(77.1025, 73.1812), 
+                         lat = c(28.7041, 22.3072)))
+library(sf)
+cities = st_as_sf(cities, 
+                  coords = c("long", "lat"), 
+                  crs = 4326, 
+                  agr = "constant")
+p = ggplot(data = world) +
+  geom_sf(mapping = aes(fill = abbrev), show.legend = FALSE) +
+  geom_sf(data = cities, color = "red") +
+  coord_sf(xlim = c(65, 100), ylim = c(5, 40)) 
+p
+```
+
+
+```{r}
+library(plotly)
+ggplotly(p)
+
+```
+

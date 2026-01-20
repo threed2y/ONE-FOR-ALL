@@ -1,0 +1,88 @@
+---
+title: "Statistical Transformations"
+author: "Vipul Kalamkar"
+date: "8/20/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+To understand this aspect of data visualization, we will first create a basic bar chart for the dataset `diamonds`.
+
+```{r}
+library(ggplot2)
+diamonds
+```
+
+Note the information available for each diamond in this dataset. Next, we create a bar chart using the `geom_bar` function.
+
+```{r}
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut))
+```
+
+Above graph displays the total number of diamonds in the `diamonds` dataset, grouped by `cut` . The graph shows that as the quality of cut becomes better, the count of available diamonds increases.
+
+The X-axis shows the type of cut, and the Y-axis shows the count. Notice that `count` is not a variable in the dataset. It is, instead, a statistic computed from the dataset.
+
+-   Charts like bar charts, histograms, and frequency polygons bin your data and then plot bin counts, the number of points that fall in each bin.
+
+-   smoothers fit a model to your data and then plot predictions from the model.
+
+-   boxplots compute summary statistics of the data distribution and then display them in a specially formatted box.
+
+The algorithm used to calculate statistics to be displayed in a graph is called a **stat**, short for *statistical transformation*.
+
+The default `stat` used by `geom_bar` can be seen on its help page. It can be seen that the default `stat` for `geom_bar` is "count", that uses the function `stat_count`. Interestingly, the same bar chart that we created above can also be created using the `stat_count` function as shown below.
+
+```{r}
+ggplot(data = diamonds) + 
+  stat_count(mapping = aes(x = cut))
+```
+
+This worked because, just like every `geom` has a default `stat`, every `stat` also has a default `geom`. The default geom for the function `stat_count` is "bar".
+
+The default `stat` can be changed when required as shown in the following graph that uses median price instead of count.
+
+```{r}
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, y = price),
+           stat = "summary", fun = median)
+```
+
+Note that the `fun` argument provided to the `geom_bar` function in above code is actually used by the function `stat_summary`. In this example we are using the library function `median` as a summary function.
+
+We can even use a user defined function as a summary function. This is shown in the following example.
+
+```{r}
+# define a new function 
+avg = function(y)
+  mean(y)
+
+# use the newly defined function as summary function
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, y = price),
+           stat = "summary", fun = avg)
+```
+
+One more example of using a different `stat` is the following graph that shows the number of students placed over the years through campus placements in Department of Statistics at The M. S. University of Baroda.
+
+```{r}
+placements = 
+  data.frame(year = c("2016", "2017", "2018", "2019", "2020"),
+             nstudents = c(10, 13, 15, 15, 26)
+            )
+ggplot(data = placements) + 
+  geom_bar(mapping = aes(x = year, y = nstudents),
+           stat = "identity")
+```
+
+Above graph uses the function `stat_identity`. ggplot2 provides over 20 stats for you to use.
+
+### Lab assignment
+
+1.  Explore different `geom` functions and identify the default `stat` for each.
+
+2.  Explore different `stat` functions and identify default `geom` for each.

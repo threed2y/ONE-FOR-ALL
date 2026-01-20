@@ -1,0 +1,103 @@
+---
+title: "Additional components of ggplot"
+author: "Vipul Kalamkar"
+date: "8/22/2022"
+output: html_document
+---
+
+## Positional Adjustments
+
+In creating a visualization, positioning of visual components is also an important aspect of visualization.To pay attention to this aspect, consider an additional information to be displayed in the bar chart.
+
+First let's recreate the bar chart that was created in the last class.
+
+```{r}
+library(ggplot2)
+ggplot(data = diamonds) + 
+  stat_count(mapping = aes(x = cut))
+```
+
+Lets have a look at the `diamond` dataset ones again.
+
+```{r}
+diamonds
+```
+
+In the next graph, we incorporate the information about color of diamonds. We achieve this by mapping the `fill` aesthetic to "color" of diamond.
+
+```{r}
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, fill = color))
+```
+
+In `geom_bar`, the `fill` aesthetic defines the grouping of observations. In the above graph, the observations grouped by diamond color are represented as small bars *stacked on each other* in the bars for each cut quality.
+
+Stacking of the rectangles on each other is the **positioning** of the visual element "bar" in the visual that we created. However, this positioning was chosen by default in ggplot. The help page of `geom_bar` function shows that it has a `position` parameter with the default value "stack".
+
+We can obtain different positioning by specifying the `position` parameter in our code as shown below.
+
+```{r}
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, fill = color),
+           position = "dodge")
+```
+
+The `position` parameter is available in other `geom` functions also.
+
+### Homework
+
+1.  Explore the default `position` values in other `geom` functions.
+2.  Explore the different available values for `position` parameter, and understand how the graph changes when these values are used for the same `geom`.
+
+## Coordinate System
+
+The graphs created by ggplot use the *Cartesian Coordinate System* by default. In this system, the x and y positions act independently to determine the location of a visual element.
+
+There are other coordinate systems available in ggplot that are useful in some situations. These systems are defined by the `coord` functions.
+
+### `coord_flip`
+
+This coordinate system flips the Cartesian coordinates so that horizontal axis becomes vertical, and the vertical axis becomes horizontal. This can be useful, for example, if the X-axis has long labels that are hard to fit without overlapping on the x-axis.
+
+```{r}
+ggplot(data = mpg, mapping = aes(x = class, y = hwy)) + 
+  geom_boxplot()
+```
+
+In above visualization, the variable "class" is represented on X-axis because the aesthetic `x` has been mapped to the variable "class". This resulted into a vertical box plots.
+
+To obtain the horizontal box plots instead, we can change the coordinate system to `coord_flip` as shown below.
+
+```{r}
+ggplot(data = mpg, mapping = aes(x = class, y = hwy)) + 
+  geom_boxplot() +
+  coord_flip()
+```
+
+The same result can also be obtained by swapping the mappings of `x` and `y` aesthetics as shown below.
+
+```{r}
+ggplot(data = mpg, mapping = aes(y = class, x = hwy)) + 
+  geom_boxplot()
+```
+
+### `coord_polar` 
+
+This function defines the polar coordinate systems, in which the `x` aesthetic specifies the angle and the `y` aesthetic specified the distance from origin.
+
+If we change the coordinate system to polar while using `geom_bar`, it produces a *Coxcomb chart* as shown below.
+
+```{r}
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, fill = cut),
+           width = 1) +
+  labs(x = NULL, y = NULL) +
+  coord_polar()
+```
+
+### Homework
+
+Explore the `coord` functions available in ggplot and see the different result produced by them with different `geom` functions.
+library(ggplot2)
+ggplot(data = diamonds) + 
+  stat_count(mapping = aes(x = cut))

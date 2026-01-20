@@ -1,0 +1,167 @@
+---
+title: "Untitled"
+output:
+  pdf_document: default
+  html_document: default
+date: "2025-08-01"
+---
+
+```{r cars}
+pacman :: p_load("dplyr","ggplot2","scales")
+
+View(diamonds)
+
+# Q.1: Bar chart showing count of diamonds for each cut with fill colors
+
+a = ggplot(diamonds, aes(x = cut, fill = cut)) +
+  geom_bar() +
+  labs(title = "Count of Diamonds by Cut Quality",
+       x = "Cut Quality",
+       y = "Count") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+print(a)
+# Q.2: Modified bar chart to show proportions
+
+b = ggplot(diamonds, aes(x = cut, fill = cut)) +
+  geom_bar(aes(y = after_stat(count/sum(count)))) +
+  labs(title = "Proportion of Diamonds by Cut Quality",
+       x = "Cut Quality",
+       y = "Proportion") +
+  scale_y_continuous(labels = percent_format()) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+print(b)
+
+
+#Q.3: Boxplot comparing diamond price across clarity levels with custom color
+
+
+c = ggplot(diamonds, aes(x = clarity, y = price)) +
+  geom_boxplot(fill = "lightblue", color = "darkblue", alpha = 0.7) +
+  labs(title = "Distribution of Diamond Prices by Clarity",
+       x = "Clarity",
+       y = "Price ($)") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+print(c)
+
+# Q.4: Scatter plot of carat vs price with cut differentiation and custom legend
+
+d = ggplot(diamonds, aes(x = carat, y = price, color = cut)) +
+  geom_point(alpha = 0.6) +
+  labs(title = "Relationship between Carat Weight and Price",
+       x = "Carat Weight",
+       y = "Price (USD)",
+       color = "Cut Quality") +
+  scale_color_brewer(type = "qual", palette = "Set1") +
+  theme_minimal() +
+  guides(color = guide_legend(title = "Diamond Cut Quality",
+                             override.aes = list(alpha = 1, size = 3)))
+
+print(d)
+
+# Q.5: Scatter plot with subplots for different cut qualities
+
+
+e = ggplot(diamonds, aes(x = carat, y = price)) +
+  geom_point(alpha = 0.6, color = "steelblue") +
+  facet_wrap(~ cut, nrow = 2, ncol = 3) +
+  labs(title = "Carat vs Price by Cut Quality",
+       x = "Carat Weight",
+       y = "Price (USD)") +
+  theme_minimal() +
+  theme(strip.text = element_text(face = "bold"))
+
+print(e)
+
+
+# Q.6: Box plot showing prices for different diamond colors
+
+f = ggplot(diamonds, aes(x = color, y = price, fill = color)) +
+  geom_boxplot(alpha = 0.7) +
+  labs(title = "Diamond Prices by Color Grade",
+       x = "Color Grade",
+       y = "Price ($)") +
+  scale_fill_viridis_d() +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+print(f)
+
+# Q.7: Histogram of price with density curve
+
+
+g = ggplot(diamonds, aes(x = price)) +
+  geom_histogram(aes(y = after_stat(density)), 
+                 bins = 50, fill = "lightblue", alpha = 0.7, color = "black") +
+  geom_density(color = "red", size = 1.2) +
+  labs(title = "Distribution of Diamond Prices with Density Curve",
+       x = "Price ($)",
+       y = "Density") +
+  theme_minimal()
+
+print(g)
+
+# Q.8: Bar chart showing average prices by cut with values displayed
+
+
+avg_price_by_cut <- diamonds %>%
+  group_by(cut) %>%
+  summarise(avg_price = mean(price), .groups = 'drop')
+
+h = ggplot(avg_price_by_cut, aes(x = cut, y = avg_price, fill = cut)) +
+  geom_bar(stat = "identity", alpha = 0.8) +
+  geom_text(aes(label = paste0("$", round(avg_price, 0))), 
+            vjust = -0.5, size = 3.5, fontface = "bold") +
+  labs(title = "Average Diamond Prices by Cut Quality",
+       x = "Cut Quality",
+       y = "Average Price ($)") +
+  scale_y_continuous(labels = dollar_format()) +
+  theme_minimal() +
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 45, hjust = 1))
+
+print(h)
+
+# Q.9: Log-transformed price vs carat with facets and custom formatting
+
+
+i = ggplot(diamonds, aes(x = carat, y = log10(price))) +
+  geom_point(alpha = 0.4, color = "darkblue") +
+  facet_wrap(~ cut, nrow = 2, ncol = 3) +
+  labs(title = "Log-Transformed Price vs Carat Weight by Cut Quality",
+       subtitle = "Log transformation reduces price skewness",
+       x = "Carat Weight",
+       y = "Log10(Price)") +
+  scale_x_continuous(breaks = seq(0, 5, 0.5)) +
+  theme_minimal() +
+  theme(strip.text = element_text(face = "bold"),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.title = element_text(size = 14, face = "bold"),
+        plot.subtitle = element_text(size = 11))
+
+print(i)
+# Q.10: Scatter plot of depth vs price with reversed y-axis
+
+j = ggplot(diamonds, aes(x = depth, y = price)) +
+  geom_point(alpha = 0.5, color = "darkgreen") +
+  scale_y_reverse() +  # This reverses the y-axis
+  labs(title = "Diamond Depth vs Price (Reversed Y-axis)",
+       x = "Depth (%)",
+       y = "Price ($) - Reversed Scale") +
+  theme_minimal()
+
+print(j)
+# Summary of dataset characteristics
+
+eth = summary(diamonds)
+
+
+print(eth)
+
+
+```
