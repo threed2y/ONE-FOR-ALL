@@ -1,0 +1,68 @@
+---
+title: "PRACTICAL - 4 -- TEST OF SYMMETRY OF ORGANS"
+author: "Rupesh Pandey"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+X1 = HEAD LENGTH FIRST SON
+X2 = HEAD BREADTH FIRST SON
+X3 = HEAD LENGTH SECOND SON
+X4 = HEAD BREADTH SECOND SON
+
+
+```{r}
+data = read.csv("C:/Users/statlab/Desktop/RUPESH PANDEY/Sem-2/Multivariate Analysis-2/MA-2 Practical/practical-4 Brother's  Data.csv")
+head(data)
+
+y = matrix(c(rep(1)),25,1)
+y
+
+## mean
+
+x = as.matrix(data)
+x
+
+n = 25
+
+x_bar = t(x)%*%y/n
+x_bar
+
+## sigma
+
+s = cov(data)
+s
+
+p = 2
+p
+
+v11 = s[1:2,1:2]
+v12 = s[1:2,3:4]
+v21 = s[3:4,1:2]
+v22 = s[3:4,3:4]
+
+v11
+v12
+v21
+v22
+
+x1_bar = x_bar[1:2]
+x2_bar = x_bar[3:4]
+
+x1_bar
+x2_bar
+
+hotelling = n*(n-1)* t(x1_bar - x2_bar)%*%solve(v11-v12-v21+v22)%*%(x1_bar-x2_bar)
+hotelling
+
+hotelling_tab = ((n-p)/p)*(hotelling/n-1)
+hotelling_tab
+
+ftab = qf(0.95,p,n-p)
+ftab
+
+## REJECT HO AS WE CALCULATED VALUE IS GREATER THAN TABULATED VALUE AT 5% LOS.
+
+
+```
+
