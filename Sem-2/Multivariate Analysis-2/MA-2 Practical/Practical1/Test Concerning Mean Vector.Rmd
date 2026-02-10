@@ -1,0 +1,95 @@
+---
+title: "Test Concerning Mean Vector (One Sample Problem)"
+author: "Alokchandra Jha"
+date: "2025-12-18"
+output: html_document
+---
+
+Q.1 In a study of market structure of firms four variables that determine a firm’s 
+market structure are: 
+X1: Market share at a given time  
+X2: Firm Size (Natural logarithm of net total assets) 
+X3: Rate of return on capital 
+X4: Growth (% Change in total revenue during a given period) 
+Data were obtained on a sample of N= 231 large U.S. firms during 1960 – 1961. 
+The sample mean vector is  =(20.92, 8.06, 11.78, 1.09)′ 
+The covariance matrix are  
+S = V/n = 
+
+.𝟐𝟔𝟎 𝟎.𝟎𝟖𝟎 𝟏.𝟔𝟑𝟗 𝟎.𝟏𝟓𝟔
+𝟏.𝟓𝟏𝟑 −𝟎.𝟐𝟐𝟐 −𝟎.𝟎𝟏𝟗
+𝟐𝟔.𝟔𝟐𝟔 𝟐.𝟐𝟑𝟑
+𝟏.𝟑𝟒𝟔
+Assuming that the data for the N= 231 firms constitute a random sample from 
+a 4 variate normal distribution, test  the hypothesis that 𝒖𝟎 = (20, 7.5, 10, 2) 
+
+```{r}
+s_upper_tri = matrix(c(0.260, 0.080, 1.639, 0.156, 0, 1.513, -0.222, -0.019, 0, 0, 26.626, 2.233, 0, 0, 0, 1.346), ncol = 4, nrow = 4, byrow = TRUE)
+    
+s_matrix = s_upper_tri + t(s_upper_tri) - diag(diag(s_upper_tri))
+print("The given Variance-Covariance matrix is")
+print(s_matrix)
+
+N = 231
+P = 4                   
+
+sample_mean = c(20.92, 8.06, 11.78, 1.09)
+null_pop_mean = c(20, 7.5, 10, 2)
+
+hotelling_t1 = N*t(sample_mean - null_pop_mean) %*% solve(s_matrix) %*% (sample_mean - null_pop_mean)
+hotelling_t1
+
+t_cal = ((N-P)*hotelling_t1)/(P*(N-1))
+t_cal 
+t_tab = qf(1-0.05, P, (N-P))
+t_tab
+
+if (t_cal > t_tab) {
+  print("We reject the null hypothesis at 5% level of Significance")
+} else {
+  print("We do not have enough evidence to reject the null hypothesis at 5% level of Significance")}
+```
+Q.2 Use the Weights of cork deposits Data 
+
+```{r}
+data_cork = read.csv("C:/Users/statlab/Desktop/AlokPrev/Multivariate/M.A.-3WEIGHTS OF CORK DATA.csv")
+
+matrix_data = as.matrix(data_cork)
+
+N = nrow(matrix_data)
+P = ncol(matrix_data)
+
+cov_matrix = cov(data)
+cov_matrix
+
+mean_matrix = colMeans(data)
+mean_matrix
+
+contrast_matrix = cbind(diag(3), -1)
+contrast_matrix
+
+y_bar = contrast_matrix %*% mean_matrix
+y_bar
+
+y_cov = contrast_matrix %*% cov_matrix %*% t(contrast_matrix)
+y_cov
+ 
+hotelling_t2 = N %*% t(y_bar) %*% solve(y_cov) %*% (y_bar)
+hotelling_t2
+
+t_tab = qf(1-0.05, P-1, N-P)
+t_tab
+
+
+```
+```{r}
+data_respiratory = read.csv("C:/Users/statlab/Desktop/AlokPrev/Multivariate/M.A.-3RESPIRATORY DATA.csv")
+
+matrix_data2 = as.matrix(data_respiratory)
+
+N = nrow(matrix_data2)
+P = ncol(matrix_data2)
+```
+
+
+
