@@ -1,0 +1,66 @@
+---
+title: "Test of symmetry of organs"
+author: "Alok"
+date: "`r Sys.Date()`"
+output: html_document
+---
+Question 1:
+Data on brother's 
+For the data "head length and breadth of brother's"
+X1: Head length of first son 
+X2: Head breadth of first son
+X3: Head length of second son
+X4: Head breadth of second son
+
+```{r}
+data = read.csv("C:\\Users\\statlab\\Desktop\\AlokPrev\\Multivariate\\Practical4\\practical-6 Brother's  Data.csv")
+
+#Hypothesis
+# H0 : There is no difference between the measurements and characteristics of the first son and second son.
+# H1 : There is a significant difference between the measurements and characteristics of the first son and second son.
+
+#mean of the columns
+mean_data = colMeans(data)
+mean_data
+
+
+#variance covariances matrix
+cov_data = cov(data)
+cov_data
+
+#partition of mean matrix
+mean_first_son = mean_data[1:2]
+mean_second_son = mean_data[3:4]
+
+#partition of var cov matrix
+v11 = cov_data[1:2, 1:2]
+v12 = cov_data[1:2, 3:4]
+v21 = cov_data[3:4, 1:2]
+v22 = cov_data[3:4, 3:4]
+
+#number of observation
+N = nrow(data)
+P = ncol(data)/2
+
+#hotelling's tsq
+hotelling_t = N * (N-1) * t(mean_first_son - mean_second_son) %*% solve((v11 - t(v12) - v12 + v22)) %*% (mean_first_son - mean_second_son)
+hotelling_t
+
+#calculated f
+f_cal = ((N - P)/ P) * (hotelling_t/N-1)
+f_cal
+
+#tabulated f
+f_tab = qf(0.95, P, N-P)
+f_tab
+
+if (f_cal > f_tab) {
+  print("We reject the null hypothesis at 5% level of Significance")
+} else {
+  print("We do not have enough evidence to reject the null hypothesis at 5% level of Significance")}
+
+print("Here, as we reject the null hypothesis, we can conclude that there exists a significant difference in the characteristics and measurements of the twin brothers at 5% level of significance.")
+  
+
+```
+

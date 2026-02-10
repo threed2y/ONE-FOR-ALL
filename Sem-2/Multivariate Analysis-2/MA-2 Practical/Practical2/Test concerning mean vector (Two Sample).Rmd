@@ -1,0 +1,130 @@
+---
+title: "Test Concerning Mean Vector (Two Sample Problem)"
+author: "Alokchandra Jha"
+date: "2026-01-01"
+output: html_document
+---
+1. 	Using Moody’s bond rating data sample of 20 “Aa” (middle high quality) corporate bonds and 20 “Baa”( Top medium quality ) corporate bonds were selected. For each of the corresponding companies, the ratios 
+X1 : Current ratio ( measure of short term liquidity)
+X2 : Time long-term interest rate (measure of financial risk as interest coverage) 
+X3 : debt to equity ratio ( a measure of financial risk as leverage)
+X4 : rate of return on equity ( A measure  of profitability)
+Were recorded the summary statistics are as follows:
+N1 = 20   N2 = 20 
+Are financial characteristics of firm with Ab bond different from those with Baa bonds at 
+α = 0.05
+Aa bond companies :                                             
+X ̅ 1 =  ■(2.287&12.600&0.34477&14.830)
+S1 = ■(0.459&0.254&-0.026&-0.244@0.254&27.465&-0.589&-0.267@-0.026&-0.589&0.030&0.102@-0.244&-0.267&0.102&6.854)
+Baa bond companies:
+X ̅ 2 =  ■(2.404&7.155&0.524&12.840)
+
+S2 = ■(0.944&-0.089&0.002&-0.719@-0.089&16.432&-0.400&19.044@0.002&-0.400&0.024&-0.094@-0.719&19.044&-0.094&61.854)
+
+```{r}
+#equal sample size
+N = 20
+
+P = 4
+#to test if financial characteristics of both the bonds is same or different
+
+#Hypothesis :
+#Ho : There is no difference between the means of Aa and Baa bonds. (X1_bar = X2_bar)
+#H1 : There is a difference between the means of Aa and Baa bonds. (X1_bar != X2_bar)
+
+x1_bar = c(2.287, 12.600, 0.34477, 14.830)
+x2_bar = c(2.404, 7.155, 0.524, 12.840)
+
+y_bar = x1_bar - x2_bar
+y_bar
+
+s1 = matrix(c(0.459, 0.254, -0.026, -0.244, 0.254, 27.465, -0.589, -0.267, -0.026, -0.589, 0.030, 0.102, -0.244, -0.267, 0.102, 6.854), nrow = 4, ncol = 4, byrow = TRUE)
+s2 = matrix(c(0.944, -0.089, 0.002, -0.719, -0.089, 16.432, -0.400, 19.044, 0.002, -0.400, 0.024, -0.094, -0.719, 19.044, -0.094, 61.854), nrow = 4, ncol = 4, byrow = TRUE)
+s1
+s2
+
+y_s = s1 + s2
+y_s
+
+hotelling_t = N %*% t(y_bar) %*% solve(y_s) %*% (y_bar)
+hotelling_t
+
+f1 = ((N-P)/ P) * hotelling_t/(N-1)
+f1
+
+f_tab = qf(1-0.05, P, N-P)
+f_tab
+
+if (f1 > f_tab) {
+  print("We reject the null hypothesis at 5% level of Significance")
+} else {
+  print("We do not have enough evidence to reject the null hypothesis at 5% level of Significance")}
+print("Hence, we conclude that there is a statistically significant difference among the financial characteristics of Aa and Baa bonds.")
+```
+```{r}
+data1 = as.matrix(read.csv("C:\\Users\\statlab\\Desktop\\AlokPrev\\Multivariate\\Practical2\\M.A.-4IRIS SETOSA DATA.csv"))
+data2 = as.matrix(read.csv("C:\\Users\\statlab\\Desktop\\AlokPrev\\Multivariate\\Practical2\\M.A.-4IRIS VERSICOLOR DATA.csv"))
+
+number_rows = nrow(data1)
+
+P = ncol(data1)
+
+y_bar = colMeans(data1) - colMeans(data2)
+y_bar
+
+y_cov = cov(data1) + cov(data2)
+y_cov
+
+h_t = number_rows %*% t(y_bar) %*% solve(y_cov) %*% (y_bar)
+h_t
+
+f2 = ((number_rows - P)/ P) * (h_t/(number_rows-1))
+f2
+
+f_tab = qf(1-0.05, P, number_rows-P)
+f_tab
+
+if (f1 > f_tab) {
+  print("We reject the null hypothesis at 5% level of Significance")
+} else {
+  print("We do not have enough evidence to reject the null hypothesis at 5% level of Significance")}
+```
+```{r}
+data(iris)
+
+setosa = iris[iris$Species == "setosa", 1:4]
+versicolor = iris[iris$Species == "versicolor", 1:4]
+
+head(setosa)
+
+data1 = setosa
+data2 = versicolor
+
+number_rows = nrow(data1)
+
+P = ncol(data1)
+
+colMeans(data1)
+
+y_bar = colMeans(data1) - colMeans(data2)
+y_bar
+
+y_cov = cov(data1) + cov(data2)
+y_cov
+
+h_t = number_rows %*% t(y_bar) %*% solve(y_cov) %*% (y_bar)
+h_t
+
+f2 = ((number_rows - P)/ P) * (h_t/(number_rows-1))
+f2
+
+f_tab = qf(1-0.05, P, number_rows-P)
+f_tab
+
+if (f1 > f_tab) {
+  print("We reject the null hypothesis at 5% level of Significance")
+} else {
+  print("We do not have enough evidence to reject the null hypothesis at 5% level of Significance")}
+```
+
+

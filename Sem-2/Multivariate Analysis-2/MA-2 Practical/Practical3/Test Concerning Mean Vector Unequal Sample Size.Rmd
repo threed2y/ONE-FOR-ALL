@@ -1,0 +1,94 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+data_oleracea = as.matrix(read.csv("C:\\Users\\statlab\\Desktop\\AlokPrev\\Multivariate\\Practical3\\M.A.-5 FLEA BEETLE HALTIKA OLERACEA.csv"))
+tail(data_oleracea)
+data_carduorum = as.matrix(read.csv("C:\\Users\\statlab\\Desktop\\AlokPrev\\Multivariate\\Practical3\\M.A.-5 FLEA BEETLE HALTIKA CARDUORUM.csv"))
+tail(data_carduorum)
+
+mean_oleracea = colMeans(data_oleracea)
+mean_oleracea
+mean_carduorum = as.matrix(colMeans(data_carduorum))
+
+n1 = nrow(data_oleracea)
+n1
+n2 = nrow(data_carduorum)
+n2
+p = ncol(data_oleracea)
+p
+
+ur = as.matrix(data_oleracea - sqrt(n1/n2) * data_carduorum[1:19, ])
+ur
+dim(ur)
+
+mean_ur = colMeans(ur)
+mean_ur
+dim(mean_ur)
+
+Vu = t(ur-mean_ur) %*% (ur-mean_ur)
+Vu
+
+ur_new <- ur
+ur_new[, "x1"] <- ur_new[, "x1"] - mean_ur["x1"]
+ur_new
+
+
+Tsq = n1 * (n1-1) * t(mean_oleracea - mean_carduorum) %*% solve(Vu) %*% (mean_oleracea - mean_carduorum)
+Tsq
+
+fcal = (n1+n2-p-1)/p *(Tsq/(n1+n2-2))
+fcal
+
+ftab = qf(0.95, p, (n1+n2-p-1))
+ftab
+```
+
+```{r}
+data_oleracea = as.matrix(read.csv("C:\\Users\\statlab\\Desktop\\AlokPrev\\Multivariate\\Practical3\\M.A.-5 FLEA BEETLE HALTIKA OLERACEA.csv"))
+tail(data_oleracea)
+data_carduorum = as.matrix(read.csv("C:\\Users\\statlab\\Desktop\\AlokPrev\\Multivariate\\Practical3\\M.A.-5 FLEA BEETLE HALTIKA CARDUORUM.csv"))
+tail(data_carduorum)
+
+mean_oleracea = colMeans(data_oleracea)
+mean_oleracea
+mean_carduorum = as.matrix(colMeans(data_carduorum))
+
+n1 = nrow(data_oleracea)
+n1
+n2 = nrow(data_carduorum)
+n2
+p = ncol(data_oleracea)
+p
+
+ur = as.matrix(data_oleracea - sqrt(n1/n2) * data_carduorum[1:19, ])
+ur
+dim(ur)
+
+mean_ur = colMeans(ur)
+mean_ur
+dim(mean_ur)
+
+ur_new <- sweep(ur, 2, mean_ur, FUN = "-")
+ur_new
+
+Vu = t(ur_new) %*% (ur_new)
+Vu
+
+Tsq = n1 * (n1-1) * t(mean_oleracea - mean_carduorum) %*% solve(Vu) %*% (mean_oleracea - mean_carduorum)
+Tsq
+
+fcal = (n1+n2-p-1)/p *(Tsq/(n1+n2-2))
+fcal
+
+ftab = qf(0.95, p, (n1+n2-p-1))
+ftab
+```
+```{r}
+(489.19,-24.21,62.38,-57.03,0.15,104.07,0.76,-2.97,2.50,45.68,-39.38,-0.39,39.92,-1.99,1.93)
+```
+
+
+
