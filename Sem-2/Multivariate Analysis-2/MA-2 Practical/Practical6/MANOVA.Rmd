@@ -1,0 +1,95 @@
+---
+title: "Practical6--MANOVA"
+author: "Rupesh Pandey"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r}
+# S1 matrix
+S1 <- matrix(c(
+  0.291, -0.001,  0.002,  0.010,
+ -0.001,  0.011,  0.000,  0.003,
+  0.002,  0.000,  0.001,  0.000,
+  0.010,  0.003,  0.000,  0.010
+), nrow = 4, byrow = TRUE)
+
+# S2 matrix
+S2 <- matrix(c(
+  0.561,  0.011,  0.001,  0.037,
+  0.011,  0.025,  0.004,  0.007,
+  0.001,  0.004,  0.005,  0.002,
+  0.037,  0.007,  0.002,  0.019
+), nrow = 4, byrow = TRUE)
+
+# S3 matrix
+S3 <- matrix(c(
+  0.261,  0.030,  0.003,  0.018,
+  0.030,  0.017, -0.000,  0.006,
+  0.003, -0.000,  0.004,  0.001,
+  0.018,  0.006,  0.001,  0.013
+), nrow = 4, byrow = TRUE)
+
+# View matrices
+S1
+S2
+S3
+
+pool_S = 
+
+
+# Sample sizes
+n1 <- 271
+n2 <- 138
+n3 <- 107
+p = 4
+g = 3
+
+
+# Sample mean vectors
+xbar1 <- matrix(c(2.066, 0.480, 0.082, 0.360), ncol = 1)
+xbar2 <- matrix(c(2.167, 0.596, 0.124, 0.418), ncol = 1)
+xbar3 <- matrix(c(2.273, 0.521, 0.125, 0.383), ncol = 1)
+
+
+# View results
+xbar1
+xbar2
+xbar3
+
+
+# Total sample size
+N <- n1 + n2 + n3
+N
+
+cmean = (n1*xbar1 + n2*xbar2 + n3*xbar3 )/N
+cmean
+
+w_sum = (n1-1)*S1 + (n2-1)*S2 + (n3-1)*S3
+w_sum
+
+b_sum = n1*(xbar1-cmean)%*%t(xbar1-cmean)+n2*(xbar2-cmean)%*%t(xbar2-cmean)+n3*(xbar3-cmean)%*%t(xbar3-cmean)
+b_sum
+
+total_S = w_sum + b_sum
+total_S
+
+omega = det(w_sum)/det(total_S)
+omega
+
+a = ((N-p-2)/p)
+b = ((1-omega)/omega)
+
+f_cal = a*b
+f_cal
+
+f2_cal = -(515-(p+g)/2)*log(omega)
+f2_cal
+
+
+
+
+```
+
+
+```{r}
