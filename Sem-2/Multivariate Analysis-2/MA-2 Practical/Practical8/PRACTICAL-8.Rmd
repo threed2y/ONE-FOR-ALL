@@ -1,0 +1,53 @@
+---
+title: 'Practical-8 : Repeated Measure Design'
+author: "SHRUTI KHARVA"
+date: "2026-03-27"
+output: html_document
+---
+Q.1 Improved anesthetics are often developed by first studying their effect of animals. In one study, 19 dogs were initially given the drug pentobarbital. Each dog was then administered carbon dioxide CO2 at each of two pressure levels. Next halothane (H) was added, and the administration of CO2 was repeated. The response, milliseconds between heartbeats, was measured for the four treatment combinations:
+Treatment 1 = high CO2 pressure without H
+Treatment 2 = low  CO2 pressure without H
+Treatment 3 = high CO2 pressure with H
+Treatment 4 = low   CO2 pressure with H
+We shall analyze the anesthetizing effect of CO2 pressure and halothane from repeated measure design.
+```{r}
+data = read.csv(file.choose())
+data
+```
+```{r}
+n = 19
+p = 4
+mean = as.vector(colMeans(data[,2:5]))
+mean
+
+x_bar = t(t(mean))
+x_bar
+
+c = matrix(c(1,-1,0,0,0,-1,1,0,0,0,1,-1),nrow = 3,ncol = 4,byrow = TRUE)
+c
+
+sigma = cov(data[,2:5])
+sigma
+
+c_xbar = c%*%x_bar
+c_xbar
+
+c_sigma_c = c%*%sigma%*%t(c)
+c_sigma_c
+
+T_2 = n*(t(c_xbar))%*%solve(c_sigma_c)%*%c_xbar
+T_2
+
+Test_statistics = ((n-p+1)/((n-1)*(p-1)))*T_2
+Test_statistics
+
+f_tab = qf(0.95,p-1,n-p+1)
+f_tab
+
+#Here Test_statistics > f_tab Reject H0 at 5% LOS
+
+#Growth Curve
+Treatment = c(1,2,3,4)
+plot(Treatment,mean,type = "b")
+```
+
