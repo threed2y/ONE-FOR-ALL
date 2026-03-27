@@ -1,0 +1,151 @@
+---
+title: "Metropolis-Hastings"
+author: "Rupesh Pandey"
+date: '`r Sys.Date()`'
+output: pdf_document
+---
+
+
+```{r}
+
+library(ggplot2)
+
+delta <- 0.5
+N <- 500
+x <- numeric(N)
+x[1] <- 0
+set.seed(2018-06-04)
+for(i in 2:N) {
+        eps <- runif(1, -delta, delta)
+        y <- x[i-1] + eps
+        alpha <- min(dnorm(y, log = TRUE) - dnorm(x[i-1], log = TRUE), 0)
+        u <- runif(1, 0, 1)
+        if(log(u) <= alpha)
+                x[i] <- y
+        else
+                x[i] <- x[i-1]
+}
+summary(x)
+
+hist(x)
+```
+```{r}
+
+qplot(1:N, x, geom = "line", xlab = "Iteration")
+
+```
+```{r}
+delta <- 2
+N <- 500
+x <- numeric(N)
+x[1] <- 0
+set.seed(2018-06-04)
+for(i in 2:N) {
+        eps <- runif(1, -delta, delta)
+        y <- x[i-1] + eps
+        alpha <- min(dnorm(y, log = TRUE) - dnorm(x[i-1], log = TRUE), 0)
+        u <- runif(1, 0, 1)
+        if(log(u) <= alpha)
+                x[i] <- y
+        else
+                x[i] <- x[i-1]
+}
+summary(x)
+```
+```{r}
+qplot(1:N, x,
+      geom = "line",
+       xlab = "iteration")
+```
+```{r}
+set.seed(1)
+
+N <- 500
+y <- c(8,9,7,10,9)
+mean(y)
+
+# prior
+prior_mean <- 0
+prior_sd <- sqrt(10)
+
+# initialize chain
+nu_chain <- numeric(N)
+nu_chain[1] <- mean(y)
+
+for(i in 2:N) {
+  # proposal
+  proposal <- rnorm(1, mean = nu_chain[i-1], sd = 0.5)
+  
+  # log-likelihood
+  loglik_prop <- sum(dnorm(y, mean = proposal, log = TRUE))
+  loglik_curr <- sum(dnorm(y, mean = nu_chain[i-1], log = TRUE))
+  
+  # log-prior
+  logprior_prop <- dnorm(proposal, mean = prior_mean, sd = prior_sd, log = TRUE)
+  logprior_curr <- dnorm(nu_chain[i-1], mean = prior_mean, sd = prior_sd, log = TRUE)
+  
+  # acceptance ratio
+  alpha <- min(0, (loglik_prop + logprior_prop) - (loglik_curr + logprior_curr))
+  
+  # accept/reject
+  u <- runif(1)
+  if(log(u) < alpha) {
+    nu_chain[i] <- proposal
+  } else {
+    nu_chain[i] <- nu_chain[i-1]
+  }
+}
+
+
+simulated_nu = summary(nu_chain)
+print(simulated_nu)
+
+qplot(1:N, nu_chain,
+      geom = "line",
+       xlab = "iteration")
+```
+```{r}
+set.seed(1)
+
+N <- 500
+y <- c(2.1,1.8,3.2,2.5,1.9)
+
+# prior (Gamma)
+shape <- 2
+rate <- 1
+
+# initialize chain (positive values)
+nu_chain <- numeric(N)
+nu_chain[1] <- 1  
+
+for(i in 2:N) {
+  # proposal (log-normal random walk ensures positivity)
+  proposal <- rlnorm(1, log(nu_chain[i-1]), 0.3)
+  
+  # log-likelihood (Normal model)
+  loglik_prop <- sum(dnorm(y, mean = proposal, sd = 1, log = TRUE))
+  loglik_curr <- sum(dnorm(y, mean = nu_chain[i-1], sd = 1, log = TRUE))
+  
+  # log-prior (Gamma)
+  logprior_prop <- dgamma(proposal, shape = shape, rate = rate, log = TRUE)
+  logprior_curr <- dgamma(nu_chain[i-1], shape = shape, rate = rate, log = TRUE)
+  
+  # acceptance ratio
+  log_alpha <- (loglik_prop + logprior_prop) - (loglik_curr + logprior_curr)
+  
+  # accept/reject
+  if(log(runif(1)) < log_alpha) {
+    nu_chain[i] <- proposal
+  } else {
+    nu_chain[i] <- nu_chain[i-1]
+  }
+}
+
+summary(nu_chain)
+
+library(ggplot2)
+qplot(1:N, nu_chain, geom = "line", xlab = "iteration")
+```
+
+
+

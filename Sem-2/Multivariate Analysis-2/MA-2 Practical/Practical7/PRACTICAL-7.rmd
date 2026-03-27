@@ -1,0 +1,79 @@
+---
+title: "practical - 7 :  Principal component Analysis and PCA in regression"
+author: "SHRUTI KHARVA"
+date: "2026-03-25"
+output: html_document
+---
+
+Q.1	A study was conducted to analyze the relationship among seven variables. The covariance matrix of the variables X_1,X_2,…,X_7is given below:
+
+S=    ■(1.307&0.879&0.908&0.958&0.345&0.512&0.385@&1.248&1.147&1.411&-0.089&0.564&0.172@&&1.317&1.480&0.058&0.573&0.259@&&&2.022&-0.110&0.773&0.236@&&&&0.443&0.046&0.259@&&&&&0.371&0.154@&&&&&&0.264)
+
+	Determine the principal components (PCs).
+	Interpret the first few principal components.
+
+
+```{r}
+#Find principal component when S = cov(x) matrix is given
+S = matrix(c(1.307,0.879,0.908,0.958,0.345,0.512,0.385,0,1.248,1.147,1.411,-0.089,0.564,0.172,0,0,1.317,1.480,0.058,0.573,0.259,0,0,0,2.022,-0.110,0.773,0.236,0,0,0,0,0.443,0.046,0.259,0,0,0,0,0,0.371,0.154,0,0,0,0,0,0,0.264),byrow=TRUE,7)
+S
+s = S+t(S)-diag(diag(S))
+s
+p = 7 #number of indepedent variables
+n = 36 #We have 36 observation
+l = eigen(s)$values
+l
+g = eigen(s)$vectors
+g #eigen vectors are orthogonal to each other
+g=round(g,4)
+
+propvar = (l/sum(l))*100 # proportion variance explained by ith component
+propvar
+cumprop=cumsum(propvar) # proportion of variance explained by frist i component
+cumprop
+
+#the eigenvalues and the percentage of variance explained by the component
+Pc_no = 1:length(l)
+cbind(Pc_no,l,propvar,cumprop)
+
+#conclusion : It is since that the frist component explains by 76% variation dataset explains by X1 followed by X2,followed by X3 and followed by X4
+#The second component explains 15% variation of data explains by X2 followed by The frist three component explaines around 95% variation of the dataset. 
+
+#calculate loading
+rij = (t(g)*sqrt(l))/sqrt(diag(s))
+rij = t(rij);rij
+rij^2 #Weights
+
+# LRT to select the number of components
+for (r in 0:(p-1))
+{
+  a0 = sum(l[(r+1):p])/(p-r)
+  g0 = prod(l[(r+1):p])^(1/(p-r))
+  T = (n - ((2*p + 11)/6)) * (p - r) * log(a0/g0)
+  df = (p - r + 2) * (p - r - 1) / 2
+  pvalue = 1 - pchisq(T, df)
+  if (pvalue > 0.05) { break }
+}
+
+cat("Here accept H0 for r=", r, "chisq=", T, "p-value=", pvalue)
+
+# scree plot
+plot(1:7, l, type="o", col="darkblue")
+
+
+```
+Q.2	A study was conducted on 60 children (n = 60) to analyze the relationship between a response variable and several explanatory variables related to child characteristics. The variables recorded are:
+y : Response variable 
+x₁, x₂, x₃, x₄, x₅, x₆, x₇, x₈ : Predictor variables representing different child-related factors
+i.	Obtain the correlation matrix of the predictor variables.
+ii.	Determine the principal components (PCs).
+iii.	Interpret the first few principal components.
+iv.	Fit the Principal Component Regression model.
+v.	Express the regression equation: In terms of principal components and In terms of original variables
+
+USE CHILD DATASET.
+
+```{r}
+#P
+```
+

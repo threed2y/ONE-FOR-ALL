@@ -1,0 +1,144 @@
+---
+title: "Gibbs Sampling"
+author: "Rupesh Pandey"
+date: "`r Sys.Date()`"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+Q -- 1 
+
+```{r}
+
+# Parameters
+n = 20
+alpha = 2
+beta = 3
+
+N = 5000 # number of iterations
+
+
+# Store Values
+x1 = numeric(N)
+x2 = numeric(N)
+
+
+# Initial Values
+value = dbeta(0,2,3)
+x2[1] = 0
+
+
+# Gibbs Sampling
+for(i in 2
+    :N){
+  x1[i] = rbinom(1,n,x2[i-1])
+  
+  x2[i] = rbeta(1,x1[i] + alpha,n - x1[i] + beta)
+  
+}
+
+# Results
+mean(x1[1000:N])
+mean(x2[1000:N])
+
+
+```
+```{r}
+
+par(mfrow = c(2,1))
+
+# Trace plot for x1
+plot(x1, type = "l", col = "blue",
+     main = "Trace Plot of x1 (Binomial draws)",
+     ylab = "x1")
+
+# Trace plot for x2
+plot(x2, type = "l", col = "red",
+     main = "Trace Plot of x2 (Beta samples)",
+     ylab = "x2")
+
+```
+```{r}
+
+par(mfrow = c(1,2))
+
+# Histogram of x1
+hist(x1, col = "lightblue", breaks = 20,
+     main = "Histogram of x1",
+     xlab = "x1")
+
+# Histogram of x2
+hist(x2, col = "lightcoral", breaks = 20,
+     main = "Histogram of x2",
+     xlab = "x2")
+
+```
+
+```{r}
+
+plot(density(x2), col = "red", lwd = 2,
+     main = "Density of x2 vs True Beta(2,3)",
+     xlab = "x2")
+
+curve(dbeta(x, 2, 3), col = "blue", lwd = 2, add = TRUE)
+
+legend("topright", legend = c("Sampled", "True Beta(2,3)"),
+       col = c("red", "blue"), lwd = 2)
+
+```
+
+```{r}
+
+burn = 1000
+
+plot(density(x2[burn:N]), col = "darkgreen", lwd = 2,
+     main = "Density after Burn-in",
+     xlab = "x2")
+
+curve(dbeta(x, 2, 3), col = "blue", lwd = 2, add = TRUE)
+
+```
+
+Q -- 2
+
+```{r}
+
+rho = 0.6
+mu_x = 100
+mu_y = 200
+sigma_x = 10
+sigma_y = 20
+n_iter = 5000
+
+x0 = 1
+y0 = 2
+# Storage
+x <- numeric(n_iter)
+y <- numeric(n_iter)
+
+# Initialize
+x[1] <- x0
+y[1] <- y0
+
+# Conditional variances
+sigma_x_cond <- sigma_x * sqrt(1 - rho^2)
+sigma_y_cond <- sigma_y * sqrt(1 - rho^2)
+
+for (t in 2:n_iter) {
+  
+  # Sample X | Y
+  mu_x_cond <- mu_x + rho * (sigma_x / sigma_y) * (y[t-1] - mu_y)
+  x[t] <- rnorm(1, mean = mu_x_cond, sd = sigma_x_cond)
+  
+  # Sample Y | X
+  mu_y_cond <- mu_y + rho * (sigma_y / sigma_x) * (x[t] - mu_x)
+  y[t] <- rnorm(1, mean = mu_y_cond, sd = sigma_y_cond)
+}
+
+mean(x[1000:N])
+mean(y[1000:N])
+
+
+```
+
