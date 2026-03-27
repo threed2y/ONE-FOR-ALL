@@ -1,0 +1,89 @@
+---
+title: "PCA-PCR"
+author: "Rupesh Pandey"
+date: "`r Sys.Date()`"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+
+# STEPS TO PERFORM PRINCIPAL COMPONENT ANALYSIS :-
+1. Obtain the eigen values and eigen vectors.
+2. Obtain component loadings using the formula : g'sqrt(l)/sqrt(Sii)
+3. obtain the percentage of variation of x explained by ith component is  λi/summation(λi)
+    with the help of this percentage of variation, it explains how much component explains the variation
+4. Anderson proposed the test procedure to test the equality of λi, using Bartlett test -- 
+                the test statistics is : (n-(2p+1)/6)(p-r)ln(a0/g0)
+                where, a0 = (lr+1 + lr+2 + ... + lp)/(p-r)
+                     , g0 = (lr+1 . lr+2 . 
+                     
+   chi-square tabulated value :- chi-square(1/2)(p-r+2)(p-r-1)
+   
+# METHOD OF EXTRACTION OF PRINCIPAL COMPONENTS
+-- Technique to transform the original set of variables into a set of linear combinations, so most of         variation in original dataset is explained by linear combinations. The linear combination so selected is    called principal components.
+
+
+# PCA in Regression
+-- PCA is used to orthogonalize X matrix. PCA transforms "X" into a new matrix "Z"
+                          where, z = gamma'(x)
+                                     -- matrix of eigen vectors and z is principal component.
+                                replace X by Z then,
+                                Y = Xbeta + E
+                                  = Zbeta + E,
+                                  = Gamma'Xbeta + E
+                                  = ZGamma'Beta + E
+                                  Intercept is 0
+                                  
+```{r}
+var_cov = matrix(c(1.307,0.879,0.908,0.958,0.345,0.512,0.385,0,1.248,1.147,1.411,-0.089,0.564,0.172,0,0,1.317,1.480,0.058,0.573,0.259,0,0,0,2.022,-0.110,0.773,0.236,0,0,0,0,0.443,0.046,0.259,0,0,0,0,0,0.371,0.154,0,0,0,0,0,0,0.264),nrow = 7, ncol = 7, byrow = TRUE)
+var_cov
+var_c = var_cov + t(var_cov) - diag(diag(var_cov))
+var_c
+
+p = 7
+n = 36
+
+l = eigen(var_c)$value
+g = eigen(var_c)$vector
+l
+g
+g = round(g,4)
+
+propvar = (l/sum(l))*100
+propvar
+
+cumprop = cumsum(propvar)
+cumprop
+
+pc_no = 1:length(l)
+cbind(pc_no,l,propvar,cumprop)
+
+rij = (t(g)*sqrt(l))/(sqrt(diag(var_c)))
+rij = t(rij);rij
+rij^2
+
+for (r in 0:(p-1)) {
+  a0 = sum(l[(r+1):p])/(p-r)
+  g0 = prod(l[(r+1):p])^(1/(p-r))
+  t = (n-((2*p+11)/6))*(p-r)*log(a0/g0)
+  df = (p-r+2)*(p-r-1)/2
+
+  pvalue = 1- pchisq(t,df)
+  if(pvalue>= 0.05)
+  {break}
+}
+
+cat("here accept H0 for r = ",r,"chisq =",t,"pvalue = ", pvalue)
+
+plot(1:7,l,type = "b", col = "black")
+
+```
+```{r}
+data = read.csv(file.choose())
+data
+
+var_covariance = cov(data[, 2:ncol(data)])
+var_covariance
+```
+
