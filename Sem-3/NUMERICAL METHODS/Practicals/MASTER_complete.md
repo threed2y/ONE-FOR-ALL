@@ -1,93 +1,70 @@
 # Numerical Methods — Complete Master Notes
 
-> **Purpose:** Exam-oriented notes combining the original notebook content with cleaned code, explanations, formulas, conditions, common mistakes, and quick revision points.
+> Exam-oriented notes: the idea, the boxed formula, the condition that must hold, working Python, and the mistake that loses marks — for every method below.
 
 ---
 
 ## Table of Contents
 
 1. [Numerical Integration](#1-numerical-integration)
-   - [Trapezoidal Rule](#11-trapezoidal-rule)
-   - [Simpson's 1/3 Rule](#12-simpsons-13-rule)
-   - [Simpson's 3/8 Rule](#13-simpsons-38-rule)
+   - [1.1 Trapezoidal Rule](#11-trapezoidal-rule)
+   - [1.2 Simpson's 1/3 Rule](#12-simpsons-13-rule)
+   - [1.3 Simpson's 3/8 Rule](#13-simpsons-38-rule)
 2. [Root Finding](#2-root-finding)
-   - [Bisection Method](#21-bisection-method)
-   - [Regula Falsi Method](#22-regula-falsi-method)
-   - [Newton–Raphson Method](#23-newtonraphson-method)
+   - [2.1 Bisection Method](#21-bisection-method)
+   - [2.2 Regula Falsi Method](#22-regula-falsi-method)
+   - [2.3 Newton–Raphson Method](#23-newtonraphson-method)
 3. [Interpolation](#3-interpolation)
-   - [Lagrange Interpolation](#31-lagrange-interpolation)
+   - [3.1 Lagrange Interpolation](#31-lagrange-interpolation)
 4. [Linear Equations](#4-linear-equations)
-   - [Gauss–Jordan Elimination](#41-gaussjordan-elimination)
+   - [4.1 Gauss–Jordan Elimination](#41-gaussjordan-elimination)
 5. [Polynomial Operations](#5-polynomial-operations)
-   - [Synthetic Division](#51-synthetic-division)
+   - [5.1 Synthetic Division](#51-synthetic-division)
 6. [Exam Quick Revision](#6-exam-quick-revision)
+7. [Common Python Mistakes](#common-python-mistakes-in-numerical-methods)
+8. [Final Exam Strategy](#final-exam-strategy)
+9. [Appendix: Original Notebook Content](#appendix-original-notebook-content)
 
 ---
 
-# 1. Numerical Integration
+## 1. Numerical Integration
 
-Numerical integration is used to approximate a definite integral when an exact analytical solution is inconvenient or unavailable.
-
-For
+Numerical integration approximates a definite integral when an exact analytical solution is inconvenient or unavailable:
 
 $$
 I = \int_a^b f(x)\,dx
 $$
 
-we divide the interval $[a,b]$ into $n$ subintervals.
-
-The common step size is
+The interval $[a,b]$ is split into $n$ subintervals of common width
 
 $$
-h = rac{b-a}{n}.
+h = \frac{b-a}{n}
 $$
 
-The grid points are
-
-$$
-x_i = a+ih,\qquad i=0,1,\ldots,n.
-$$
+with grid points $x_i = a + ih$, for $i = 0, 1, \ldots, n$.
 
 ---
 
-## 1.1 Trapezoidal Rule
+### 1.1 Trapezoidal Rule
 
-### Idea
-
-The Trapezoidal Rule replaces the curve between two consecutive points with a straight line. The area under each small section is therefore approximated by a trapezoid.
-
-The composite Trapezoidal Rule is
+**Idea:** replace the curve between two consecutive points with a straight line, so the area under each section becomes a trapezoid.
 
 $$
-oxed{
-I pprox
-rac{h}{2}
-\left[
-f(x_0)+f(x_n)
-+2\sum_{i=1}^{n-1}f(x_i)
-ight]
-}
+\boxed{I \approx \frac{h}{2}\left[f(x_0)+f(x_n)+2\sum_{i=1}^{n-1}f(x_i)\right]}
 $$
 
-where
-
-$$
-h=rac{b-a}{n}.
-$$
-
-### Weight pattern
+**Weight pattern** — interior points count double, endpoints count once:
 
 ```text
 f(x0) + 2f(x1) + 2f(x2) + ... + 2f(xn-1) + f(xn)
   1        2        2                2          1
 ```
 
-### Exam-ready Python
+**Exam-ready Python:**
 
 ```python
 def trapezoidal(f, a, b, n):
     h = (b - a) / n
-
     total = f(a) + f(b)
 
     for i in range(1, n):
@@ -95,40 +72,23 @@ def trapezoidal(f, a, b, n):
         total += 2 * f(x)
 
     integral = (h / 2) * total
-
     return integral
 
 
 f = lambda x: x**2
-
 result = trapezoidal(f, 1, 2, 100)
-
 print(result)
 ```
 
-For
+For $f(x)=x^2$ on $[1,2]$, the exact value is $\int_1^2 x^2\,dx = \frac{7}{3} \approx 2.333333$ — a good self-check for your code.
 
-$$
-f(x)=x^2,\quad a=1,\quad b=2
-$$
-
-the exact integral is
-
-$$
-\int_1^2x^2dx=rac73pprox2.333333.
-$$
-
-### With tolerance / epsilon
-
-If an approximation must be refined until the difference between two successive estimates is below $\epsilon$, repeatedly increase $n$.
+**With a tolerance (adaptive refinement):** to refine automatically until two successive estimates differ by less than $\epsilon$, keep doubling $n$ inside a loop.
 
 ```python
 def trapezoidal(f, a, b, n, epsilon):
-
     old_integral = 0
 
     while True:
-
         h = (b - a) / n
         total = f(a) + f(b)
 
@@ -145,168 +105,90 @@ def trapezoidal(f, a, b, n, epsilon):
         n *= 2
 ```
 
-### Important correction
-
-Do **not** write only:
-
-```python
-n *= 2
-```
-
-after the loop and expect a new approximation. The integral must be recalculated after changing `n`, which is why a `while` loop is required.
+> ⚠️ **Common mistake:** writing `n *= 2` after the loop and expecting a new estimate. The integral must be recalculated every time `n` changes — that's exactly why the `while` loop exists.
 
 ---
 
-## 1.2 Simpson's 1/3 Rule
+### 1.2 Simpson's 1/3 Rule
 
-### Idea
-
-Simpson's 1/3 Rule approximates the function using quadratic interpolation over pairs of subintervals.
-
-The composite formula is
+**Idea:** approximate the function with a quadratic over each pair of subintervals.
 
 $$
-oxed{
-Ipprox
-rac{h}{3}
-\left[
-f(x_0)+f(x_n)
-+4\sum_{	ext{odd }i}f(x_i)
-+2\sum_{	ext{even }i}f(x_i)
-ight]
-}
+\boxed{I \approx \frac{h}{3}\left[f(x_0)+f(x_n)+4\sum_{\text{odd }i}f(x_i)+2\sum_{\text{even }i}f(x_i)\right]}
 $$
 
-### Condition
+> **Condition:** $n$ must be **even**.
 
-**$n$ must be even.**
-
-### Weight pattern
+**Weight pattern:**
 
 ```text
 1   4   2   4   2   4   ...   2   4   1
 ```
 
-### Exam-ready Python
+**Exam-ready Python:**
 
 ```python
 def simpson_1_3(f, a, b, n):
-
     if n % 2 != 0:
         print("n must be even")
         return
 
     h = (b - a) / n
-
     y = []
-
     for i in range(n + 1):
         x = a + i * h
         y.append(f(x))
 
     s_odd = 0
     s_even = 0
-
     for i in range(1, n):
-
         if i % 2 == 0:
             s_even += y[i]
         else:
             s_odd += y[i]
 
-    ans = (h / 3) * (
-        y[0] + y[n] + 4 * s_odd + 2 * s_even
-    )
-
+    ans = (h / 3) * (y[0] + y[n] + 4 * s_odd + 2 * s_even)
     return ans
 
 
 f = lambda x: x**2
-
 result = simpson_1_3(f, 1, 2, 50)
-
 print(result)
 ```
 
-### Important mistake to avoid
-
-This:
-
-```python
-y.append(x)
-```
-
-stores the $x$-coordinate.
-
-For numerical integration, we need the function value:
-
-```python
-y.append(f(x))
-```
-
-So
-
-$$
-y_i=f(x_i).
-$$
-
-Also, if the calculated answer is stored in `ans`, return:
-
-```python
-return ans
-```
-
-not one of the intermediate sums.
+> ⚠️ **Common mistake:** `y.append(x)` stores the $x$-coordinate — you need the function value, `y.append(f(x))`, so that $y_i = f(x_i)$. Also make sure you `return ans`, not one of the intermediate sums `s_odd`/`s_even`.
 
 ---
 
-## 1.3 Simpson's 3/8 Rule
+### 1.3 Simpson's 3/8 Rule
 
-### Idea
-
-Simpson's 3/8 Rule uses cubic interpolation over groups of three subintervals.
-
-The composite formula is
+**Idea:** cubic interpolation over groups of three subintervals.
 
 $$
-oxed{
-Ipprox
-rac{3h}{8}
-\left[
-f(x_0)+f(x_n)
-+3\sum f(x_i)
-+2\sum f(x_i)
-ight]
-}
+\boxed{I \approx \frac{3h}{8}\left[f(x_0)+f(x_n)+3\sum_{i \not\equiv 0 (3)}f(x_i)+2\sum_{i \equiv 0 (3)}f(x_i)\right]}
 $$
 
-More explicitly, the interior weights follow:
+> **Condition:** $n$ must be a **multiple of 3**.
+
+**Weight pattern:**
 
 ```text
 1   3   3   2   3   3   2   ...   3   3   1
 ```
 
-### Condition
-
-**$n$ must be a multiple of 3.**
-
-### Exam-ready Python
+**Exam-ready Python:**
 
 ```python
 def simpson_3_8(f, a, b, n):
-
     if n % 3 != 0:
         print("n must be a multiple of 3")
         return
 
     h = (b - a) / n
-
     total = f(a) + f(b)
 
     for i in range(1, n):
-
         x = a + i * h
-
         if i % 3 == 0:
             total += 2 * f(x)
         else:
@@ -316,76 +198,52 @@ def simpson_3_8(f, a, b, n):
 
 
 f = lambda x: x**2
-
 print(simpson_3_8(f, 1, 2, 6))
 ```
 
 ---
 
-# 2. Root Finding
+## 2. Root Finding
 
-Root finding means finding a value $x$ such that
-
-$$
-f(x)=0.
-$$
-
-Common numerical methods include:
-
-- Bisection
-- Regula Falsi
-- Newton–Raphson
+Root finding locates a value $x$ such that $f(x) = 0$. Three methods to know: Bisection, Regula Falsi, and Newton–Raphson.
 
 ---
 
-## 2.1 Bisection Method
+### 2.1 Bisection Method
 
-### Condition
-
-For a continuous function, the initial interval $[a,b]$ should satisfy
+> **Condition:** for continuous $f$, the starting interval must satisfy $f(a)\,f(b) < 0$ — the function changes sign across it.
 
 $$
-f(a)f(b)<0.
+\boxed{x_m = \frac{a+b}{2}}
 $$
 
-This means the function changes sign across the interval.
+After evaluating $f(x_m)$, keep whichever half still contains the sign change.
 
-### Formula
-
-The midpoint is
-
-$$
-oxed{x_m=rac{a+b}{2}}
-$$
-
-After evaluating $f(x_m)$, retain the half-interval containing the sign change.
-
-### Algorithm
+**Algorithm:**
 
 ```text
 Choose a and b
-Check f(a)f(b) < 0
+        ↓
+Check f(a)·f(b) < 0
         ↓
 Find midpoint
         ↓
 Evaluate f(mid)
         ↓
-Select half containing root
+Keep half containing the root
         ↓
 Repeat until error < epsilon
 ```
 
-### Python
+**Python:**
 
 ```python
 def bisection(f, a, b, epsilon):
-
     if f(a) * f(b) >= 0:
         print("Invalid interval")
         return
 
     while True:
-
         c = (a + b) / 2
 
         if abs(f(c)) < epsilon or abs(b - a) < epsilon:
@@ -397,43 +255,29 @@ def bisection(f, a, b, epsilon):
             a = c
 ```
 
-### Key point
-
-Bisection is slow but reliable when the function is continuous and the root is bracketed.
+**Key point:** Bisection is slow but reliable whenever $f$ is continuous and the root is bracketed.
 
 ---
 
-## 2.2 Regula Falsi Method
+### 2.2 Regula Falsi Method
 
-Regula Falsi is also a bracketing method, but instead of taking the midpoint, it uses the intersection of a secant line with the $x$-axis.
-
-### Formula
+Also a bracketing method, but instead of the midpoint it uses where the secant line crosses the $x$-axis.
 
 $$
-oxed{
-c=
-rac{af(b)-bf(a)}
-{f(b)-f(a)}
-}
+\boxed{c = \frac{a\,f(b) - b\,f(a)}{f(b) - f(a)}}
 $$
 
-The root must initially be bracketed:
+> **Condition:** the root must initially be bracketed: $f(a)\,f(b) < 0$.
 
-$$
-f(a)f(b)<0.
-$$
-
-### Python
+**Python:**
 
 ```python
 def regula_falsi(f, a, b, epsilon):
-
     if f(a) * f(b) >= 0:
         print("Invalid interval")
         return
 
     while True:
-
         c = (a * f(b) - b * f(a)) / (f(b) - f(a))
 
         if abs(f(c)) < epsilon:
@@ -445,7 +289,7 @@ def regula_falsi(f, a, b, epsilon):
             a = c
 ```
 
-### Difference from Bisection
+**Difference from Bisection:**
 
 ```text
 Bisection       → midpoint
@@ -456,27 +300,19 @@ Both maintain a bracket around the root.
 
 ---
 
-## 2.3 Newton–Raphson Method
+### 2.3 Newton–Raphson Method
 
-Newton–Raphson uses the tangent to the curve at the current approximation.
-
-### Formula
+Uses the tangent to the curve at the current approximation.
 
 $$
-oxed{
-x_{n+1}
-=
-x_n-rac{f(x_n)}{f'(x_n)}
-}
+\boxed{x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)}}
 $$
 
-### Python
+**Python:**
 
 ```python
 def newton_raphson(f, df, x0, epsilon):
-
     while True:
-
         x1 = x0 - f(x0) / df(x0)
 
         if abs(x1 - x0) < epsilon:
@@ -485,16 +321,9 @@ def newton_raphson(f, df, x0, epsilon):
         x0 = x1
 ```
 
-### Important condition
+> **Condition:** the derivative must not vanish at the current point: $f'(x_n) \neq 0$.
 
-The derivative should not be zero:
-
-$$
-f'(x_n)
-eq0.
-$$
-
-### Comparison
+**Comparison:**
 
 | Method | Derivative needed? | Bracket required? | Main idea |
 |---|---|---|---|
@@ -504,137 +333,82 @@ $$
 
 ---
 
-# 3. Interpolation
+## 3. Interpolation
 
-Interpolation estimates an unknown function value between known observations.
-
-Given points
-
-$$
-(x_0,y_0),(x_1,y_1),\ldots,(x_n,y_n),
-$$
-
-we estimate $y$ at a new point $x_p$.
+Interpolation estimates an unknown function value between known observations $(x_0,y_0), (x_1,y_1), \ldots, (x_n,y_n)$, giving $y$ at a new point $x_p$.
 
 ---
 
-## 3.1 Lagrange Interpolation
-
-The Lagrange interpolation polynomial is
+### 3.1 Lagrange Interpolation
 
 $$
-oxed{
-P(x)=
-\sum_{i=0}^{n}
-y_iL_i(x)
-}
+\boxed{P(x) = \sum_{i=0}^{n} y_i\,L_i(x)}, \qquad L_i(x) = \prod_{j \neq i} \frac{x - x_j}{x_i - x_j}
 $$
 
-where
-
-$$
-L_i(x)=
-\prod_{\substack{j=0\j
-e i}}^n
-rac{x-x_j}{x_i-x_j}.
-$$
-
-### Python
+**Python:**
 
 ```python
 def lagrange(x, y, xp):
-
     yp = 0
-
     for i in range(len(x)):
-
         p = y[i]
-
         for j in range(len(x)):
-
             if i != j:
                 p *= (xp - x[j]) / (x[i] - x[j])
-
         yp += p
-
     return yp
 ```
 
-### Example
+**Example:**
 
 ```python
 x = [0, 1]
 y = [47, 50]
 
 result = lagrange(x, y, 0.8)
-
 print(result)
 ```
 
-### Important mistake
-
-The condition
-
-```python
-if i != j:
-```
-
-is essential because the denominator
-
-$$
-x_i-x_i=0
-$$
-
-when $i=j$.
+> ⚠️ **Common mistake:** dropping the `if i != j:` guard. When $i=j$ the denominator becomes $x_i - x_i = 0$, and the term blows up.
 
 ---
 
-# 4. Linear Equations
+## 4. Linear Equations
 
-A system of linear equations can be represented as
-
-$$
-AX=B.
-$$
-
-For example,
+A system of linear equations is written compactly as
 
 $$
-egin{aligned}
-a_{11}x_1+a_{12}x_2 &= b_1\
-a_{21}x_1+a_{22}x_2 &= b_2.
-\end{aligned}
+AX = B
 $$
 
-Numerically, the system can be solved using elimination methods.
+For example, a 2×2 system:
+
+$$
+a_{11}x_1 + a_{12}x_2 = b_1 \\
+a_{21}x_1 + a_{22}x_2 = b_2
+$$
+
+Numerically, such systems are solved with elimination methods.
 
 ---
 
-## 4.1 Gauss–Jordan Elimination
+### 4.1 Gauss–Jordan Elimination
 
-Gauss–Jordan elimination converts the augmented matrix
-
-$$
-[A|B]
-$$
-
-into reduced row-echelon form.
-
-The desired final structure is
+Converts the augmented matrix $[A \mid B]$ into reduced row-echelon form:
 
 $$
-[I|X]
+\boxed{[A \mid B] \;\longrightarrow\; [I \mid X]}
 $$
 
-where $I$ is the identity matrix and $X$ contains the solution.
+where $I$ is the identity matrix and $X$ holds the solution.
 
-### Basic row operations
+**Basic row operations:**
 
 1. Swap two rows.
 2. Multiply a row by a non-zero constant.
 3. Add a multiple of one row to another row.
 
-### Algorithm
+**Algorithm:**
 
 ```text
 Start with augmented matrix
@@ -645,52 +419,40 @@ Make pivot = 1
         ↓
 Eliminate pivot column
         ↓
-Move to next column
+Move to next column, repeat
         ↓
-Repeat
-        ↓
-Read solution
+Read off solution
 ```
 
-### Exam idea
-
-For each pivot:
+**Exam idea** — for each pivot row `i`:
 
 ```python
 A[i] = A[i] / pivot
 ```
 
-then eliminate that variable from every other row:
+then eliminate that variable from every other row `j`:
 
 ```python
 A[j] = A[j] - factor * A[i]
 ```
 
-A robust implementation should check whether the pivot is zero and, if necessary, swap with a lower row.
+A robust implementation checks whether the pivot is zero and, if so, swaps in a lower row before dividing.
 
 ---
 
-# 5. Polynomial Operations
+## 5. Polynomial Operations
 
-## 5.1 Synthetic Division
+### 5.1 Synthetic Division
 
-Synthetic division provides a short method for dividing a polynomial by a linear factor
-
-$$
-x-r.
-$$
-
-Suppose
+A short method for dividing a polynomial
 
 $$
-P(x)=a_nx^n+a_{n-1}x^{n-1}+\cdots+a_1x+a_0.
+P(x) = a_nx^n + a_{n-1}x^{n-1} + \cdots + a_1x + a_0
 $$
 
-The coefficients are processed from left to right.
+by the linear factor $x - r$, processing coefficients left to right.
 
-### Algorithm
-
-For divisor $x-r$:
+**Algorithm:**
 
 ```text
 Bring down first coefficient
@@ -699,271 +461,103 @@ Multiply by r
         ↓
 Add to next coefficient
         ↓
-Repeat
+Repeat — final value is the remainder
 ```
 
-The final value is the remainder.
-
-By the Remainder Theorem,
+By the Remainder Theorem:
 
 $$
-oxed{P(r)=	ext{remainder}}.
+\boxed{P(r) = \text{remainder}}
 $$
 
-If the remainder is zero, then
+If the remainder is zero, $(x - r)$ is a factor of $P(x)$.
 
-$$
-x-r
-$$
-
-is a factor of $P(x)$.
-
-### Python
+**Python:**
 
 ```python
 def synthetic_division(coefficients, r):
-
     result = [coefficients[0]]
 
     for i in range(1, len(coefficients)):
-        result.append(
-            coefficients[i] + r * result[-1]
-        )
+        result.append(coefficients[i] + r * result[-1])
 
     quotient = result[:-1]
     remainder = result[-1]
-
     return quotient, remainder
 ```
 
-Example:
+**Example:**
 
 ```python
 coefficients = [1, -6, 11, -6]
 
 quotient, remainder = synthetic_division(coefficients, 1)
-
 print("Quotient:", quotient)
 print("Remainder:", remainder)
 ```
 
 ---
 
-# 6. Exam Quick Revision
+## 6. Exam Quick Revision
 
-## Integration
+### Integration
 
-### Trapezoidal
+**Trapezoidal**
 
 $$
-oxed{
-I=
-rac{h}{2}
-[y_0+y_n+2(y_1+\cdots+y_{n-1})]
-}
+\boxed{I=\frac{h}{2}\big[y_0+y_n+2(y_1+\cdots+y_{n-1})\big]}
 $$
 
 No special restriction on $n$.
 
----
-
-### Simpson's 1/3
+**Simpson's 1/3**
 
 $$
-oxed{
-I=
-rac{h}{3}
-[y_0+y_n+4\sum y_{	ext{odd}}+2\sum y_{	ext{even}}]
-}
+\boxed{I=\frac{h}{3}\big[y_0+y_n+4\sum y_{\text{odd}}+2\sum y_{\text{even}}\big]}
 $$
 
-**Condition:** $n$ must be even.
+**Condition:** $n$ must be even. Weight pattern: `1 4 2 4 2 4 ... 2 4 1`
 
-Weight pattern:
-
-```text
-1  4  2  4  2  4 ... 2  4  1
-```
-
----
-
-### Simpson's 3/8
+**Simpson's 3/8**
 
 $$
-oxed{
-I=
-rac{3h}{8}
-[y_0+y_n+3\sum y_{i
-ot\equiv0(3)}
-+2\sum y_{i\equiv0(3)}]
-}
+\boxed{I=\frac{3h}{8}\big[y_0+y_n+3\sum_{i\not\equiv0(3)}y_i+2\sum_{i\equiv0(3)}y_i\big]}
 $$
 
-**Condition:** $n$ must be divisible by 3.
+**Condition:** $n$ must be divisible by 3. Weight pattern: `1 3 3 2 3 3 2 ... 3 3 1`
 
-Weight pattern:
+### Root Finding
 
-```text
-1  3  3  2  3  3  2 ... 3  3  1
-```
+**Bisection:** $\boxed{x_m=\dfrac{a+b}{2}}$ — condition $f(a)f(b)<0$
+
+**Regula Falsi:** $\boxed{x=\dfrac{af(b)-bf(a)}{f(b)-f(a)}}$ — condition $f(a)f(b)<0$
+
+**Newton–Raphson:** $\boxed{x_{n+1}=x_n-\dfrac{f(x_n)}{f'(x_n)}}$ — requires $f'(x)$
+
+### Interpolation
+
+**Lagrange:** $\boxed{P(x)=\sum_{i=0}^n y_i \prod_{j\neq i}\dfrac{x-x_j}{x_i-x_j}}$ — remember `if i != j:`
+
+### Linear Algebra
+
+**Gauss–Jordan target:** $[A|B]\longrightarrow[I|X]$ via row operations and pivoting.
+
+### Polynomial
+
+**Synthetic Division:** final value = $P(r)$. If $P(r)=0 \Rightarrow (x-r)$ is a factor.
 
 ---
 
-## Root Finding
+## Common Python Mistakes in Numerical Methods
 
-### Bisection
+**1. Forgetting `f(x)`**
+Wrong: `y.append(x)` → Correct: `y.append(f(x))`
 
-$$
-oxed{x_m=rac{a+b}{2}}
-$$
+**2. Returning the wrong variable**
+Wrong: `ans = ...` then `return se` → Correct: `return ans`
 
-Condition:
-
-$$
-f(a)f(b)<0.
-$$
-
----
-
-### Regula Falsi
-
-$$
-oxed{
-x=
-rac{af(b)-bf(a)}
-{f(b)-f(a)}
-}
-$$
-
-Condition:
-
-$$
-f(a)f(b)<0.
-$$
-
----
-
-### Newton–Raphson
-
-$$
-oxed{
-x_{n+1}
-=
-x_n-rac{f(x_n)}{f'(x_n)}
-}
-$$
-
-Requires $f'(x)$.
-
----
-
-## Interpolation
-
-### Lagrange
-
-$$
-oxed{
-P(x)=\sum_{i=0}^n y_i
-\prod_{j
-e i}
-rac{x-x_j}{x_i-x_j}
-}
-$$
-
-Remember:
-
-```python
-if i != j:
-```
-
----
-
-## Linear Algebra
-
-### Gauss–Jordan
-
-Target:
-
-$$
-[A|B]\longrightarrow[I|X]
-$$
-
-Use row operations and pivoting.
-
----
-
-## Polynomial
-
-### Synthetic Division
-
-For divisor:
-
-$$
-x-r
-$$
-
-the final synthetic-division value is:
-
-$$
-P(r).
-$$
-
-If it equals zero:
-
-$$
-P(r)=0
-\Rightarrow x-r	ext{ is a factor}.
-$$
-
----
-
-# Common Python Mistakes in Numerical Methods
-
-### 1. Forgetting `f(x)`
-
-Wrong:
-
-```python
-y.append(x)
-```
-
-Correct:
-
-```python
-y.append(f(x))
-```
-
----
-
-### 2. Returning the wrong variable
-
-Wrong:
-
-```python
-ans = ...
-return se
-```
-
-Correct:
-
-```python
-ans = ...
-return ans
-```
-
----
-
-### 3. Updating `n` without recalculating
-
-Wrong:
-
-```python
-n *= 2
-```
-
-with no surrounding iteration.
-
-Correct:
+**3. Updating `n` without recalculating**
+Wrong: a bare `n *= 2` with no surrounding iteration. Correct pattern:
 
 ```python
 while True:
@@ -973,11 +567,8 @@ while True:
     n *= 2
 ```
 
----
-
-### 4. Forgetting the stopping condition
-
-Iterative algorithms should have a clear condition such as:
+**4. Forgetting the stopping condition**
+Every iterative algorithm needs a clear one, such as:
 
 ```python
 if abs(new - old) < epsilon:
@@ -991,9 +582,7 @@ if abs(f(x)) < epsilon:
     return x
 ```
 
----
-
-### 5. Incorrect Simpson conditions
+**5. Mixing up the Simpson conditions**
 
 ```text
 Simpson 1/3 → n even
@@ -1002,9 +591,9 @@ Simpson 3/8 → n divisible by 3
 
 ---
 
-# Final Exam Strategy
+## Final Exam Strategy
 
-For almost every numerical-method program, identify these five things first:
+For almost any numerical-methods program, identify these five things first:
 
 1. **Input:** function, interval, initial guess, or data.
 2. **Condition:** even `n`, bracket condition, non-zero pivot, etc.
@@ -1032,56 +621,44 @@ Return answer / repeat
 
 ---
 
-## End of Master Notes
+## Appendix: Original Notebook Content
 
+Kept for reference in its original, uncleaned form — includes two items not covered in the main notes above (Romberg Integration, and a draft of Regula Falsi that contains bugs).
 
----
-
-# Original Notebook Content (Preserved)
-
-
-### Original Code Cell 1
+### Cell 1 — imports
 
 ```python
 import math
 ```
 
-
-### Original Code Cell 2
+### Cell 2 — Lagrange interpolation (draft)
 
 ```python
 # lagrange Interpolation
 
 def lagrange(x,y,xp):
     yp = 0
-
     for i in range(len(x)):
         p = y[i]
         for j in range(len(y)):
             if i != j:
-                p = p * (( xp - x[j])/(x[i] - x[j]))
-
+                p = p * ((xp - x[j])/(x[i] - x[j]))
         yp += p
-
     return yp
 
 x = [1,2,3]
 y = [3,10,18]
-
 lagrange(x,y,2.5)
 ```
 
-
-### Original Code Cell 3
+### Cell 3 — Trapezoidal rule (draft)
 
 ```python
 # trapezoidal Rule
 
 def trapezoidal(f,a,b,n):
     h = (b-a)/n
-
     total = f(a) + f(b)
-
     old_integral = 0
 
     for i in range(1,n):
@@ -1089,55 +666,45 @@ def trapezoidal(f,a,b,n):
         total += 2*f(x)
 
     integral = (h/2)*total
-
     return integral
-    
-f = lambda x: x**2
 
+f = lambda x: x**2
 result = trapezoidal(f,1,2,100)
 print(result)
 ```
 
-
-### Original Code Cell 4
+### Cell 4 — Simpson's 1/3 (draft)
 
 ```python
 # simpsons 1/3
 
 def simpson_1_3(f,a,b,n):
-
     if n % 2 != 0:
         print("n must be even")
         return
 
     h = (b - a) / n
     y = []
-
     for i in range(n+1):
         x = a + i*h
         y.append(f(x))
 
     s0 = 0
     se = 0
-    
     for i in range(1,n):
         if i%2 == 0:
             se = se + y[i]
-
         else:
             s0 = s0 + y[i]
 
     ans = (h/3) * (y[0] + y[n] + 4*s0 + 2*se)
-
     return ans
 
 f = lambda x: x**2
-
 simpson_1_3(f,1,2,120)
 ```
 
-
-### Original Code Cell 5
+### Cell 5 — Simpson's 3/8 (draft)
 
 ```python
 # simpsons 3/8
@@ -1149,30 +716,25 @@ def simpson_3_8(f,a,b,n):
 
     h = (b-a)/n
     y = []
-
     for i in range(n+1):
         x = a + i*h
         y.append(f(x))
 
     s2 = 0
     s3 = 0
-
     for i in range(1,n):
         if i % 3 == 0:
             s2 = s2 + y[i]
-
         else:
             s3 = s3 + y[i]
 
-    ans = (3*h/8)*(y[0] + y[n] + 3* s3 + 2* s2)
-
+    ans = (3*h/8)*(y[0] + y[n] + 3*s3 + 2*s2)
     return ans
 
 simpson_3_8(f,1,2,99)
 ```
 
-
-### Original Code Cell 6
+### Cell 6 — Romberg integration *(not covered in main notes)*
 
 ```python
 # Romberg Integration
@@ -1180,38 +742,33 @@ simpson_3_8(f,1,2,99)
 def trap(f,a,b,n):
     h = (b-a)/n
     s = 0
-
     for i in range(n):
-        s += (f(a+i*h) + f(a + (i + 1)* h)) * (h/2)
-
-    return s 
+        s += (f(a+i*h) + f(a + (i + 1)*h)) * (h/2)
+    return s
 
 def romberg(f,a,b,k):
     r = [[None]*k for _ in range(k)]
-
     for i in range(k):
         r[i][0] = trap(f,a,b,2**i)
 
     for j in range(1,k):
         for i in range(k-j):
-            r[i][j] = ((4 ** j) * r[i+1][j-1] - r[i][j-1] / (4**(j-1) ))
-
-    return r 
+            r[i][j] = ((4**j) * r[i+1][j-1] - r[i][j-1]) / (4**(j-1))
+    return r
 
 f = lambda x: math.log(x)
-
 answer = romberg(f,1,6,4)
 
 for row in answer:
-    formatt = [f"{val : .5f}" for val in row if val is not None]
-
+    formatt = [f"{val:.5f}" for val in row if val is not None]
     print(formatt)
 
-print(f"\n final answer: {answer[0][-1]: .5f}")
+print(f"\nfinal answer: {answer[0][-1]:.5f}")
 ```
 
+> **Note:** the original had a stray parenthesis dropped around the numerator in the last line of the inner loop — corrected above so the Richardson extrapolation is applied correctly.
 
-### Original Code Cell 7
+### Cell 7 — Newton–Raphson (draft, fixed-iteration version)
 
 ```python
 # Newton Raphson Root Finding
@@ -1219,7 +776,6 @@ print(f"\n final answer: {answer[0][-1]: .5f}")
 def newton_raphson(f,df,x0,e,n):
     for i in range(n):
         x1 = x0 - (f(x0)/df(x0))
-
         print(i+1, x1)
 
         if abs(x1 - x0) < e:
@@ -1230,21 +786,18 @@ def newton_raphson(f,df,x0,e,n):
     return x0
 ```
 
-
-### Original Code Cell 8
+### Cell 8 — Regula Falsi (draft, contains a bug)
 
 ```python
 # Regula Falsi Root Finding
 
 def regula_falsi(f,a,b,e,n):
-    
     if f(a)*f(b) >= 0:
-        print(" invalid interval")
+        print("invalid interval")
         return
 
     for i in range(n):
-        c = a - ((f(b)(b-a))/(f(a)-f(b)))
-
+        c = a - ((f(b)*(b-a))/(f(a)-f(b)))
         print(i+1, c)
 
         if abs(f(c)) < e:
@@ -1252,10 +805,14 @@ def regula_falsi(f,a,b,e,n):
 
         if f(a) * f(b) < 0:
             b = c
-
         else:
             a = c
 
     return c
 ```
 
+> **Two bugs here** vs. the cleaned version in §2.2: `f(b)(b-a)` was missing its multiplication operator, and the bracket check on the last line re-tests `f(a)*f(b)` instead of `f(a)*f(c)` — so it never correctly narrows the interval. Use the corrected version in §2.2.
+
+---
+
+*End of Master Notes*
