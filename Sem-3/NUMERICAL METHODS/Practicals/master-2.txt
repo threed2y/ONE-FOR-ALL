@@ -1,0 +1,235 @@
+# Gauss Elimination Code
+
+n = int(input("Enter number of equations: "))
+
+a = []
+
+print("Enter the augmented matrix:")
+for i in range(n):
+    row = []
+    for j in range(n + 1):
+        row.append(float(input()))
+    a.append(row)
+
+# Forward elimination
+for i in range(n):
+    for j in range(i + 1, n):
+        m = a[j][i] / a[i][i]
+
+        for k in range(n + 1):
+            a[j][k] = a[j][k] - m * a[i][k]
+
+# Back substitution
+x = [0] * n
+
+for i in range(n - 1, -1, -1):
+    s = 0
+
+    for j in range(i + 1, n):
+        s = s + a[i][j] * x[j]
+
+    x[i] = (a[i][n] - s) / a[i][i]
+
+print("Solution:")
+for i in range(n):
+    print("x", i + 1, "=", x[i])
+
+
+# Sweep Method for finding inverse
+
+def sweep(a, n, p):
+
+    for i in range(n):
+        if i != p:
+            for j in range(n):
+                if j != p:
+                    a[i][j] = a[i][j] - a[i][p] * a[p][j] / a[p][p]
+
+    for i in range(n):
+        if i != p:
+            a[i][p] = -a[i][p] / a[p][p]
+
+    for j in range(n):
+        if j != p:
+            a[p][j] = a[p][j] / a[p][p]
+
+    a[p][p] = 1 / a[p][p]
+
+
+n = int(input("Enter order of matrix: "))
+
+a = []
+
+print("Enter matrix:")
+for i in range(n):
+    a.append(list(map(float, input().split())))
+
+for i in range(n):
+    if a[i][i] == 0:
+        for k in range(i + 1, n):
+            if a[k][i] != 0:
+                a[i], a[k] = a[k], a[i]
+                break
+
+    sweep(a, n, i)
+
+print("Inverse of matrix:")
+
+for i in range(n):
+    for j in range(n):
+        print(round(a[i][j], 4), end="\t")
+    print()
+
+# House-Holder Transformation for upper triangular matrix
+
+from math import *
+
+n = int(input("Enter number of rows: "))
+p = int(input("Enter number of columns: "))
+
+x = []
+
+print("Enter matrix:")
+for i in range(n):
+    x.append(list(map(float, input().split())))
+
+for k in range(min(n, p)):
+
+    s = 0
+    for i in range(k, n):
+        s = s + x[i][k] ** 2
+
+    if s == 0:
+        continue
+
+    if x[k][k] < 0:
+        u = x[k][k] - sqrt(s)
+    else:
+        u = x[k][k] + sqrt(s)
+
+    v = [0] * n
+
+    v[k] = u
+    for i in range(k + 1, n):
+        v[i] = x[i][k]
+
+    beta = 0
+    for i in range(k, n):
+        beta = beta + v[i] ** 2
+
+    for j in range(k, p):
+        s = 0
+
+        for i in range(k, n):
+            s = s + v[i] * x[i][j]
+
+        for i in range(k, n):
+            x[i][j] = x[i][j] - 2 * v[i] * s / beta
+
+print("Transformed matrix:")
+
+for i in range(n):
+    for j in range(p):
+        print(round(x[i][j], 4), end="\t")
+    print()
+
+
+# GAUSS SEIDEL METHOD
+
+n = int(input("Enter number of equations: "))
+
+a = []
+b = []
+
+print("Enter coefficients of A:")
+for i in range(n):
+    a.append(list(map(float, input().split())))
+
+print("Enter RHS values:")
+b = list(map(float, input().split()))
+
+x = [0] * n
+
+N = int(input("Enter maximum iterations: "))
+e = 0.00001
+
+for k in range(N):
+
+    old = x.copy()
+
+    for i in range(n):
+        s = b[i]
+
+        for j in range(n):
+            if j != i:
+                s = s - a[i][j] * x[j]
+
+        x[i] = s / a[i][i]
+
+    error = 0
+
+    for i in range(n):
+        error = error + abs(x[i] - old[i])
+
+    if error < e:
+        break
+
+print("Solution:")
+
+for i in range(n):
+    print("x", i + 1, "=", x[i])
+
+
+# GRAM SCHMIDT METHOD
+
+from math import *
+
+n = int(input("Enter number of rows: "))
+p = int(input("Enter number of columns: "))
+
+X = []
+
+print("Enter matrix:")
+for i in range(n):
+    X.append(list(map(float, input().split())))
+
+V = [[0] * p for i in range(n)]
+T = [[0] * p for i in range(p)]
+
+for k in range(p):
+
+    # Find norm
+    s = 0
+    for i in range(n):
+        s = s + X[i][k] ** 2
+
+    d = sqrt(s)
+
+    # Find unit vector
+    for i in range(n):
+        V[i][k] = X[i][k] / d
+
+    # Find T
+    for j in range(k, p):
+        s = 0
+        for i in range(n):
+            s = s + V[i][k] * X[i][j]
+
+        T[k][j] = s
+
+    # Make remaining columns orthogonal
+    for j in range(k + 1, p):
+        for i in range(n):
+            X[i][j] = X[i][j] - T[k][j] * V[i][k]
+
+print("Matrix V:")
+for i in range(n):
+    for j in range(p):
+        print(round(V[i][j], 4), end="\t")
+    print()
+
+print("Matrix T:")
+for i in range(p):
+    for j in range(p):
+        print(round(T[i][j], 4), end="\t")
+    print()
