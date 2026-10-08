@@ -1,41 +1,202 @@
-# Gauss Elimination Code
+-----------------------------------------------
+-----------------------------------------------
 
-n = int(input("Enter number of equations: "))
+# Gaussian Elimination
 
-a = []
+import numpy as np
+
+n = int(input("Enter number of unknowns: "))
+
+# Augmented matrix
+A = np.zeros((n, n + 1))
 
 print("Enter the augmented matrix:")
 for i in range(n):
-    row = []
     for j in range(n + 1):
-        row.append(float(input()))
-    a.append(row)
+        A[i, j] = float(input(f"A[{i+1},{j+1}] = "))
+
+print("\nAugmented matrix:")
+print(A)
 
 # Forward elimination
-for i in range(n):
-    for j in range(i + 1, n):
-        m = a[j][i] / a[i][i]
+for k in range(n - 1):
 
-        for k in range(n + 1):
-            a[j][k] = a[j][k] - m * a[i][k]
+    # If pivot is zero, interchange rows
+    if A[k, k] == 0:
+        for i in range(k + 1, n):
+            if A[i, k] != 0:
+                A[[k, i]] = A[[i, k]]
+                break
+
+    # Make elements below pivot zero
+    for i in range(k + 1, n):
+        m = A[i, k] / A[k, k]
+        A[i] = A[i] - m * A[k]
+
+print("\nUpper triangular matrix:")
+print(A)
 
 # Back substitution
-x = [0] * n
+x = np.zeros(n)
 
 for i in range(n - 1, -1, -1):
     s = 0
 
     for j in range(i + 1, n):
-        s = s + a[i][j] * x[j]
+        s += A[i, j] * x[j]
 
-    x[i] = (a[i][n] - s) / a[i][i]
+    x[i] = (A[i, n] - s) / A[i, i]
 
-print("Solution:")
+# Solution
+print("\nSolution:")
 for i in range(n):
-    print("x", i + 1, "=", x[i])
+    print(f"x{i+1} = {x[i]}")
+
+-----------------------------------------------
+
+# GAUSS SEIDEL METHOD
+
+import numpy as np
+
+n = int(input("Enter no. of unknowns = no. of equations: "))
+
+A = np.zeros((n, n))
+
+print("Enter coefficient matrix A:")
+for i in range(n):
+    for j in range(n):
+        A[i, j] = float(input(f"Enter a{i+1}{j+1}: "))
+
+print("Coefficient matrix A:")
+print(A)
 
 
-# Sweep Method for finding inverse
+b = np.zeros(n)
+
+print("Enter right side values:")
+for i in range(n):
+    b[i] = float(input(f"Enter b{i+1}: "))
+
+print("Right side vector b:")
+print(b)
+
+
+# Check diagonal dominance
+diagonal_dominant = True
+
+for i in range(n):
+
+    diag_element = abs(A[i, i])
+
+    off_diag_sum = 0
+
+    for j in range(n):
+        if j != i:
+            off_diag_sum += abs(A[i, j])
+
+    if diag_element <= off_diag_sum:
+        diagonal_dominant = False
+
+
+if diagonal_dominant:
+    print("Matrix A is diagonally dominant.")
+    print("Gauss-Seidel method is expected to converge.")
+else:
+    print("Matrix A is not diagonally dominant.")
+    print("Convergence is not guaranteed.")
+
+
+# Initial approximation
+x = np.zeros(n)
+
+eps = float(input("Enter accuracy level: "))
+N = int(input("Enter maximum iterations: "))
+
+
+# Gauss-Seidel iteration
+for k in range(N):
+
+    x_old = x.copy()
+
+    for i in range(n):
+
+        p = b[i,0]
+
+        for j in range(n):
+            if j != i:
+                p = p - A[i, j] * x[j]
+
+        x[i] = p / A[i, i]
+
+    error = np.max(np.abs(x - x_old))
+
+    print(f"Iteration {k+1}: {x}")
+
+    if error < eps:
+        print("Gauss-Seidel method converged.")
+        break
+
+else:
+    print("Maximum iterations reached.")
+
+
+# Final solution
+print("\nSolution:")
+
+for i in range(n):
+    print(f"x{i+1} = {x[i]}")
+
+-----------------------------------------------
+-----------------------------------------------
+
+# GAUSS JORDAN FOR MATRIX INVERSE
+
+import numpy as np
+
+n = int(input("Enter order of matrix: "))
+
+# Enter matrix
+A = np.zeros((n, n))
+
+print("Enter matrix A:")
+for i in range(n):
+    for j in range(n):
+        A[i, j] = float(input(f"A[{i+1},{j+1}] = "))
+
+# Augment A with identity matrix
+aug = np.hstack((A, np.eye(n)))
+
+# Gauss-Jordan elimination
+for i in range(n):
+
+    # Check zero pivot
+    if aug[i, i] == 0:
+        for k in range(i + 1, n):
+            if aug[k, i] != 0:
+                aug[[i, k]] = aug[[k, i]]
+                break
+        else:
+            print("Inverse does not exist.")
+            exit()
+
+    # Make pivot = 1
+    aug[i] = aug[i] / aug[i, i]
+
+    # Make other elements in pivot column = 0
+    for j in range(n):
+        if i != j:
+            m = aug[j, i]
+            aug[j] = aug[j] - m * aug[i]
+
+# Extract inverse
+inverse = aug[:, n:]
+
+print("\nInverse of A:")
+print(inverse)
+
+-----------------------------------------------
+
+# Sweep Method for finding inverse (without conditions)
 
 def sweep(a, n, p):
 
@@ -80,107 +241,159 @@ for i in range(n):
         print(round(a[i][j], 4), end="\t")
     print()
 
+-----------------------------------------------
+
+# SWEEP METHOD WITH CONDITION CHECKS
+
+def sweep(a,n,i):
+    A=[[0]*(n+1)for i in range(n+1)]
+    for j in range(1,n+1):
+        if j != i:
+            A[i][j] = a[i][j]/a[i][i]
+    for k in range(1,n+1):
+        if k != i:
+            A[k][i] = -(a[k][i]/a[i][i])
+    A[i][i] = 1/a[i][i]
+    for k in range(1,n+1):
+        for j in range(1,n+1):
+            if k != i and j != i:
+                A[k][j] = a[k][j] - (a[k][i]*a[i][j])/a[i][i]
+    
+    for k in range(1,n+1):
+        for j in range(1,n+1):
+            a[k][j] = A[k][j]
+                
+e=0.0001;row=0;col=0
+n=int(input("Enter size of matrix A: "))
+a=[[0]*(n+1)for i in range(n+1)]
+#print(a)
+b=[[0]*(n+1)for i in range(n+1)]
+
+print("enter the elements of matrix A row-wise:")
+for i in range(1,n+1):
+    for j in range(1,n+1):
+        aij=float(input("input aij:"))
+        a[i][j]=aij
+print(a)
+
+ans=input("Is matrix A singular ? (y / n) : ") #'y' for yes, 'n' for 'no'
+sym=0 # '0' for 'symmetric', '1' for 'non-symmetric'
+for i in range(1,n+1):
+    for j in range(1,n+1):
+        b[i][j]=a[j][i]
+for i in range(1,n+1):
+    for j in range(1,n+1):
+        if b[i][j]!=a[i][j]:
+            sym=1
+            break
+if sym == 0:
+    print("Matrix A is symmetric")
+else:
+    print("Matrix A is not symmetric")
+
+for i in range(1,n+1):
+    if ans == 'n' and sym == 0: # A is n.s. and symmetric
+        if abs(a[i][i])< e:
+            for k in range(i+1,n+1):
+                if abs(a[k][k]) > e:
+                    for l in range(1,n+1):
+                        a[i][l],a[k][l]=a[k][l],a[i][l]
+                    row=i;col=k
+                    break
+            sweep(a,n,col)
+        else:
+            sweep(a,n,i)
+    elif ans == 'n' and sym == 1:# A is n.s. and non-symmetric
+        if abs(a[i][i]) < e:
+            for k in range(i+1,n+1):
+                if abs(a[k][k]) > e:
+                    sweep(a,n,k)
+                    break
+            if abs(a[i][i]) > e:
+                sweep(a,n,i)
+            i = i+1
+        else:
+            sweep(a,n,i)
+    elif ans == 'y' and sym == 0:# A is singular and symmetric
+        if abs(a[i][i]) > e:
+            sweep(a,n,i)
+        
+    else: # A is singular and non-symmetric
+        print("the method is not applicable.")
+        sys.exit()
+
+if ans == 'n' and sym == 0:
+    for l in range(1,n+1):
+        a[l][row],a[l][col] = a[l][col],a[l][row]
+ 
+print("The inverse of A is:")
+for i in range(1,n+1):
+    for j in range(1,n+1):
+        print(round(a[i][j],4),end='\t')
+    print("\n")
+
+-----------------------------------------------
+-----------------------------------------------
+
 # House-Holder Transformation for upper triangular matrix
 
-from math import *
+import numpy as np
 
-n = int(input("Enter number of rows: "))
-p = int(input("Enter number of columns: "))
+n = int(input("Enter number of rows of X: "))
+p = int(input("Enter number of columns of X: "))
+e = 0.001
 
-x = []
+X = np.zeros((n, p))
 
-print("Enter matrix:")
-for i in range(n):
-    x.append(list(map(float, input().split())))
-
-for k in range(min(n, p)):
-
-    s = 0
-    for i in range(k, n):
-        s = s + x[i][k] ** 2
-
-    if s == 0:
-        continue
-
-    if x[k][k] < 0:
-        u = x[k][k] - sqrt(s)
-    else:
-        u = x[k][k] + sqrt(s)
-
-    v = [0] * n
-
-    v[k] = u
-    for i in range(k + 1, n):
-        v[i] = x[i][k]
-
-    beta = 0
-    for i in range(k, n):
-        beta = beta + v[i] ** 2
-
-    for j in range(k, p):
-        s = 0
-
-        for i in range(k, n):
-            s = s + v[i] * x[i][j]
-
-        for i in range(k, n):
-            x[i][j] = x[i][j] - 2 * v[i] * s / beta
-
-print("Transformed matrix:")
-
+print("Enter matrix X rowwise:")
 for i in range(n):
     for j in range(p):
-        print(round(x[i][j], 4), end="\t")
-    print()
+        X[i, j] = float(input(f"X[{i+1},{j+1}] = "))
+
+print("\nOriginal matrix X:")
+print(X)
 
 
-# GAUSS SEIDEL METHOD
+# Householder transformation
+for k in range(min(n, p)):
 
-n = int(input("Enter number of equations: "))
+    s_sq = np.sum(X[k:, k] ** 2)
 
-a = []
-b = []
+    if s_sq < e:
+        continue
 
-print("Enter coefficients of A:")
-for i in range(n):
-    a.append(list(map(float, input().split())))
+    s = np.sqrt(s_sq)
 
-print("Enter RHS values:")
-b = list(map(float, input().split()))
+    u = X[k:, k].copy()
 
-x = [0] * n
+    if X[k, k] < 0:
+        u[0] -= s
+    else:
+        u[0] += s
 
-N = int(input("Enter maximum iterations: "))
-e = 0.00001
+    beta = np.dot(u, u)
 
-for k in range(N):
+    # Apply transformation to remaining columns
+    for j in range(k + 1, p):
+        temp = np.dot(u, X[k:, j])
+        X[k:, j] -= (u * temp) / beta
 
-    old = x.copy()
+    # Transform current column
+    if X[k, k] < 0:
+        X[k, k] = s
+    else:
+        X[k, k] = -s
 
-    for i in range(n):
-        s = b[i]
+    X[k + 1:, k] = 0
 
-        for j in range(n):
-            if j != i:
-                s = s - a[i][j] * x[j]
+X[np.abs(X) < 1e-10] = 0
 
-        x[i] = s / a[i][i]
+print("\nThe transformed matrix X is:")
+print(np.round(X, 4))
 
-    error = 0
+-----------------------------------------------
 
-    for i in range(n):
-        error = error + abs(x[i] - old[i])
-
-    if error < e:
-        break
-
-print("Solution:")
-
-for i in range(n):
-    print("x", i + 1, "=", x[i])
-
-
-# GRAM SCHMIDT METHOD
+# GRAM SCHMIDT METHOD FOR ORTHOGONALISATION
 
 from math import *
 
@@ -233,3 +446,6 @@ for i in range(p):
     for j in range(p):
         print(round(T[i][j], 4), end="\t")
     print()
+
+-----------------------------------------------
+-----------------------------------------------
