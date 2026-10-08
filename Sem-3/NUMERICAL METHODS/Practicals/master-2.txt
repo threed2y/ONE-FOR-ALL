@@ -120,7 +120,7 @@ for k in range(N):
 
     for i in range(n):
 
-        p = b[i,0]
+        p = b[i]
 
         for j in range(n):
             if j != i:
@@ -245,6 +245,8 @@ for i in range(n):
 
 # SWEEP METHOD WITH CONDITION CHECKS
 
+import sys
+
 def sweep(a,n,i):
     A=[[0]*(n+1)for i in range(n+1)]
     for j in range(1,n+1):
@@ -337,59 +339,88 @@ for i in range(1,n+1):
 
 # House-Holder Transformation for upper triangular matrix
 
-import numpy as np
-
-n = int(input("Enter number of rows of X: "))
-p = int(input("Enter number of columns of X: "))
+from math import *
+import sys
+k=1
+t=1
 e = 0.001
+s_sq=0
+n= int(input("Enter n, number of rows of matrix X:"))
+p= int(input("Enter p, number of columns of matrix X:"))
+x = [[0]*(p+1) for i in range(n+1)]
+I = [[0]*(n+1) for i in range(n+1)]
+H = [[0]*(n+1) for i in range(n+1)]
+U = [[0]*(n+1) for i in range(n+1)]
+u = [0 for i in range(n+1)]
+sum1 = [0 for i in range(n+1)]
+print("Input matrix X rowwise:")
+for i in range(1,n+1):
+    for j in range(1,p+1):
+        xij=float(input("(i,j)th element="))
+        x[i][j]=xij
 
-X = np.zeros((n, p))
+for i in range(1,n+1):
+    for j in range(1,n+1):
+        if i == j:
+            Iij = 1
+        else:
+            Iij = 0
+        I[i][j] = Iij
 
-print("Enter matrix X rowwise:")
-for i in range(n):
-    for j in range(p):
-        X[i, j] = float(input(f"X[{i+1},{j+1}] = "))
-
-print("\nOriginal matrix X:")
-print(X)
-
-
-# Householder transformation
-for k in range(min(n, p)):
-
-    s_sq = np.sum(X[k:, k] ** 2)
-
+while True:
+    s_sq = 0 
+    for i in range(t,n+1):
+        s_sq += x[i][k]*x[i][k]
     if s_sq < e:
+        k += 1
         continue
+    if k > p:
+        sys.exit()
+    for i in range(1,n+1):
+        if i < t:
+            u[i]=0
+        elif i == t:
+            if x[t][k] < 0:
+                u[t] = x[t][k] - sqrt(s_sq)
+                beta = (-u[t])*sqrt(s_sq)
+            else:
+                u[t] = x[t][k] + sqrt(s_sq)
+                beta = u[t]*sqrt(s_sq)
+        else:
+            u[i] = x[i][k]
+    # computing H
+    for i in range(1,n+1):
+        for j in range(1,n+1):
+            if i == j:
+                U[i][j] = u[i]*u[i]/beta
+            else:
+                U[i][j] = u[i]*u[j]/beta
+            H[i][j] = I[i][j]-U[i][j]
+    # print H
+    # computing HX
+    for j in range(k+1,p+1):
+        sum1[j]=0
+        for i in range(t,n+1):
+            sum1[j] += u[i]*x[i][j]
 
-    s = np.sqrt(s_sq)
-
-    u = X[k:, k].copy()
-
-    if X[k, k] < 0:
-        u[0] -= s
+    for i in range(t,n+1):
+        for j in range(k+1,p+1):
+            x[i][j] = x[i][j] - (u[i]*sum1[j])/beta
+    if x[t][k]<0:
+        x[t][k] = sqrt(s_sq)
     else:
-        u[0] += s
-
-    beta = np.dot(u, u)
-
-    # Apply transformation to remaining columns
-    for j in range(k + 1, p):
-        temp = np.dot(u, X[k:, j])
-        X[k:, j] -= (u * temp) / beta
-
-    # Transform current column
-    if X[k, k] < 0:
-        X[k, k] = s
-    else:
-        X[k, k] = -s
-
-    X[k + 1:, k] = 0
-
-X[np.abs(X) < 1e-10] = 0
-
-print("\nThe transformed matrix X is:")
-print(np.round(X, 4))
+        x[t][k] = -sqrt(s_sq)
+    for i in range(t+1,n+1):
+        x[i][k]=0
+    t=t+1
+    k=k+1
+    if k > p:
+        break
+print("The transformed matrix X is:")
+for i in range(1,n+1):
+    for j in range(1,p+1):
+        print(round(x[i][j],4),end='\t')
+    print("\n")
 
 -----------------------------------------------
 
